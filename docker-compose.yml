@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  # PostgreSQL数据库
+  postgres:
+    image: postgres:15-alpine
+    container_name: web3_alpha_hunter_db
+    environment:
+      POSTGRES_USER: web3hunter
+      POSTGRES_PASSWORD: devpassword123
+      POSTGRES_DB: web3_alpha_hunter
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U web3hunter"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis
+  redis:
+    image: redis:7-alpine
+    container_name: web3_alpha_hunter_redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # 后端API (开发环境)
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: web3_alpha_hunter_api
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://web3hunter:devpassword123@postgres:5432/web3_alpha_hunter
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/2
+      SECRET_KEY: dev-secret-key-change-in-production
+      DEBUG: "True"
+      ENVIRONMENT: development
+    volumes:
+      - ./backend:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  # Celery Worker
+  celery_worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: web3_alpha_hunter_celery
+    environment:
+      DATABASE_URL: postgresql://web3hunter:devpassword123@postgres:5432/web3_alpha_hunter
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/2
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - redis
+      - postgres
+    command: celery -A app.tasks.celery worker --loglevel=info
+
+volumes:
+  postgres_data:
+

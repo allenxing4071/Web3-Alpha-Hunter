@@ -1,0 +1,551 @@
+{
+  "coingecko_trending": [
+    {
+      "name": "Ergo",
+      "symbol": "ERG",
+      "market_cap_rank": 741,
+      "thumb": "https://coin-images.coingecko.com/coins/images/2484/standard/channels4_profile.jpg?1726043738",
+      "price_btc": 6.210604135995916e-06,
+      "score": 0,
+      "source": "coingecko_trending"
+    },
+    {
+      "name": "DoubleZero",
+      "symbol": "2Z",
+      "market_cap_rank": 81,
+      "thumb": "https://coin-images.coingecko.com/coins/images/68339/standard/Coingecko_-_PFP.png?1755694420",
+      "price_btc": 4.592697228521957e-06,
+      "score": 1,
+      "source": "coingecko_trending"
+    },
+    {
+      "name": "Adrena",
+      "symbol": "ADX",
+      "market_cap_rank": 976,
+      "thumb": "https://coin-images.coingecko.com/coins/images/50363/standard/adrena_logo_adx_color_200x200.png?1727331561",
+      "price_btc": 3.2000736841097165e-07,
+      "score": 2,
+      "source": "coingecko_trending"
+    },
+    {
+      "name": "Zcash",
+      "symbol": "ZEC",
+      "market_cap_rank": 72,
+      "thumb": "https://coin-images.coingecko.com/coins/images/486/standard/circle-zcash-color.png?1696501740",
+      "price_btc": 0.0010860127549086492,
+      "score": 3,
+      "source": "coingecko_trending"
+    },
+    {
+      "name": "Aster",
+      "symbol": "ASTER",
+      "market_cap_rank": 55,
+      "thumb": "https://coin-images.coingecko.com/coins/images/69040/standard/_ASTER.png?1757326782",
+      "price_btc": 1.4847355252660143e-05,
+      "score": 4,
+      "source": "coingecko_trending"
+    },
+    {
+      "name": "Plasma",
+      "symbol": "XPL",
+      "market_cap_rank": 91,
+      "thumb": "https://coin-images.coingecko.com/coins/images/66489/standard/Plasma-symbol-green-1.png?1755142558",
+      "price_btc": 7.875845986629843e-06,
+      "score": 5,
+      "source": "coingecko_trending"
+    },
+    {
+      "name": "AtomOne",
+      "symbol": "ATONE",
+      "market_cap_rank": 471,
+      "thumb": "https://coin-images.coingecko.com/coins/images/33230/standard/atomone_200x200.jpg?1737579596",
+      "price_btc": 8.629682200085246e-06,
+      "score": 6,
+      "source": "coingecko_trending"
+    },
+    {
+      "name": "OpenVPP",
+      "symbol": "OVPP",
+      "market_cap_rank": 753,
+      "thumb": "https://coin-images.coingecko.com/coins/images/68508/standard/IMG_9538.jpeg?1756034149",
+      "price_btc": 6.164970980425921e-07,
+      "score": 7,
+      "source": "coingecko_trending"
+    },
+    {
+      "name": "Bitcoin",
+      "symbol": "BTC",
+      "market_cap_rank": 1,
+      "thumb": "https://coin-images.coingecko.com/coins/images/1/standard/bitcoin.png?1696501400",
+      "price_btc": 1.0,
+      "score": 8,
+      "source": "coingecko_trending"
+    },
+    {
+      "name": "Pudgy Penguins",
+      "symbol": "PENGU",
+      "market_cap_rank": 80,
+      "thumb": "https://coin-images.coingecko.com/coins/images/52622/standard/PUDGY_PENGUINS_PENGU_PFP.png?1733809110",
+      "price_btc": 2.6058179236430835e-07,
+      "score": 9,
+      "source": "coingecko_trending"
+    }
+  ],
+  "coingecko_new": [
+    {
+      "id": "zo-perpetuals-lp-token",
+      "name": "ZO Perpetuals LP Token",
+      "symbol": "zlp",
+      "platforms": {
+        "sui": "0xf7fade57462e56e2eff1d7adef32e4fd285b21fd81f983f407bb7110ca766cda::zlp::ZLP"
+      },
+      "source": "coingecko_new"
+    },
+    {
+      "id": "zora",
+      "name": "Zora",
+      "symbol": "zora",
+      "platforms": {
+        "base": "0x1111111111166b7fe7bd91427724b487980afc69"
+      },
+      "source": "coingecko_new"
+    },
+    {
+      "id": "zora-bridged-usdc-zora",
+      "name": "Zora Bridged USDC (Zora)",
+      "symbol": "usdzc",
+      "platforms": {
+        "zora-network": "0xcccccccc7021b32ebb4e8c08314bd62f7c653ec4"
+      },
+      "source": "coingecko_new"
+    },
+    {
+      "id": "zora-bridged-weth-zora-network",
+      "name": "Zora Bridged WETH (Zora Network)",
+      "symbol": "weth",
+      "platforms": {
+        "zora-network": "0x4200000000000000000000000000000000000006"
+      },
+      "source": "coingecko_new"
+    },
+    {
+      "id": "zorby",
+      "name": "ZORBY",
+      "symbol": "zorby",
+      "platforms": {
+        "base": "0xbe29e78b18066b3bf7c70523371e0169350f6f53"
+      },
+      "source": "coingecko_new"
+    },
+    {
+      "id": "zorobotics",
+      "name": "ZoRobotics",
+      "symbol": "zoro",
+      "platforms": {
+        "binance-smart-chain": "0x0d4d3c739e2fdf82c7ce2a9e450e208e5330a237"
+      },
+      "source": "coingecko_new"
+    },
+    {
+      "id": "zorro",
+      "name": "Zorro",
+      "symbol": "zorro",
+      "platforms": {
+        "zksync": "0x244c238325fc1bdf6eded726ee1b47d55895d944"
+      },
+      "source": "coingecko_new"
+    },
+    {
+      "id": "z-protocol",
+      "name": "Z Protocol",
+      "symbol": "zp",
+      "platforms": {
+        "scroll": "0x2147a89fb4608752807216d5070471c09a0dce32"
+      },
+      "source": "coingecko_new"
+    },
+    {
+      "id": "ztx",
+      "name": "ZTX",
+      "symbol": "ztx",
+      "platforms": {
+        "arbitrum-one": "0x1c43d05be7e5b54d506e3ddb6f0305e8a66cd04e"
+      },
+      "source": "coingecko_new"
+    },
+    {
+      "id": "zulu-network",
+      "name": "Zulu Network",
+      "symbol": "zulu",
+      "platforms": {
+        "ethereum": "0x7b67d8b4da0b17a9b98eddc21230b60c8ede69a4"
+      },
+      "source": "coingecko_new"
+    },
+    {
+      "id": "zum-token",
+      "name": "ZUM",
+      "symbol": "zum",
+      "platforms": {
+        "ethereum": "0xe0b9bcd54bf8a730ea5d3f1ffce0885e911a502c",
+        "avalanche": "0x63dc3ca01ff09e714c8108ffd6f8a3e0b8cd13e4"
+      },
+      "source": "coingecko_new"
+    },
+    {
+      "id": "zuzalu",
+      "name": "zuzalu",
+      "symbol": "zuzalu",
+      "platforms": {
+        "base": "0x3054e8f8fba3055a42e5f5228a2a4e2ab1326933"
+      },
+      "source": "coingecko_new"
+    },
+    {
+      "id": "zuzalu-inu",
+      "name": "Zuzalu Inu",
+      "symbol": "zuzalu",
+      "platforms": {
+        "ethereum": "0xd1f17b7a6bff962659ed608bcd6d318bb5fbb249"
+      },
+      "source": "coingecko_new"
+    },
+    {
+      "id": "zyberswap",
+      "name": "Zyberswap",
+      "symbol": "zyb",
+      "platforms": {
+        "arbitrum-one": "0x3b475f6f2f41853706afc9fa6a6b8c5df1a2724c"
+      },
+      "source": "coingecko_new"
+    },
+    {
+      "id": "zyfi",
+      "name": "ZyfAI",
+      "symbol": "zfi",
+      "platforms": {
+        "zksync": "0x5d0d7bca050e2e98fd4a5e8d3ba823b49f39868d",
+        "base": "0xd080ed3c74a20250a2c9821885203034acd2d5ae"
+      },
+      "source": "coingecko_new"
+    },
+    {
+      "id": "zygo-the-frog",
+      "name": "Zygo The Frog",
+      "symbol": "zygo",
+      "platforms": {
+        "base": "0xaf4c1405aa8ab2a4f267a9700f9230ddc592f63f"
+      },
+      "source": "coingecko_new"
+    },
+    {
+      "id": "zyncoin-2",
+      "name": "ZynCoin",
+      "symbol": "zyn",
+      "platforms": {
+        "ethereum": "0x58cb30368ceb2d194740b144eab4c2da8a917dcb",
+        "solana": "PzuaVAUH2tfxGZcbBR6kMxeJsBngnsPLFotGJNCtcsd"
+      },
+      "source": "coingecko_new"
+    },
+    {
+      "id": "zynecoin",
+      "name": "Zynecoin",
+      "symbol": "zyn",
+      "platforms": {},
+      "source": "coingecko_new"
+    },
+    {
+      "id": "zyro-2",
+      "name": "ZYRO",
+      "symbol": "zyro",
+      "platforms": {
+        "solana": "4HWX6k9ZoutJ1oyZUPHogERiLGNZJgrmcVwF6eS9pump"
+      },
+      "source": "coingecko_new"
+    },
+    {
+      "id": "z-z-z-z-z-fehu-z-z-z-z-z",
+      "name": "Z•Z•Z•Z•Z•FEHU•Z•Z•Z•Z•Z",
+      "symbol": "ᚠ",
+      "platforms": {
+        "ordinals": "840000:1"
+      },
+      "source": "coingecko_new"
+    }
+  ],
+  "github_trending": [
+    {
+      "name": "hey",
+      "full_name": "heyverse/hey",
+      "description": "Hey is a decentralized and permissionless social media app built with Lens Protocol 🌿",
+      "stars": 29432,
+      "url": "https://github.com/heyverse/hey",
+      "language": "TypeScript",
+      "topic": "web3",
+      "source": "github_trending"
+    },
+    {
+      "name": "web3.js",
+      "full_name": "web3/web3.js",
+      "description": "Collection of comprehensive TypeScript libraries for Interaction with the Ethereum JSON RPC API and utility functions.",
+      "stars": 19894,
+      "url": "https://github.com/web3/web3.js",
+      "language": "TypeScript",
+      "topic": "web3",
+      "source": "github_trending"
+    },
+    {
+      "name": "gun",
+      "full_name": "amark/gun",
+      "description": "An open source cybersecurity protocol for syncing decentralized graph data.",
+      "stars": 18657,
+      "url": "https://github.com/amark/gun",
+      "language": "JavaScript",
+      "topic": "web3",
+      "source": "github_trending"
+    },
+    {
+      "name": "WTF-Solidity",
+      "full_name": "AmazingAng/WTF-Solidity",
+      "description": "WTF Solidity 极简入门教程，供小白们使用。Now supports English! 官网: https://wtf.academy",
+      "stars": 13255,
+      "url": "https://github.com/AmazingAng/WTF-Solidity",
+      "language": "Solidity",
+      "topic": "web3",
+      "source": "github_trending"
+    },
+    {
+      "name": "full-blockchain-solidity-course-py",
+      "full_name": "smartcontractkit/full-blockchain-solidity-course-py",
+      "description": "Ultimate Solidity, Blockchain, and Smart Contract - Beginner to Expert Full Course | Python Edition",
+      "stars": 11135,
+      "url": "https://github.com/smartcontractkit/full-blockchain-solidity-course-py",
+      "language": null,
+      "topic": "web3",
+      "source": "github_trending"
+    },
+    {
+      "name": "union",
+      "full_name": "unionlabs/union",
+      "description": "The trust-minimized, zero-knowledge bridging protocol, designed for censorship resistance, extremely high security, and usage in decentralized finance.",
+      "stars": 74633,
+      "url": "https://github.com/unionlabs/union",
+      "language": "Rust",
+      "topic": "blockchain",
+      "source": "github_trending"
+    },
+    {
+      "name": "fuel-core",
+      "full_name": "FuelLabs/fuel-core",
+      "description": "Rust full node implementation of the Fuel v2 protocol.",
+      "stars": 57516,
+      "url": "https://github.com/FuelLabs/fuel-core",
+      "language": "Rust",
+      "topic": "blockchain",
+      "source": "github_trending"
+    },
+    {
+      "name": "go-ethereum",
+      "full_name": "ethereum/go-ethereum",
+      "description": "Go implementation of the Ethereum protocol",
+      "stars": 49947,
+      "url": "https://github.com/ethereum/go-ethereum",
+      "language": "Go",
+      "topic": "blockchain",
+      "source": "github_trending"
+    },
+    {
+      "name": "Folo",
+      "full_name": "RSSNext/Folo",
+      "description": "🧡 Follow everything in one place",
+      "stars": 34574,
+      "url": "https://github.com/RSSNext/Folo",
+      "language": "TypeScript",
+      "topic": "blockchain",
+      "source": "github_trending"
+    },
+    {
+      "name": "anoma",
+      "full_name": "anoma/anoma",
+      "description": "Reference implementation of Anoma",
+      "stars": 34348,
+      "url": "https://github.com/anoma/anoma",
+      "language": "Elixir",
+      "topic": "blockchain",
+      "source": "github_trending"
+    },
+    {
+      "name": "full-blockchain-solidity-course-js",
+      "full_name": "smartcontractkit/full-blockchain-solidity-course-js",
+      "description": "Learn Blockchain, Solidity, and Full Stack Web3 Development with Javascript",
+      "stars": 13711,
+      "url": "https://github.com/smartcontractkit/full-blockchain-solidity-course-js",
+      "language": null,
+      "topic": "defi",
+      "source": "github_trending"
+    },
+    {
+      "name": "DeFi-Developer-Road-Map",
+      "full_name": "OffcierCia/DeFi-Developer-Road-Map",
+      "description": "DeFi Developer roadmap is a curated Developer handbook which includes a list of the best tools for DApps development, resources and references! ",
+      "stars": 10518,
+      "url": "https://github.com/OffcierCia/DeFi-Developer-Road-Map",
+      "language": "JavaScript",
+      "topic": "defi",
+      "source": "github_trending"
+    },
+    {
+      "name": "DeFiHackLabs",
+      "full_name": "SunWeb3Sec/DeFiHackLabs",
+      "description": "Reproduce DeFi hacked incidents using Foundry.",
+      "stars": 6048,
+      "url": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "language": "Solidity",
+      "topic": "defi",
+      "source": "github_trending"
+    },
+    {
+      "name": "seaprotocol",
+      "full_name": "sea-protocol/seaprotocol",
+      "description": "Sea protocol is the ultimate DEX base on order-book & AMM on Aptos & Sui.Anybody has the right to trade any asset anywhere, anytime!",
+      "stars": 5080,
+      "url": "https://github.com/sea-protocol/seaprotocol",
+      "language": "Move",
+      "topic": "defi",
+      "source": "github_trending"
+    },
+    {
+      "name": "rainbow",
+      "full_name": "rainbow-me/rainbow",
+      "description": "🌈‒ the Ethereum wallet that lives in your pocket ",
+      "stars": 4197,
+      "url": "https://github.com/rainbow-me/rainbow",
+      "language": "TypeScript",
+      "topic": "defi",
+      "source": "github_trending"
+    },
+    {
+      "name": "full-blockchain-solidity-course-js",
+      "full_name": "smartcontractkit/full-blockchain-solidity-course-js",
+      "description": "Learn Blockchain, Solidity, and Full Stack Web3 Development with Javascript",
+      "stars": 13711,
+      "url": "https://github.com/smartcontractkit/full-blockchain-solidity-course-js",
+      "language": null,
+      "topic": "nft",
+      "source": "github_trending"
+    },
+    {
+      "name": "WTF-Solidity",
+      "full_name": "AmazingAng/WTF-Solidity",
+      "description": "WTF Solidity 极简入门教程，供小白们使用。Now supports English! 官网: https://wtf.academy",
+      "stars": 13255,
+      "url": "https://github.com/AmazingAng/WTF-Solidity",
+      "language": "Solidity",
+      "topic": "nft",
+      "source": "github_trending"
+    },
+    {
+      "name": "metaplex",
+      "full_name": "metaplex-foundation/metaplex",
+      "description": "A directory of what the Metaplex Foundation works on!",
+      "stars": 3366,
+      "url": "https://github.com/metaplex-foundation/metaplex",
+      "language": null,
+      "topic": "nft",
+      "source": "github_trending"
+    },
+    {
+      "name": "Maskbook",
+      "full_name": "DimensionDev/Maskbook",
+      "description": "The portal to the new, open Internet. ([I:b])",
+      "stars": 1553,
+      "url": "https://github.com/DimensionDev/Maskbook",
+      "language": "TypeScript",
+      "topic": "nft",
+      "source": "github_trending"
+    },
+    {
+      "name": "Blockchain-Development-Resources",
+      "full_name": "frankiefab100/Blockchain-Development-Resources",
+      "description": "The contents of this repository will help you launch a career in Blockchain development. How to deploy Smart contracts on Ethereum, build DApps, DeFi, DAO, NFT and Token protocol.",
+      "stars": 1469,
+      "url": "https://github.com/frankiefab100/Blockchain-Development-Resources",
+      "language": "Markdown",
+      "topic": "nft",
+      "source": "github_trending"
+    },
+    {
+      "name": "OpenBB",
+      "full_name": "OpenBB-finance/OpenBB",
+      "description": "Financial data platform for analysts, quants and AI agents.",
+      "stars": 52861,
+      "url": "https://github.com/OpenBB-finance/OpenBB",
+      "language": "Python",
+      "topic": "crypto",
+      "source": "github_trending"
+    },
+    {
+      "name": "ccxt",
+      "full_name": "ccxt/ccxt",
+      "description": "A cryptocurrency trading API with more than 100 exchanges in JavaScript / TypeScript / Python / C# / PHP / Go ",
+      "stars": 39008,
+      "url": "https://github.com/ccxt/ccxt",
+      "language": "Python",
+      "topic": "crypto",
+      "source": "github_trending"
+    },
+    {
+      "name": "hey",
+      "full_name": "heyverse/hey",
+      "description": "Hey is a decentralized and permissionless social media app built with Lens Protocol 🌿",
+      "stars": 29432,
+      "url": "https://github.com/heyverse/hey",
+      "language": "TypeScript",
+      "topic": "crypto",
+      "source": "github_trending"
+    },
+    {
+      "name": "gun",
+      "full_name": "amark/gun",
+      "description": "An open source cybersecurity protocol for syncing decentralized graph data.",
+      "stars": 18657,
+      "url": "https://github.com/amark/gun",
+      "language": "JavaScript",
+      "topic": "crypto",
+      "source": "github_trending"
+    },
+    {
+      "name": "eliza",
+      "full_name": "elizaOS/eliza",
+      "description": "Autonomous agents for everyone",
+      "stars": 16934,
+      "url": "https://github.com/elizaOS/eliza",
+      "language": "TypeScript",
+      "topic": "crypto",
+      "source": "github_trending"
+    }
+  ],
+  "crypto_news": [],
+  "twitter_signals": [
+    {
+      "keyword": "LayerZero",
+      "mentions": "High activity on Twitter",
+      "sentiment": "Positive",
+      "source": "twitter_search"
+    },
+    {
+      "keyword": "zkSync",
+      "mentions": "Airdrop rumors trending",
+      "sentiment": "Very Positive",
+      "source": "twitter_search"
+    },
+    {
+      "keyword": "Starknet",
+      "mentions": "New ecosystem projects",
+      "sentiment": "Positive",
+      "source": "twitter_search"
+    }
+  ],
+  "timestamp": "2025-10-03T00:22:21.807880"
+}

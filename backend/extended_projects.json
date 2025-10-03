@@ -1,0 +1,168 @@
+[
+  {
+    "project_id": "cg_uniswap",
+    "name": "Uniswap",
+    "symbol": "UNI",
+    "category": "DeFi",
+    "blockchain": "Ethereum",
+    "description": "Uniswap is the largest decentralized exchange (DEX) protocol on Ethereum, enabling automated token swaps through liquidity pools",
+    "website": "https://uniswap.org",
+    "logo_url": "https://assets.coingecko.com/coins/images/12504/large/uniswap-uni.png",
+    "metrics": {
+      "market_cap_rank": 17,
+      "price_btc": 8.1e-05,
+      "tvl": 4200000000,
+      "daily_volume": 1800000000
+    },
+    "source": "coingecko_trending",
+    "grade": "S",
+    "overall_score": 92.5,
+    "scores": {
+      "overall": 92.5,
+      "team": 95,
+      "technology": 95,
+      "community": 90,
+      "tokenomics": 85,
+      "market_timing": 90,
+      "risk": 90
+    },
+    "risk_assessment": {
+      "scam_probability": 5.0,
+      "risk_level": "low",
+      "risk_flags": []
+    },
+    "analyzed_at": "2025-10-03T01:11:11.805561"
+  },
+  {
+    "project_id": "cg_aave",
+    "name": "Aave",
+    "symbol": "AAVE",
+    "category": "DeFi",
+    "blockchain": "Multi-Chain",
+    "description": "Aave is a decentralized lending protocol that allows users to lend and borrow cryptocurrencies",
+    "website": "https://aave.com",
+    "github_repo": "https://github.com/aave/aave-v3-core",
+    "logo_url": "https://assets.coingecko.com/coins/images/12645/large/AAVE.png",
+    "metrics": {
+      "market_cap_rank": 35,
+      "price_btc": 0.0018,
+      "tvl": 5800000000,
+      "github_stars": 2543
+    },
+    "source": "coingecko_trending",
+    "grade": "S",
+    "overall_score": 90.25,
+    "scores": {
+      "overall": 90.25,
+      "team": 90,
+      "technology": 92,
+      "community": 88,
+      "tokenomics": 87,
+      "market_timing": 92,
+      "risk": 85
+    },
+    "risk_assessment": {
+      "scam_probability": 3.0,
+      "risk_level": "low",
+      "risk_flags": []
+    }
+  },
+  {
+    "project_id": "cg_axie",
+    "name": "Axie Infinity",
+    "symbol": "AXS",
+    "category": "Gaming",
+    "blockchain": "Ronin",
+    "description": "Axie Infinity is a blockchain-based play-to-earn game where players breed, battle, and trade NFT creatures called Axies",
+    "website": "https://axieinfinity.com",
+    "logo_url": "https://assets.coingecko.com/coins/images/13029/large/axie_infinity_logo.png",
+    "metrics": {
+      "market_cap_rank": 112,
+      "price_btc": 4.6e-05,
+      "daily_active_users": 450000
+    },
+    "source": "coingecko_trending",
+    "grade": "A",
+    "overall_score": 78.5,
+    "scores": {
+      "overall": 78.5,
+      "team": 85,
+      "technology": 80,
+      "community": 75,
+      "tokenomics": 70,
+      "market_timing": 75,
+      "risk": 80
+    },
+    "risk_assessment": {
+      "scam_probability": 8.0,
+      "risk_level": "low",
+      "risk_flags": []
+    }
+  },
+  {
+    "project_id": "cg_arbitrum",
+    "name": "Arbitrum",
+    "symbol": "ARB",
+    "category": "Infrastructure",
+    "blockchain": "Ethereum Layer 2",
+    "description": "Arbitrum is a Layer 2 scaling solution for Ethereum using Optimistic Rollup technology",
+    "website": "https://arbitrum.io",
+    "github_repo": "https://github.com/OffchainLabs/arbitrum",
+    "logo_url": "https://assets.coingecko.com/coins/images/16547/large/photo_2023-03-29_21.47.00.jpeg",
+    "metrics": {
+      "market_cap_rank": 42,
+      "tvl": 12500000000,
+      "daily_transactions": 3500000,
+      "github_stars": 4521
+    },
+    "source": "coingecko_trending",
+    "grade": "S",
+    "overall_score": 88.75,
+    "scores": {
+      "overall": 88.75,
+      "team": 92,
+      "technology": 90,
+      "community": 85,
+      "tokenomics": 80,
+      "market_timing": 92,
+      "risk": 85
+    },
+    "risk_assessment": {
+      "scam_probability": 4.0,
+      "risk_level": "low",
+      "risk_flags": []
+    }
+  },
+  {
+    "project_id": "cg_render",
+    "name": "Render Network",
+    "symbol": "RNDR",
+    "category": "AI",
+    "blockchain": "Solana",
+    "description": "Render Network is a decentralized GPU rendering platform connecting artists with GPU compute power",
+    "website": "https://rendernetwork.com",
+    "logo_url": "https://assets.coingecko.com/coins/images/11636/large/rndr.png",
+    "metrics": {
+      "market_cap_rank": 56,
+      "price_btc": 6.2e-05,
+      "render_jobs_completed": 8900000
+    },
+    "source": "coingecko_trending",
+    "grade": "A",
+    "overall_score": 82.5,
+    "scores": {
+      "overall": 82.5,
+      "team": 88,
+      "technology": 85,
+      "community": 80,
+      "tokenomics": 78,
+      "market_timing": 87,
+      "risk": 75
+    },
+    "risk_assessment": {
+      "scam_probability": 6.0,
+      "risk_level": "low",
+      "risk_flags": []
+    }
+  }
+]

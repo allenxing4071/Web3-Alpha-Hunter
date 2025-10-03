@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API文档 - Web3 Alpha Hunter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: 48px;
+            font-weight: 800;
+            background: linear-gradient(to right, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 18px;
+            margin-bottom: 60px;
+        }
+        
+        .category {
+            margin-bottom: 48px;
+        }
+        
+        .category-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #334155;
+        }
+        
+        .api-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        
+        .api-card {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .api-card:hover {
+            background: rgba(30, 41, 59, 0.9);
+            border-color: #3b82f6;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(59, 130, 246, 0.2);
+        }
+        
+        .api-card h3 {
+            font-size: 20px;
+            color: #3b82f6;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .api-card p {
+            color: #cbd5e1;
+            font-size: 14px;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+        
+        .api-link {
+            color: #60a5fa;
+            text-decoration: none;
+            font-size: 13px;
+            word-break: break-all;
+            display: block;
+            padding: 8px 12px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+        
+        .api-link:hover {
+            background: rgba(59, 130, 246, 0.2);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(139, 92, 246, 0.2);
+            color: #a78bfa;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .icon {
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔌 API文档中心</h1>
+        <p class="subtitle">Web3 Alpha Hunter 使用的第三方平台API文档</p>
+        
+        <!-- 社交媒体平台 -->
+        <div class="category">
+            <h2 class="category-title">📱 社交媒体平台</h2>
+            <div class="api-grid">
+                <div class="api-card" onclick="window.open('https://developer.twitter.com/en/docs/twitter-api', '_blank')">
+                    <div class="badge">社交</div>
+                    <h3><span class="icon">𝕏</span> Twitter API</h3>
+                    <p>Twitter官方API,用于监控项目动态、KOL言论、社区热度</p>
+                    <a href="https://developer.twitter.com/en/docs/twitter-api" target="_blank" class="api-link" onclick="event.stopPropagation()">
+                        https://developer.twitter.com/en/docs/twitter-api
+                    </a>
+                </div>
+                
+                <div class="api-card" onclick="window.open('https://core.telegram.org/bots/api', '_blank')">
+                    <div class="badge">社交</div>
+                    <h3><span class="icon">✈️</span> Telegram Bot API</h3>
+                    <p>Telegram机器人API,监控频道、群组讨论和项目公告</p>
+                    <a href="https://core.telegram.org/bots/api" target="_blank" class="api-link" onclick="event.stopPropagation()">
+                        https://core.telegram.org/bots/api
+                    </a>
+                </div>
+                
+                <div class="api-card" onclick="window.open('https://discord.com/developers/docs/intro', '_blank')">
+                    <div class="badge">社交</div>
+                    <h3><span class="icon">💬</span> Discord API</h3>
+                    <p>Discord开发者API,监控项目Discord社区活跃度</p>
+                    <a href="https://discord.com/developers/docs/intro" target="_blank" class="api-link" onclick="event.stopPropagation()">
+                        https://discord.com/developers/docs/intro
+                    </a>
+                </div>
+                
+                <div class="api-card" onclick="window.open('https://developers.reddit.com/docs', '_blank')">
+                    <div class="badge">社交</div>
+                    <h3><span class="icon">🤖</span> Reddit API</h3>
+                    <p>Reddit官方API,分析Web3相关subreddit讨论热度</p>
+                    <a href="https://developers.reddit.com/docs" target="_blank" class="api-link" onclick="event.stopPropagation()">
+                        https://developers.reddit.com/docs
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 区块链数据平台 -->
+        <div class="category">
+            <h2 class="category-title">⛓️ 区块链数据平台</h2>
+            <div class="api-grid">
+                <div class="api-card" onclick="window.open('https://www.coingecko.com/en/api/documentation', '_blank')">
+                    <div class="badge">价格</div>
+                    <h3><span class="icon">🦎</span> CoinGecko API</h3>
+                    <p>加密货币价格、市值、交易量等全面数据</p>
+                    <a href="https://www.coingecko.com/en/api/documentation" target="_blank" class="api-link" onclick="event.stopPropagation()">
+                        https://www.coingecko.com/en/api/documentation
+                    </a>
+                </div>
+                
+                <div class="api-card" onclick="window.open('https://coinmarketcap.com/api/documentation/v1/', '_blank')">
+                    <div class="badge">价格</div>
+                    <h3><span class="icon">📊</span> CoinMarketCap API</h3>
+                    <p>加密货币排名、历史数据、市场分析</p>
+                    <a href="https://coinmarketcap.com/api/documentation/v1/" target="_blank" class="api-link" onclick="event.stopPropagation()">
+                        https://coinmarketcap.com/api/documentation/v1/
+                    </a>
+                </div>
+                
+                <div class="api-card" onclick="window.open('https://docs.llama.fi/api', '_blank')">
+                    <div class="badge">DeFi</div>
+                    <h3><span class="icon">🦙</span> DefiLlama API</h3>
+                    <p>DeFi协议TVL、收益率、链上数据分析</p>
+                    <a href="https://docs.llama.fi/api" target="_blank" class="api-link" onclick="event.stopPropagation()">
+                        https://docs.llama.fi/api
+                    </a>
+                </div>
+                
+                <div class="api-card" onclick="window.open('https://dune.com/docs/api/', '_blank')">
+                    <div class="badge">分析</div>
+                    <h3><span class="icon">🔮</span> Dune Analytics API</h3>
+                    <p>链上数据查询、自定义分析、项目指标</p>
+                    <a href="https://dune.com/docs/api/" target="_blank" class="api-link" onclick="event.stopPropagation()">
+                        https://dune.com/docs/api/
+                    </a>
+                </div>
+                
+                <div class="api-card" onclick="window.open('https://docs.etherscan.io/', '_blank')">
+                    <div class="badge">浏览器</div>
+                    <h3><span class="icon">🔍</span> Etherscan API</h3>
+                    <p>以太坊区块链浏览器API,交易、合约、代币数据</p>
+                    <a href="https://docs.etherscan.io/" target="_blank" class="api-link" onclick="event.stopPropagation()">
+                        https://docs.etherscan.io/
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 开发者平台 -->
+        <div class="category">
+            <h2 class="category-title">👨‍💻 开发者平台</h2>
+            <div class="api-grid">
+                <div class="api-card" onclick="window.open('https://docs.github.com/en/rest', '_blank')">
+                    <div class="badge">代码</div>
+                    <h3><span class="icon">🐙</span> GitHub API</h3>
+                    <p>项目代码活跃度、提交频率、开发者背景分析</p>
+                    <a href="https://docs.github.com/en/rest" target="_blank" class="api-link" onclick="event.stopPropagation()">
+                        https://docs.github.com/en/rest
+                    </a>
+                </div>
+                
+                <div class="api-card" onclick="window.open('https://www.crunchbase.com/developers', '_blank')">
+                    <div class="badge">融资</div>
+                    <h3><span class="icon">💰</span> Crunchbase API</h3>
+                    <p>项目融资信息、投资机构背景、团队履历</p>
+                    <a href="https://www.crunchbase.com/developers" target="_blank" class="api-link" onclick="event.stopPropagation()">
+                        https://www.crunchbase.com/developers
+                    </a>
+                </div>
+                
+                <div class="api-card" onclick="window.open('https://rootdata.com/', '_blank')">
+                    <div class="badge">Web3</div>
+                    <h3><span class="icon">🌳</span> RootData</h3>
+                    <p>Web3项目数据库,融资轮次、投资方、项目进展</p>
+                    <a href="https://rootdata.com/" target="_blank" class="api-link" onclick="event.stopPropagation()">
+                        https://rootdata.com/
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 视频内容平台 -->
+        <div class="category">
+            <h2 class="category-title">📹 视频内容平台</h2>
+            <div class="api-grid">
+                <div class="api-card" onclick="window.open('https://developers.google.com/youtube/v3', '_blank')">
+                    <div class="badge">视频</div>
+                    <h3><span class="icon">▶️</span> YouTube Data API</h3>
+                    <p>项目宣传视频、KOL评测、社区热度分析</p>
+                    <a href="https://developers.google.com/youtube/v3" target="_blank" class="api-link" onclick="event.stopPropagation()">
+                        https://developers.google.com/youtube/v3
+                    </a>
+                </div>
+                
+                <div class="api-card" onclick="window.open('https://developers.tiktok.com/doc/overview', '_blank')">
+                    <div class="badge">视频</div>
+                    <h3><span class="icon">🎵</span> TikTok API</h3>
+                    <p>短视频传播、病毒式营销、用户参与度</p>
+                    <a href="https://developers.tiktok.com/doc/overview" target="_blank" class="api-link" onclick="event.stopPropagation()">
+                        https://developers.tiktok.com/doc/overview
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- AI分析平台 -->
+        <div class="category">
+            <h2 class="category-title">🤖 AI分析平台</h2>
+            <div class="api-grid">
+                <div class="api-card" onclick="window.open('https://platform.openai.com/docs/api-reference', '_blank')">
+                    <div class="badge">AI</div>
+                    <h3><span class="icon">🧠</span> OpenAI API</h3>
+                    <p>GPT-4驱动的项目分析、白皮书解读、风险评估</p>
+                    <a href="https://platform.openai.com/docs/api-reference" target="_blank" class="api-link" onclick="event.stopPropagation()">
+                        https://platform.openai.com/docs/api-reference
+                    </a>
+                </div>
+                
+                <div class="api-card" onclick="window.open('https://docs.anthropic.com/claude/reference/getting-started-with-the-api', '_blank')">
+                    <div class="badge">AI</div>
+                    <h3><span class="icon">🎭</span> Claude API</h3>
+                    <p>Anthropic Claude AI,深度文本分析和智能评估</p>
+                    <a href="https://docs.anthropic.com/claude/reference/getting-started-with-the-api" target="_blank" class="api-link" onclick="event.stopPropagation()">
+                        https://docs.anthropic.com/claude/reference/getting-started-with-the-api
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 60px; padding-top: 40px; border-top: 1px solid #334155;">
+            <p style="color: #64748b; font-size: 14px;">© 2025 Web3 Alpha Hunter. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
+

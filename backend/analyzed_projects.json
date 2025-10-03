@@ -1,0 +1,317 @@
+[
+  {
+    "project_id": "gh_heyverse_hey",
+    "name": "hey",
+    "symbol": null,
+    "category": "Infrastructure",
+    "blockchain": "Multi-Chain",
+    "description": "Hey is a decentralized and permissionless social media app built with Lens Protocol 🌿",
+    "website": "https://github.com/heyverse/hey",
+    "github_repo": "https://github.com/heyverse/hey",
+    "metrics": {
+      "github_stars": 29432,
+      "programming_language": "TypeScript"
+    },
+    "source": "github_trending",
+    "grade": "A",
+    "overall_score": 71.75,
+    "scores": {
+      "overall": 71.75,
+      "team": 80,
+      "technology": 75,
+      "community": 80,
+      "tokenomics": 50,
+      "market_timing": 65,
+      "risk": 70
+    },
+    "risk_assessment": {
+      "scam_probability": 10.0,
+      "risk_level": "low",
+      "risk_flags": []
+    },
+    "analyzed_at": "2025-10-03T00:24:28.932442"
+  },
+  {
+    "project_id": "gh_web3_web3.js",
+    "name": "web3.js",
+    "symbol": null,
+    "category": "Infrastructure",
+    "blockchain": "Multi-Chain",
+    "description": "Collection of comprehensive TypeScript libraries for Interaction with the Ethereum JSON RPC API and utility functions.",
+    "website": "https://github.com/web3/web3.js",
+    "github_repo": "https://github.com/web3/web3.js",
+    "metrics": {
+      "github_stars": 19894,
+      "programming_language": "TypeScript"
+    },
+    "source": "github_trending",
+    "grade": "B",
+    "overall_score": 69.75,
+    "scores": {
+      "overall": 69.75,
+      "team": 80,
+      "technology": 75,
+      "community": 70,
+      "tokenomics": 50,
+      "market_timing": 65,
+      "risk": 70
+    },
+    "risk_assessment": {
+      "scam_probability": 10.0,
+      "risk_level": "low",
+      "risk_flags": []
+    },
+    "analyzed_at": "2025-10-03T00:24:28.932446"
+  },
+  {
+    "project_id": "gh_amark_gun",
+    "name": "gun",
+    "symbol": null,
+    "category": "Infrastructure",
+    "blockchain": "Multi-Chain",
+    "description": "An open source cybersecurity protocol for syncing decentralized graph data.",
+    "website": "https://github.com/amark/gun",
+    "github_repo": "https://github.com/amark/gun",
+    "metrics": {
+      "github_stars": 18657,
+      "programming_language": "JavaScript"
+    },
+    "source": "github_trending",
+    "grade": "B",
+    "overall_score": 69.75,
+    "scores": {
+      "overall": 69.75,
+      "team": 80,
+      "technology": 75,
+      "community": 70,
+      "tokenomics": 50,
+      "market_timing": 65,
+      "risk": 70
+    },
+    "risk_assessment": {
+      "scam_probability": 10.0,
+      "risk_level": "low",
+      "risk_flags": []
+    },
+    "analyzed_at": "2025-10-03T00:24:28.932450"
+  },
+  {
+    "project_id": "gh_AmazingAng_WTF-Solidity",
+    "name": "WTF-Solidity",
+    "symbol": null,
+    "category": "Infrastructure",
+    "blockchain": "Multi-Chain",
+    "description": "WTF Solidity 极简入门教程，供小白们使用。Now supports English! 官网: https://wtf.academy",
+    "website": "https://github.com/AmazingAng/WTF-Solidity",
+    "github_repo": "https://github.com/AmazingAng/WTF-Solidity",
+    "metrics": {
+      "github_stars": 13255,
+      "programming_language": "Solidity"
+    },
+    "source": "github_trending",
+    "grade": "B",
+    "overall_score": 69.75,
+    "scores": {
+      "overall": 69.75,
+      "team": 80,
+      "technology": 75,
+      "community": 70,
+      "tokenomics": 50,
+      "market_timing": 65,
+      "risk": 70
+    },
+    "risk_assessment": {
+      "scam_probability": 10.0,
+      "risk_level": "low",
+      "risk_flags": []
+    },
+    "analyzed_at": "2025-10-03T00:24:28.932673"
+  },
+  {
+    "project_id": "gh_smartcontractkit_full-blockchain-solidity-course-py",
+    "name": "full-blockchain-solidity-course-py",
+    "symbol": null,
+    "category": "Infrastructure",
+    "blockchain": "Multi-Chain",
+    "description": "Ultimate Solidity, Blockchain, and Smart Contract - Beginner to Expert Full Course | Python Edition",
+    "website": "https://github.com/smartcontractkit/full-blockchain-solidity-course-py",
+    "github_repo": "https://github.com/smartcontractkit/full-blockchain-solidity-course-py",
+    "metrics": {
+      "github_stars": 11135,
+      "programming_language": null
+    },
+    "source": "github_trending",
+    "grade": "B",
+    "overall_score": 69.75,
+    "scores": {
+      "overall": 69.75,
+      "team": 80,
+      "technology": 75,
+      "community": 70,
+      "tokenomics": 50,
+      "market_timing": 65,
+      "risk": 70
+    },
+    "risk_assessment": {
+      "scam_probability": 10.0,
+      "risk_level": "low",
+      "risk_flags": []
+    },
+    "analyzed_at": "2025-10-03T00:24:28.932680"
+  },
+  {
+    "project_id": "cg_2z",
+    "name": "DoubleZero",
+    "symbol": "2Z",
+    "category": "DeFi",
+    "blockchain": "Ethereum",
+    "description": "DoubleZero is a cryptocurrency currently ranked #81 by market cap.",
+    "logo_url": "https://coin-images.coingecko.com/coins/images/68339/standard/Coingecko_-_PFP.png?1755694420",
+    "metrics": {
+      "market_cap_rank": 81,
+      "price_btc": 4.592697228521957e-06
+    },
+    "source": "coingecko_trending",
+    "grade": "B",
+    "overall_score": 60.75,
+    "scores": {
+      "overall": 60.75,
+      "team": 50,
+      "technology": 60,
+      "community": 40,
+      "tokenomics": 95,
+      "market_timing": 65,
+      "risk": 70
+    },
+    "risk_assessment": {
+      "scam_probability": 25.0,
+      "risk_level": "low",
+      "risk_flags": []
+    },
+    "analyzed_at": "2025-10-03T00:24:28.932418"
+  },
+  {
+    "project_id": "cg_zec",
+    "name": "Zcash",
+    "symbol": "ZEC",
+    "category": "DeFi",
+    "blockchain": "Ethereum",
+    "description": "Zcash is a cryptocurrency currently ranked #72 by market cap.",
+    "logo_url": "https://coin-images.coingecko.com/coins/images/486/standard/circle-zcash-color.png?1696501740",
+    "metrics": {
+      "market_cap_rank": 72,
+      "price_btc": 0.0010860127549086492
+    },
+    "source": "coingecko_trending",
+    "grade": "B",
+    "overall_score": 60.75,
+    "scores": {
+      "overall": 60.75,
+      "team": 50,
+      "technology": 60,
+      "community": 40,
+      "tokenomics": 95,
+      "market_timing": 65,
+      "risk": 70
+    },
+    "risk_assessment": {
+      "scam_probability": 25.0,
+      "risk_level": "low",
+      "risk_flags": []
+    },
+    "analyzed_at": "2025-10-03T00:24:28.932429"
+  },
+  {
+    "project_id": "cg_aster",
+    "name": "Aster",
+    "symbol": "ASTER",
+    "category": "DeFi",
+    "blockchain": "Ethereum",
+    "description": "Aster is a cryptocurrency currently ranked #55 by market cap.",
+    "logo_url": "https://coin-images.coingecko.com/coins/images/69040/standard/_ASTER.png?1757326782",
+    "metrics": {
+      "market_cap_rank": 55,
+      "price_btc": 1.4847355252660143e-05
+    },
+    "source": "coingecko_trending",
+    "grade": "B",
+    "overall_score": 60.75,
+    "scores": {
+      "overall": 60.75,
+      "team": 50,
+      "technology": 60,
+      "community": 40,
+      "tokenomics": 95,
+      "market_timing": 65,
+      "risk": 70
+    },
+    "risk_assessment": {
+      "scam_probability": 25.0,
+      "risk_level": "low",
+      "risk_flags": []
+    },
+    "analyzed_at": "2025-10-03T00:24:28.932433"
+  },
+  {
+    "project_id": "cg_erg",
+    "name": "Ergo",
+    "symbol": "ERG",
+    "category": "DeFi",
+    "blockchain": "Ethereum",
+    "description": "Ergo is a cryptocurrency currently ranked #741 by market cap.",
+    "logo_url": "https://coin-images.coingecko.com/coins/images/2484/standard/channels4_profile.jpg?1726043738",
+    "metrics": {
+      "market_cap_rank": 741,
+      "price_btc": 6.210604135995916e-06
+    },
+    "source": "coingecko_trending",
+    "grade": "B",
+    "overall_score": 57.0,
+    "scores": {
+      "overall": 57.0,
+      "team": 50,
+      "technology": 60,
+      "community": 40,
+      "tokenomics": 70,
+      "market_timing": 65,
+      "risk": 70
+    },
+    "risk_assessment": {
+      "scam_probability": 25.0,
+      "risk_level": "low",
+      "risk_flags": []
+    },
+    "analyzed_at": "2025-10-03T00:24:28.932396"
+  },
+  {
+    "project_id": "cg_adx",
+    "name": "Adrena",
+    "symbol": "ADX",
+    "category": "DeFi",
+    "blockchain": "Ethereum",
+    "description": "Adrena is a cryptocurrency currently ranked #976 by market cap.",
+    "logo_url": "https://coin-images.coingecko.com/coins/images/50363/standard/adrena_logo_adx_color_200x200.png?1727331561",
+    "metrics": {
+      "market_cap_rank": 976,
+      "price_btc": 3.2000736841097165e-07
+    },
+    "source": "coingecko_trending",
+    "grade": "B",
+    "overall_score": 57.0,
+    "scores": {
+      "overall": 57.0,
+      "team": 50,
+      "technology": 60,
+      "community": 40,
+      "tokenomics": 70,
+      "market_timing": 65,
+      "risk": 70
+    },
+    "risk_assessment": {
+      "scam_probability": 25.0,
+      "risk_level": "low",
+      "risk_flags": []
+    },
+    "analyzed_at": "2025-10-03T00:24:28.932425"
+  }
+]
