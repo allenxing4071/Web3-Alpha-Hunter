@@ -7,10 +7,21 @@ from app.models.project import (
     AIAnalysis,
 )
 
+from app.models.prediction import (
+    TokenLaunchPrediction,
+    AirdropValueEstimate,
+    InvestmentActionPlan,
+    ProjectDiscovery,
+)
+
 __all__ = [
     "Project",
     "SocialMetrics", 
     "OnchainMetrics",
     "AIAnalysis",
+    "TokenLaunchPrediction",
+    "AirdropValueEstimate",
+    "InvestmentActionPlan",
+    "ProjectDiscovery",
 ]
 
