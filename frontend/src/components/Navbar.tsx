@@ -12,16 +12,18 @@ import { useState, useRef, useEffect } from 'react'
 export function Navbar() {
   const router = useRouter()
   const pathname = usePathname()
-  const { user, logout, isAdmin } = useAuthStore()
+  const { user, logout, isAdmin, checkAuth } = useAuthStore()
   const [adminMenuOpen, setAdminMenuOpen] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   const adminMenuRef = useRef<HTMLDivElement>(null)
   const userMenuRef = useRef<HTMLDivElement>(null)
 
-  // 客户端挂载标记
+  // 客户端挂载标记并恢复认证状态
   useEffect(() => {
     setMounted(true)
+    // 从sessionStorage恢复用户信息
+    checkAuth()
   }, [])
 
   // 点击外部关闭菜单
