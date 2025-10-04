@@ -64,7 +64,6 @@ const mockProjectDetail: ProjectDetail = {
     twitter_followers: 45000,
     telegram_members: 12000,
     github_stars: 320,
-    github_commits_last_week: 48,
   },
   scores: {
     overall: 92,
