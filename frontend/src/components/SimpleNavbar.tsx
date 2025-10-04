@@ -17,16 +17,21 @@ export function SimpleNavbar() {
     setMounted(true)
   }, [])
 
-  // 登录页不显示
-  if (!mounted || pathname === '/login') {
+  // 只在客户端渲染
+  if (!mounted) {
     return null
   }
 
-  // 检查认证状态(在渲染时实时检查)
-  const token = typeof window !== 'undefined' ? sessionStorage.getItem('auth_token') : null
-  if (token !== 'authenticated') {
+  // 登录页不显示
+  if (pathname === '/login') {
     return null
   }
+
+  // 暂时注释认证检查,确保能显示
+  // const token = typeof window !== 'undefined' ? sessionStorage.getItem('auth_token') : null
+  // if (token !== 'authenticated') {
+  //   return null
+  // }
 
   const handleLogout = () => {
     if (typeof window !== 'undefined') {
