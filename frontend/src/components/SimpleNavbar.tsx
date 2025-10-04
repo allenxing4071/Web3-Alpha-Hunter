@@ -27,11 +27,11 @@ export function SimpleNavbar() {
     return null
   }
 
-  // 暂时注释认证检查,确保能显示
-  // const token = typeof window !== 'undefined' ? sessionStorage.getItem('auth_token') : null
-  // if (token !== 'authenticated') {
-  //   return null
-  // }
+  // 检查认证状态
+  const token = typeof window !== 'undefined' ? sessionStorage.getItem('auth_token') : null
+  if (token !== 'authenticated') {
+    return null
+  }
 
   const handleLogout = () => {
     if (typeof window !== 'undefined') {

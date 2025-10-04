@@ -1,15 +1,15 @@
 /**
- * 客户端布局组件 - 测试版
+ * 客户端布局组件 - 包含导航栏
  */
 
 "use client"
 
-import { TestNav } from './TestNav'
+import { SimpleNavbar } from './SimpleNavbar'
 
 export function ClientLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <TestNav />
+      <SimpleNavbar />
       {children}
     </>
   )
