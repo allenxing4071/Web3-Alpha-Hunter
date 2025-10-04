@@ -58,7 +58,7 @@ export default function Home() {
                 S/A/B/C分级
               </h3>
               <p className="text-text-secondary text-sm">
-                清晰的四级分级系统,S级项目平均涨幅>200% (历史回测)
+                清晰的四级分级系统,S级项目平均涨幅&gt;200% (历史回测)
               </p>
             </div>
             
