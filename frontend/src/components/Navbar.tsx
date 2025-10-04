@@ -12,26 +12,14 @@ import { useState, useRef, useEffect } from 'react'
 export function Navbar() {
   const router = useRouter()
   const pathname = usePathname()
-  const { user, logout, isAuthenticated, isAdmin, checkAuth } = useAuthStore()
+  const { user, logout, isAuthenticated, isAdmin } = useAuthStore()
   const [adminMenuOpen, setAdminMenuOpen] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
-  const [mounted, setMounted] = useState(false)
   const adminMenuRef = useRef<HTMLDivElement>(null)
   const userMenuRef = useRef<HTMLDivElement>(null)
 
-  // 初始化认证状态
-  useEffect(() => {
-    setMounted(true)
-    checkAuth()
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
   // 登录页不显示导航栏
-  if (!mounted || pathname === '/login') {
-    return null
-  }
-
-  // 未登录不显示导航栏
-  if (!isAuthenticated) {
+  if (pathname === '/login' || !isAuthenticated) {
     return null
   }
 

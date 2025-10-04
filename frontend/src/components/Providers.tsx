@@ -1,13 +1,13 @@
 "use client"
 
-import { AuthGuard } from '@/components/AuthGuard'
+import { AuthProtection } from '@/components/AuthProtection'
 import { Navbar } from '@/components/Navbar'
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <AuthGuard>
+    <AuthProtection>
       <Navbar />
       {children}
-    </AuthGuard>
+    </AuthProtection>
   )
 }
