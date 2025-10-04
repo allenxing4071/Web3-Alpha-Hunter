@@ -17,6 +17,71 @@ class AIAnalyzer:
         self.openai_client = None
         self.active_provider = None
         
+        # 尝试从数据库加载配置
+        self._load_config_from_db()
+        
+        # 如果数据库没有配置，使用环境变量
+        if not self.active_provider:
+            self._load_config_from_env()
+    
+    def _load_config_from_db(self):
+        """从数据库加载AI配置"""
+        try:
+            from app.db.session import SessionLocal
+            from app.models.ai_config import AIConfig
+            from cryptography.fernet import Fernet
+            import base64
+            import hashlib
+            
+            # 解密密钥
+            ENCRYPTION_KEY = base64.urlsafe_b64encode(hashlib.sha256(b"web3-alpha-hunter-secret-key").digest())
+            cipher_suite = Fernet(ENCRYPTION_KEY)
+            
+            db = SessionLocal()
+            try:
+                # 获取所有启用的AI配置
+                configs = db.query(AIConfig).filter(AIConfig.enabled == True).all()
+                
+                logger.info(f"📂 Found {len(configs)} enabled AI configs in database")
+                
+                for config in configs:
+                    try:
+                        # 解密API密钥
+                        decrypted_key = cipher_suite.decrypt(config.api_key.encode()).decode()
+                        
+                        if config.name.lower() == "deepseek" and not self.active_provider:
+                            self.deepseek_client = OpenAI(
+                                api_key=decrypted_key,
+                                base_url="https://api.deepseek.com"
+                            )
+                            self.active_provider = "deepseek"
+                            logger.info(f"✅ DeepSeek initialized from DB (model: {config.model})")
+                        
+                        elif config.name.lower() == "claude" and not self.active_provider:
+                            self.claude_client = OpenAI(
+                                api_key=decrypted_key,
+                                base_url="https://api.gptsapi.net/v1"
+                            )
+                            self.active_provider = "claude"
+                            logger.info(f"✅ Claude initialized from DB (model: {config.model})")
+                        
+                        elif config.name.lower() == "openai" and not self.active_provider:
+                            self.openai_client = OpenAI(
+                                api_key=decrypted_key,
+                                base_url="https://api.gptsapi.net/v1"
+                            )
+                            self.active_provider = "openai"
+                            logger.info(f"✅ OpenAI initialized from DB (model: {config.model})")
+                    
+                    except Exception as e:
+                        logger.warning(f"Failed to initialize {config.name} from DB: {e}")
+            finally:
+                db.close()
+        except Exception as e:
+            logger.warning(f"Failed to load AI config from DB: {e}")
+    
+    def _load_config_from_env(self):
+        """从环境变量加载AI配置（备用方案）"""
         # 优先使用DeepSeek (国内,便宜快速)
         if settings.DEEPSEEK_API_KEY:
             try:
@@ -25,7 +90,7 @@ class AIAnalyzer:
                     base_url="https://api.deepseek.com"
                 )
                 self.active_provider = "deepseek"
-                logger.info("✅ DeepSeek v3 client initialized (优先使用)")
+                logger.info("✅ DeepSeek v3 client initialized from ENV (优先使用)")
             except Exception as e:
                 logger.warning(f"Failed to initialize DeepSeek: {e}")
         
@@ -38,7 +103,7 @@ class AIAnalyzer:
                     base_url="https://api.gptsapi.net/v1"
                 )
                 self.active_provider = "claude"
-                logger.info("✅ Claude client initialized (via GPTsAPI)")
+                logger.info("✅ Claude client initialized from ENV (via GPTsAPI)")
             except Exception as e:
                 logger.warning(f"Failed to initialize Claude: {e}")
         
@@ -50,7 +115,7 @@ class AIAnalyzer:
                     base_url="https://api.gptsapi.net/v1"
                 )
                 self.active_provider = "openai"
-                logger.info("✅ OpenAI client initialized (via GPTsAPI)")
+                logger.info("✅ OpenAI client initialized from ENV (via GPTsAPI)")
             except Exception as e:
                 logger.warning(f"Failed to initialize OpenAI: {e}")
     
