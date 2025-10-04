@@ -251,21 +251,31 @@ async def test_ai_connection(request: AITestRequest) -> AITestResponse:
     
     try:
         if request.provider == "deepseek":
-            from openai import OpenAI
-            client = OpenAI(
-                api_key=request.api_key,
-                base_url="https://api.deepseek.com"
-            )
-            # 简单测试请求
-            response = client.chat.completions.create(
-                model=request.model,
-                messages=[{"role": "user", "content": "test"}],
-                max_tokens=10
-            )
-            return AITestResponse(
-                success=True,
-                message="DeepSeek API连接成功"
-            )
+            # DeepSeek - 使用httpx避免SDK问题
+            import httpx
+            try:
+                response = httpx.post(
+                    "https://api.deepseek.com/chat/completions",
+                    headers={
+                        "Authorization": f"Bearer {request.api_key}",
+                        "Content-Type": "application/json"
+                    },
+                    json={
+                        "model": request.model,
+                        "messages": [{"role": "user", "content": "test"}],
+                        "max_tokens": 10
+                    },
+                    timeout=10.0
+                )
+                response.raise_for_status()
+                return AITestResponse(
+                    success=True,
+                    message="DeepSeek API连接成功"
+                )
+            except httpx.HTTPStatusError as e:
+                raise Exception(f"HTTP {e.response.status_code}: {e.response.text}")
+            except Exception as e:
+                raise Exception(str(e))
             
         elif request.provider == "claude":
             # WildCard的Claude使用OpenAI客户端格式
@@ -285,21 +295,31 @@ async def test_ai_connection(request: AITestRequest) -> AITestResponse:
             )
             
         elif request.provider == "openai":
-            # WildCard的OpenAI也使用代理地址
-            from openai import OpenAI
-            client = OpenAI(
-                api_key=request.api_key,
-                base_url="https://api.gptsapi.net/v1"
-            )
-            response = client.chat.completions.create(
-                model=request.model,
-                messages=[{"role": "user", "content": "test"}],
-                max_tokens=10
-            )
-            return AITestResponse(
-                success=True,
-                message="OpenAI API连接成功 (via WildCard)"
-            )
+            # WildCard的OpenAI - 使用httpx直接调用避免SDK版本问题
+            import httpx
+            try:
+                response = httpx.post(
+                    "https://api.gptsapi.net/v1/chat/completions",
+                    headers={
+                        "Authorization": f"Bearer {request.api_key}",
+                        "Content-Type": "application/json"
+                    },
+                    json={
+                        "model": request.model,
+                        "messages": [{"role": "user", "content": "test"}],
+                        "max_tokens": 10
+                    },
+                    timeout=10.0
+                )
+                response.raise_for_status()
+                return AITestResponse(
+                    success=True,
+                    message="OpenAI API连接成功 (via WildCard)"
+                )
+            except httpx.HTTPStatusError as e:
+                raise Exception(f"HTTP {e.response.status_code}: {e.response.text}")
+            except Exception as e:
+                raise Exception(str(e))
             
         else:
             return AITestResponse(

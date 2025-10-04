@@ -224,6 +224,9 @@ export default function AdminPage() {
 
   // 保存配置到后端数据库
   const saveToDatabase = async () => {
+    console.log('🔄 开始保存到数据库...', aiConfigs)
+    addLog('[配置] 🔄 正在保存到数据库...')
+    
     try {
       const response = await fetch(`${API_URL}/admin/ai-configs`, {
         method: 'POST',
@@ -231,15 +234,22 @@ export default function AdminPage() {
         body: JSON.stringify({ configs: aiConfigs })
       })
 
-      if (response.ok) {
-        addLog('[配置] ✅ AI配置已保存到数据库')
+      const data = await response.json()
+      console.log('📥 服务器响应:', data)
+
+      if (response.ok && data.success) {
+        addLog(`[配置] ✅ AI配置已保存到数据库 (${data.saved_count}个配置)`)
+        alert('✅ 配置已成功保存到数据库！')
         return true
       } else {
-        addLog('[配置] ❌ 保存到数据库失败')
+        addLog('[配置] ❌ 保存到数据库失败: ' + (data.message || '未知错误'))
+        alert('❌ 保存失败: ' + (data.message || '未知错误'))
         return false
       }
     } catch (error) {
+      console.error('❌ 保存错误:', error)
       addLog('[配置] ⚠️ 数据库保存失败,已保存到本地')
+      alert('❌ 保存失败: ' + (error as Error).message)
       return false
     }
   }
