@@ -40,8 +40,10 @@ export default function LoginPage() {
       
       if (success) {
         console.log('✅ 登录成功,准备跳转...')
-        // 使用 window.location 确保跳转
-        window.location.href = '/projects'
+        // 强制页面跳转
+        setTimeout(() => {
+          window.location.replace('/projects')
+        }, 100)
       } else {
         console.error('❌ 登录失败')
         setError('用户名或密码错误')
