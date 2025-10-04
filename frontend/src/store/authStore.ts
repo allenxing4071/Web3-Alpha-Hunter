@@ -33,30 +33,41 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
 
       login: async (username: string, password: string) => {
-        // 模拟API调用延迟
-        await new Promise(resolve => setTimeout(resolve, 500))
+        try {
+          // 模拟API调用延迟
+          await new Promise(resolve => setTimeout(resolve, 500))
 
-        // 只在客户端访问localStorage
-        if (typeof window === 'undefined') {
+          // 只在客户端访问localStorage
+          if (typeof window === 'undefined') {
+            return false
+          }
+
+          // 从localStorage获取所有用户
+          const usersData = localStorage.getItem('users-storage')
+          if (!usersData) {
+            console.error('用户数据未初始化')
+            return false
+          }
+
+          const parsed = JSON.parse(usersData)
+          const users: UserWithPassword[] = parsed.state?.users || parsed.users || []
+
+          // 验证用户
+          const user = users.find(
+            u => u.username === username && u.password === password
+          )
+
+          if (user) {
+            const { password: _, ...userWithoutPassword } = user
+            set({ user: userWithoutPassword, isAuthenticated: true })
+            return true
+          }
+
+          return false
+        } catch (error) {
+          console.error('登录错误:', error)
           return false
         }
-
-        // 从localStorage获取所有用户
-        const usersData = localStorage.getItem('users-storage')
-        const users: UserWithPassword[] = usersData ? JSON.parse(usersData).state.users : []
-
-        // 验证用户
-        const user = users.find(
-          u => u.username === username && u.password === password
-        )
-
-        if (user) {
-          const { password: _, ...userWithoutPassword } = user
-          set({ user: userWithoutPassword, isAuthenticated: true })
-          return true
-        }
-
-        return false
       },
 
       logout: () => {
@@ -74,11 +85,17 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'auth-storage',
-      storage: createJSONStorage(() => typeof window !== 'undefined' ? localStorage : ({
-        getItem: () => null,
-        setItem: () => {},
-        removeItem: () => {},
-      } as any)),
+      storage: createJSONStorage(() => {
+        if (typeof window === 'undefined') {
+          return {
+            getItem: () => null,
+            setItem: () => {},
+            removeItem: () => {},
+          }
+        }
+        return localStorage
+      }),
+      skipHydration: false,
     }
   )
 )
