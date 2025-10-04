@@ -62,6 +62,9 @@ class Settings(BaseSettings):
     TELEGRAM_API_HASH: Optional[str] = None
     TELEGRAM_BOT_TOKEN: Optional[str] = None
     
+    # Discord Bot
+    DISCORD_BOT_TOKEN: Optional[str] = None
+    
     # YouTube API
     YOUTUBE_API_KEY: Optional[str] = None
     
