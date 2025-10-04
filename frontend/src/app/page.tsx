@@ -68,7 +68,7 @@ export default function Home() {
                 风险智能识别
               </h3>
               <p className="text-text-secondary text-sm">
-                自动检测骗局项目,识别准确率>85%,保护投资安全
+                自动检测骗局项目,识别准确率&gt;85%,保护投资安全
               </p>
             </div>
           </div>
