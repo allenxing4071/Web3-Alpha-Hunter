@@ -16,8 +16,8 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "Web3 Alpha Hunter"
     VERSION: str = "1.0.0"
     
-    # 数据库
-    DATABASE_URL: str = "postgresql://postgres:postgres@localhost:5432/web3hunter"
+    # 数据库 (使用SQLite避免Docker依赖)
+    DATABASE_URL: str = "sqlite:///./web3hunter.db"
     DATABASE_POOL_SIZE: int = 20
     DATABASE_MAX_OVERFLOW: int = 10
     
