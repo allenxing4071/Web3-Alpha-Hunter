@@ -13,12 +13,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 export default function LoginPage() {
   const router = useRouter()
   const { login } = useAuthStore()
-  const { initializeDefaultUsers } = useUserStore()
+  const initializeDefaultUsers = useUserStore(state => state.initializeDefaultUsers)
   
   // 初始化默认用户
   useEffect(() => {
-    initializeDefaultUsers()
-  }, [initializeDefaultUsers])
+    // 只在客户端执行
+    if (typeof window !== 'undefined') {
+      initializeDefaultUsers()
+    }
+  }, [])
   
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
