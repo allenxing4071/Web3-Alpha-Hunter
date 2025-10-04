@@ -117,7 +117,11 @@ export const useUserStore = create<UserState>()(
     }),
     {
       name: 'users-storage',
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(() => typeof window !== 'undefined' ? localStorage : ({
+        getItem: () => null,
+        setItem: () => {},
+        removeItem: () => {},
+      } as any)),
     }
   )
 )

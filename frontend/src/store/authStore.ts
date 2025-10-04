@@ -36,6 +36,11 @@ export const useAuthStore = create<AuthState>()(
         // 模拟API调用延迟
         await new Promise(resolve => setTimeout(resolve, 500))
 
+        // 只在客户端访问localStorage
+        if (typeof window === 'undefined') {
+          return false
+        }
+
         // 从localStorage获取所有用户
         const usersData = localStorage.getItem('users-storage')
         const users: UserWithPassword[] = usersData ? JSON.parse(usersData).state.users : []
@@ -69,7 +74,11 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'auth-storage',
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(() => typeof window !== 'undefined' ? localStorage : ({
+        getItem: () => null,
+        setItem: () => {},
+        removeItem: () => {},
+      } as any)),
     }
   )
 )

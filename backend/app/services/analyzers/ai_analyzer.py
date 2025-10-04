@@ -29,21 +29,28 @@ class AIAnalyzer:
             except Exception as e:
                 logger.warning(f"Failed to initialize DeepSeek: {e}")
         
-        # 备用: Claude
+        # 备用: Claude (通过 WildCard/GPTsAPI 中转,使用 OpenAI 格式)
         if settings.ANTHROPIC_API_KEY and not self.active_provider:
             try:
-                self.claude_client = Anthropic(api_key=settings.ANTHROPIC_API_KEY)
+                # WildCard 的 Claude 也使用 OpenAI 客户端格式
+                self.claude_client = OpenAI(
+                    api_key=settings.ANTHROPIC_API_KEY,
+                    base_url="https://api.gptsapi.net/v1"
+                )
                 self.active_provider = "claude"
-                logger.info("✅ Claude client initialized")
+                logger.info("✅ Claude client initialized (via GPTsAPI)")
             except Exception as e:
                 logger.warning(f"Failed to initialize Claude: {e}")
         
-        # 备用: OpenAI
+        # 备用: OpenAI (通过 WildCard/GPTsAPI 中转)
         if settings.OPENAI_API_KEY and not self.active_provider:
             try:
-                self.openai_client = OpenAI(api_key=settings.OPENAI_API_KEY)
+                self.openai_client = OpenAI(
+                    api_key=settings.OPENAI_API_KEY,
+                    base_url="https://api.gptsapi.net/v1"
+                )
                 self.active_provider = "openai"
-                logger.info("✅ OpenAI client initialized")
+                logger.info("✅ OpenAI client initialized (via GPTsAPI)")
             except Exception as e:
                 logger.warning(f"Failed to initialize OpenAI: {e}")
     
@@ -105,15 +112,19 @@ class AIAnalyzer:
                 result_text = response.choices[0].message.content
                 logger.info(f"✅ DeepSeek v3 analysis completed")
             
-            # 备用: Claude
+            # 备用: Claude (通过 WildCard,使用 OpenAI 格式)
             elif self.claude_client:
-                response = self.claude_client.messages.create(
-                    model="claude-3-haiku-20240307",
-                    max_tokens=1024,
-                    messages=[{"role": "user", "content": prompt}]
+                response = self.claude_client.chat.completions.create(
+                    model="claude-3-5-sonnet-20241022",  # WildCard 支持的 Claude 模型
+                    messages=[
+                        {"role": "system", "content": "你是Web3项目分析专家,擅长从文本中提取项目关键信息。"},
+                        {"role": "user", "content": prompt}
+                    ],
+                    max_tokens=2048,
+                    temperature=0.7
                 )
-                result_text = response.content[0].text
-                logger.info(f"✅ Claude analysis completed")
+                result_text = response.choices[0].message.content
+                logger.info(f"✅ Claude analysis completed (via GPTsAPI)")
             
             # 备用: OpenAI
             elif self.openai_client:

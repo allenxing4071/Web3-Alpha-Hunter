@@ -30,6 +30,9 @@ export function Navbar() {
 
   // 点击外部关闭菜单
   useEffect(() => {
+    // 只在客户端执行
+    if (typeof window === 'undefined') return
+
     const handleClickOutside = (event: MouseEvent) => {
       if (adminMenuRef.current && !adminMenuRef.current.contains(event.target as Node)) {
         setAdminMenuOpen(false)

@@ -29,17 +29,21 @@ class Settings(BaseSettings):
     CELERY_RESULT_BACKEND: str = "redis://localhost:6379/1"
     
     # CORS
-    CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:3001"]
+    CORS_ORIGINS: str = "http://localhost:3000,http://localhost:3001"
     
     @field_validator("CORS_ORIGINS", mode="before")
     @classmethod
-    def parse_cors_origins(cls, v) -> List[str]:
-        """解析CORS origins"""
+    def parse_cors_origins(cls, v) -> str:
+        """解析CORS origins - 返回字符串,FastAPI会自动split"""
         if isinstance(v, str):
-            return [origin.strip() for origin in v.split(",") if origin.strip()]
-        elif isinstance(v, list):
             return v
-        return ["http://localhost:3000", "http://localhost:3001"]
+        elif isinstance(v, list):
+            return ",".join(v)
+        return "http://localhost:3000,http://localhost:3001"
+    
+    def get_cors_origins_list(self) -> List[str]:
+        """获取CORS origins列表"""
+        return [origin.strip() for origin in self.CORS_ORIGINS.split(",") if origin.strip()]
     
     # AI服务
     OPENAI_API_KEY: Optional[str] = None
