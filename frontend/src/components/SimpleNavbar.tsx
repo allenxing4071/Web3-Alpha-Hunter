@@ -25,7 +25,12 @@ export function SimpleNavbar() {
   }, [])
 
   // 登录页不显示
-  if (!mounted || pathname === '/login' || !isAuth) {
+  if (!mounted || pathname === '/login') {
+    return null
+  }
+
+  // 未认证不显示
+  if (!isAuth) {
     return null
   }
 
