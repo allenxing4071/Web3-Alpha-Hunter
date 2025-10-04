@@ -1,15 +1,14 @@
 /**
- * 用户数据管理 - Zustand (支持角色)
+ * 用户数据管理 - 简化版本
  */
 
 import { create } from 'zustand'
-import { persist, createJSONStorage } from 'zustand/middleware'
 
 export interface User {
   id: string
   username: string
   email: string
-  role: 'admin' | 'user'  // 添加角色字段
+  role: 'admin' | 'user'
   createdAt: string
 }
 
@@ -26,102 +25,127 @@ interface UserState {
   initializeDefaultUsers: () => void
 }
 
-export const useUserStore = create<UserState>()(
-  persist(
-    (set, get) => ({
-      users: [],
+// 默认用户
+const DEFAULT_USERS: UserWithPassword[] = [
+  {
+    id: '1',
+    username: 'admin',
+    password: 'admin123',
+    email: 'admin@web3hunter.com',
+    role: 'admin',
+    createdAt: new Date().toISOString()
+  }
+]
 
-      initializeDefaultUsers: () => {
-        const currentUsers = get().users
-        if (currentUsers.length === 0) {
-          set({
-            users: [
-              {
-                id: '1',
-                username: 'admin',
-                password: 'admin123',
-                email: 'admin@web3hunter.com',
-                role: 'admin',  // 管理员角色
-                createdAt: new Date().toISOString()
-              }
-            ]
-          })
-        }
-      },
+export const useUserStore = create<UserState>((set, get) => ({
+  users: [],
 
-      addUser: (user) => {
-        const users = get().users
-        
-        // 检查用户名是否已存在
-        if (users.some(u => u.username === user.username)) {
-          return false
-        }
-
-        const newUser: UserWithPassword = {
-          ...user,
-          id: Date.now().toString(),
-          createdAt: new Date().toISOString()
-        }
-
-        set({ users: [...users, newUser] })
-        return true
-      },
-
-      updateUser: (id, updates) => {
-        const users = get().users
-        const userIndex = users.findIndex(u => u.id === id)
-
-        if (userIndex === -1) {
-          return false
-        }
-
-        // 如果更新用户名,检查是否与其他用户冲突
-        if (updates.username) {
-          const exists = users.some(u => u.id !== id && u.username === updates.username)
-          if (exists) {
-            return false
-          }
-        }
-
-        const updatedUsers = [...users]
-        updatedUsers[userIndex] = {
-          ...updatedUsers[userIndex],
-          ...updates
-        }
-
-        set({ users: updatedUsers })
-        return true
-      },
-
-      deleteUser: (id) => {
-        const users = get().users
-        
-        // 不允许删除管理员用户
-        const user = users.find(u => u.id === id)
-        if (user && user.role === 'admin') {
-          return false
-        }
-        
-        // 不允许删除最后一个用户
-        if (users.length <= 1) {
-          return false
-        }
-
-        set({ users: users.filter(u => u.id !== id) })
-        return true
-      },
-
-      getUsers: () => {
-        return get().users
+  initializeDefaultUsers: () => {
+    if (typeof window === 'undefined') return
+    
+    try {
+      const stored = sessionStorage.getItem('app_users')
+      if (stored) {
+        const users = JSON.parse(stored)
+        set({ users })
+      } else {
+        sessionStorage.setItem('app_users', JSON.stringify(DEFAULT_USERS))
+        set({ users: DEFAULT_USERS })
       }
-    }),
-    {
-      name: 'users-storage',
-      storage: createJSONStorage(() => typeof window !== 'undefined' ? localStorage : ({
-        getItem: () => null,
-        setItem: () => {},
-        removeItem: () => {},
-      } as any)),
+    } catch (error) {
+      console.error('初始化用户失败:', error)
+      set({ users: DEFAULT_USERS })
     }
-  )
-)
+  },
+
+  addUser: (user) => {
+    const users = get().users
+    
+    if (users.some(u => u.username === user.username)) {
+      return false
+    }
+
+    const newUser: UserWithPassword = {
+      ...user,
+      id: Date.now().toString(),
+      createdAt: new Date().toISOString()
+    }
+
+    const newUsers = [...users, newUser]
+    set({ users: newUsers })
+    
+    if (typeof window !== 'undefined') {
+      try {
+        sessionStorage.setItem('app_users', JSON.stringify(newUsers))
+      } catch (error) {
+        console.error('保存用户失败:', error)
+      }
+    }
+    
+    return true
+  },
+
+  updateUser: (id, updates) => {
+    const users = get().users
+    const userIndex = users.findIndex(u => u.id === id)
+
+    if (userIndex === -1) {
+      return false
+    }
+
+    if (updates.username) {
+      const exists = users.some(u => u.id !== id && u.username === updates.username)
+      if (exists) {
+        return false
+      }
+    }
+
+    const updatedUsers = [...users]
+    updatedUsers[userIndex] = {
+      ...updatedUsers[userIndex],
+      ...updates
+    }
+
+    set({ users: updatedUsers })
+    
+    if (typeof window !== 'undefined') {
+      try {
+        sessionStorage.setItem('app_users', JSON.stringify(updatedUsers))
+      } catch (error) {
+        console.error('更新用户失败:', error)
+      }
+    }
+    
+    return true
+  },
+
+  deleteUser: (id) => {
+    const users = get().users
+    
+    const user = users.find(u => u.id === id)
+    if (user && user.role === 'admin') {
+      return false
+    }
+    
+    if (users.length <= 1) {
+      return false
+    }
+
+    const newUsers = users.filter(u => u.id !== id)
+    set({ users: newUsers })
+    
+    if (typeof window !== 'undefined') {
+      try {
+        sessionStorage.setItem('app_users', JSON.stringify(newUsers))
+      } catch (error) {
+        console.error('删除用户失败:', error)
+      }
+    }
+    
+    return true
+  },
+
+  getUsers: () => {
+    return get().users
+  }
+}))
