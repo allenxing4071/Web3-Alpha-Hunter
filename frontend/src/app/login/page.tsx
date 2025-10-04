@@ -34,14 +34,20 @@ export default function LoginPage() {
     setLoading(true)
 
     try {
+      console.log('🔐 开始登录...')
       const success = await login(username, password)
+      console.log('📊 登录结果:', success)
       
       if (success) {
-        router.push('/projects')
+        console.log('✅ 登录成功,准备跳转...')
+        // 使用 window.location 确保跳转
+        window.location.href = '/projects'
       } else {
+        console.error('❌ 登录失败')
         setError('用户名或密码错误')
       }
     } catch (err) {
+      console.error('❌ 登录异常:', err)
       setError('登录失败,请重试')
     } finally {
       setLoading(false)
