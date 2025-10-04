@@ -251,31 +251,20 @@ async def test_ai_connection(request: AITestRequest) -> AITestResponse:
     
     try:
         if request.provider == "deepseek":
-            # DeepSeek - 使用httpx避免SDK问题
-            import httpx
-            try:
-                response = httpx.post(
-                    "https://api.deepseek.com/chat/completions",
-                    headers={
-                        "Authorization": f"Bearer {request.api_key}",
-                        "Content-Type": "application/json"
-                    },
-                    json={
-                        "model": request.model,
-                        "messages": [{"role": "user", "content": "test"}],
-                        "max_tokens": 10
-                    },
-                    timeout=10.0
-                )
-                response.raise_for_status()
-                return AITestResponse(
-                    success=True,
-                    message="DeepSeek API连接成功"
-                )
-            except httpx.HTTPStatusError as e:
-                raise Exception(f"HTTP {e.response.status_code}: {e.response.text}")
-            except Exception as e:
-                raise Exception(str(e))
+            # DeepSeek - 直接使用官方API
+            from openai import OpenAI
+            client = OpenAI(
+                api_key=request.api_key,
+                base_url="https://api.deepseek.com"
+            )
+            response = client.chat.completions.create(
+                model=request.model,
+                messages=[{"role": "user", "content": "test"}]
+            )
+            return AITestResponse(
+                success=True,
+                message="DeepSeek API连接成功"
+            )
             
         elif request.provider == "claude":
             # WildCard的Claude使用OpenAI客户端格式
@@ -284,10 +273,10 @@ async def test_ai_connection(request: AITestRequest) -> AITestResponse:
                 api_key=request.api_key,
                 base_url="https://api.gptsapi.net/v1"
             )
+            # 不指定max_tokens，让WildCard自动处理
             response = client.chat.completions.create(
                 model=request.model,
-                messages=[{"role": "user", "content": "test"}],
-                max_tokens=10
+                messages=[{"role": "user", "content": "test"}]
             )
             return AITestResponse(
                 success=True,
@@ -295,31 +284,21 @@ async def test_ai_connection(request: AITestRequest) -> AITestResponse:
             )
             
         elif request.provider == "openai":
-            # WildCard的OpenAI - 使用httpx直接调用避免SDK版本问题
-            import httpx
-            try:
-                response = httpx.post(
-                    "https://api.gptsapi.net/v1/chat/completions",
-                    headers={
-                        "Authorization": f"Bearer {request.api_key}",
-                        "Content-Type": "application/json"
-                    },
-                    json={
-                        "model": request.model,
-                        "messages": [{"role": "user", "content": "test"}],
-                        "max_tokens": 10
-                    },
-                    timeout=10.0
-                )
-                response.raise_for_status()
-                return AITestResponse(
-                    success=True,
-                    message="OpenAI API连接成功 (via WildCard)"
-                )
-            except httpx.HTTPStatusError as e:
-                raise Exception(f"HTTP {e.response.status_code}: {e.response.text}")
-            except Exception as e:
-                raise Exception(str(e))
+            # WildCard的OpenAI - 使用OpenAI SDK (不发送max_tokens避免冲突)
+            from openai import OpenAI
+            client = OpenAI(
+                api_key=request.api_key,
+                base_url="https://api.gptsapi.net/v1"
+            )
+            # 不指定max_tokens，让WildCard自动处理
+            response = client.chat.completions.create(
+                model=request.model,
+                messages=[{"role": "user", "content": "test"}]
+            )
+            return AITestResponse(
+                success=True,
+                message="OpenAI API连接成功 (via WildCard)"
+            )
             
         else:
             return AITestResponse(
