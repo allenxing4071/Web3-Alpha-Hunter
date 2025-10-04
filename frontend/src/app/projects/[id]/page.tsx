@@ -25,7 +25,7 @@ const mockProjectDetail: ProjectDetail = {
   category: "DeFi",
   blockchain: "Ethereum",
   description: "革命性的跨链流动性聚合协议,通过创新的zkp技术实现即时跨链交换,Gas费用优化30-50%。",
-  logo_url: null,
+  logo_url: undefined,
   website: "https://xxx-protocol.io",
   contract_address: "0x1234567890abcdef1234567890abcdef12345678",
   whitepaper_url: "https://xxx-protocol.io/whitepaper.pdf",
