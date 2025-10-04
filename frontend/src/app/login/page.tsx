@@ -28,8 +28,7 @@ export default function LoginPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = async () => {
     setError('')
     setLoading(true)
 
@@ -39,19 +38,17 @@ export default function LoginPage() {
       console.log('📊 登录结果:', success)
       
       if (success) {
-        console.log('✅ 登录成功,准备跳转...')
-        // 强制页面跳转
-        setTimeout(() => {
-          window.location.replace('/projects')
-        }, 100)
+        console.log('✅ 登录成功,立即跳转...')
+        // 立即强制跳转
+        window.location.replace('/projects')
       } else {
         console.error('❌ 登录失败')
         setError('用户名或密码错误')
+        setLoading(false)
       }
     } catch (err) {
       console.error('❌ 登录异常:', err)
       setError('登录失败,请重试')
-    } finally {
       setLoading(false)
     }
   }
@@ -83,7 +80,7 @@ export default function LoginPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
               {/* 用户名 */}
               <div>
                 <label htmlFor="username" className="block text-sm font-medium text-text-secondary mb-2">
