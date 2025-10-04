@@ -124,7 +124,8 @@ export default function LoginPage() {
 
               {/* 登录按钮 */}
               <button
-                type="submit"
+                type="button"
+                onClick={handleSubmit}
                 disabled={loading}
                 className="w-full py-3 bg-gradient-to-r from-accent-primary to-accent-purple text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-accent-primary/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
