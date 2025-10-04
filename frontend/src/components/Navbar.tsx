@@ -24,16 +24,6 @@ export function Navbar() {
     setMounted(true)
   }, [])
 
-  // 登录页不显示导航栏
-  if (pathname === '/login' || !mounted) {
-    return null
-  }
-
-  const handleLogout = () => {
-    logout()
-    router.push('/login')
-  }
-
   // 点击外部关闭菜单
   useEffect(() => {
     // 只在客户端执行
@@ -51,6 +41,16 @@ export function Navbar() {
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
+
+  const handleLogout = () => {
+    logout()
+    router.push('/login')
+  }
+
+  // 登录页不显示导航栏 - 必须在所有hooks之后
+  if (pathname === '/login' || !mounted) {
+    return null
+  }
 
   // 普通用户可见菜单
   const publicNavItems = [
