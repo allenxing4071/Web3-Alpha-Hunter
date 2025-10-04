@@ -12,14 +12,20 @@ import { useState, useRef, useEffect } from 'react'
 export function Navbar() {
   const router = useRouter()
   const pathname = usePathname()
-  const { user, logout, isAuthenticated, isAdmin } = useAuthStore()
+  const { user, logout, isAdmin } = useAuthStore()
   const [adminMenuOpen, setAdminMenuOpen] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const adminMenuRef = useRef<HTMLDivElement>(null)
   const userMenuRef = useRef<HTMLDivElement>(null)
 
+  // 客户端挂载标记
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   // 登录页不显示导航栏
-  if (pathname === '/login' || !isAuthenticated) {
+  if (pathname === '/login' || !mounted) {
     return null
   }
 
