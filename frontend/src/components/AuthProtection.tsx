@@ -30,11 +30,12 @@ export function AuthProtection({ children }: { children: React.ReactNode }) {
         setIsAuthenticated(true)
         setIsChecking(false)
       } else {
-        // 未登录，跳转到登录页
-        router.push('/login')
+        // 未登录，强制跳转到登录页
+        console.log('🔒 未登录，跳转到登录页')
+        window.location.href = '/login'
       }
     }
-  }, [pathname, router])
+  }, [pathname])
 
   // 登录页直接显示
   if (pathname === '/login') {
