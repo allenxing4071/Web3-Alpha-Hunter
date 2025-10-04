@@ -27,6 +27,7 @@ interface AIConfig {
 
 export default function AdminPage() {
   const router = useRouter()
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1'
   const [celeryRunning, setCeleryRunning] = useState(false)
   const [beatRunning, setBeatRunning] = useState(false)
   const [tasks, setTasks] = useState<TaskStatus[]>([
@@ -53,7 +54,7 @@ export default function AdminPage() {
   // 模拟检查Celery状态
   const checkCeleryStatus = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/v1/admin/celery-status')
+      const response = await fetch(`${API_URL}/admin/celery-status`)
       if (response.ok) {
         const data = await response.json()
         setCeleryRunning(data.worker_running)
@@ -73,7 +74,7 @@ export default function AdminPage() {
     addLog(`[手动] 开始${source}数据采集...`)
     
     try {
-      const response = await fetch(`http://localhost:8000/api/v1/admin/collect/${source}`, {
+      const response = await fetch(`${API_URL}/admin/collect/${source}`, {
         method: 'POST'
       })
       
@@ -191,7 +192,7 @@ export default function AdminPage() {
 
     try {
       // 调用后端测试接口
-      const response = await fetch('http://localhost:8000/api/v1/admin/test-ai', {
+      const response = await fetch(`${API_URL}/admin/test-ai`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -223,7 +224,7 @@ export default function AdminPage() {
   // 保存配置到后端数据库
   const saveToDatabase = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/v1/admin/ai-configs', {
+      const response = await fetch(`${API_URL}/admin/ai-configs`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ configs: aiConfigs })
@@ -245,7 +246,7 @@ export default function AdminPage() {
   // 从后端加载配置
   const loadFromDatabase = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/v1/admin/ai-configs')
+      const response = await fetch(`${API_URL}/admin/ai-configs`)
       if (response.ok) {
         const data = await response.json()
         if (data.configs && data.configs.length > 0) {
