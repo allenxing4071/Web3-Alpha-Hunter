@@ -268,21 +268,12 @@ async def test_ai_connection(request: AITestRequest) -> AITestResponse:
             )
             
         elif request.provider == "claude":
-            from anthropic import Anthropic
-            client = Anthropic(api_key=request.api_key)
-            response = client.messages.create(
-                model=request.model,
-                max_tokens=10,
-                messages=[{"role": "user", "content": "test"}]
-            )
-            return AITestResponse(
-                success=True,
-                message="Claude API连接成功"
-            )
-            
-        elif request.provider == "openai":
+            # WildCard的Claude使用OpenAI客户端格式
             from openai import OpenAI
-            client = OpenAI(api_key=request.api_key)
+            client = OpenAI(
+                api_key=request.api_key,
+                base_url="https://api.gptsapi.net/v1"
+            )
             response = client.chat.completions.create(
                 model=request.model,
                 messages=[{"role": "user", "content": "test"}],
@@ -290,7 +281,24 @@ async def test_ai_connection(request: AITestRequest) -> AITestResponse:
             )
             return AITestResponse(
                 success=True,
-                message="OpenAI API连接成功"
+                message="Claude API连接成功 (via WildCard)"
+            )
+            
+        elif request.provider == "openai":
+            # WildCard的OpenAI也使用代理地址
+            from openai import OpenAI
+            client = OpenAI(
+                api_key=request.api_key,
+                base_url="https://api.gptsapi.net/v1"
+            )
+            response = client.chat.completions.create(
+                model=request.model,
+                messages=[{"role": "user", "content": "test"}],
+                max_tokens=10
+            )
+            return AITestResponse(
+                success=True,
+                message="OpenAI API连接成功 (via WildCard)"
             )
             
         else:
