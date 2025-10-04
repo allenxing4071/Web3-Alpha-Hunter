@@ -184,8 +184,21 @@ class ProjectDiscoveryService:
         
         # 统计不同时间段的提及数
         now = datetime.utcnow()
-        mentions_24h = [m for m in mentions if (now - m["discovered_at"]).total_seconds() < 86400]
-        mentions_7d = [m for m in mentions if (now - m["discovered_at"]).total_seconds() < 604800]
+        
+        # 处理日期格式
+        def parse_date(d):
+            if isinstance(d, datetime):
+                return d
+            elif isinstance(d, str):
+                try:
+                    return datetime.fromisoformat(d.replace('Z', '+00:00'))
+                except:
+                    return datetime.utcnow()
+            else:
+                return datetime.utcnow()
+        
+        mentions_24h = [m for m in mentions if (now - parse_date(m["discovered_at"])).total_seconds() < 86400]
+        mentions_7d = [m for m in mentions if (now - parse_date(m["discovered_at"])).total_seconds() < 604800]
         
         # 计算增长率
         if len(mentions_7d) > len(mentions_24h):
