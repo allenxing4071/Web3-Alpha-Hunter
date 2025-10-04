@@ -1204,8 +1204,35 @@ CREATE INDEX idx_ai_config_enabled ON ai_configs(enabled);</div>
             }
         };
 
+        // 加载数据库统计信息
+        async function loadDatabaseStats() {
+            try {
+                const response = await fetch('http://localhost:8000/api/v1/database/stats');
+                const result = await response.json();
+                
+                if (result.success) {
+                    const data = result.data;
+                    
+                    // 更新统计卡片
+                    document.querySelector('.stat-card:nth-child(1) .stat-value').textContent = data.table_count;
+                    document.querySelector('.stat-card:nth-child(2) .stat-value').textContent = data.project_count;
+                    document.querySelector('.stat-card:nth-child(3) .stat-value').textContent = data.database_type;
+                    document.querySelector('.stat-card:nth-child(4) .stat-value').textContent = data.database_port || 'N/A';
+                    
+                    console.log('数据库统计信息已加载:', data);
+                    console.log('数据表列表:', data.tables);
+                }
+            } catch (error) {
+                console.error('加载数据库统计信息失败:', error);
+            }
+        }
+
         // 初始化页面
         document.addEventListener('DOMContentLoaded', function() {
+            // 加载数据库统计
+            loadDatabaseStats();
+            
+            // 渲染表格
             renderTable('projects');
             renderTable('social');
             renderTable('onchain');
