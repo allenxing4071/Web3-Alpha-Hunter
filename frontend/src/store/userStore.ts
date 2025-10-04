@@ -1,5 +1,5 @@
 /**
- * 用户数据管理 - Zustand
+ * 用户数据管理 - Zustand (支持角色)
  */
 
 import { create } from 'zustand'
@@ -9,6 +9,7 @@ export interface User {
   id: string
   username: string
   email: string
+  role: 'admin' | 'user'  // 添加角色字段
   createdAt: string
 }
 
@@ -40,6 +41,7 @@ export const useUserStore = create<UserState>()(
                 username: 'admin',
                 password: 'admin123',
                 email: 'admin@web3hunter.com',
+                role: 'admin',  // 管理员角色
                 createdAt: new Date().toISOString()
               }
             ]
@@ -94,6 +96,12 @@ export const useUserStore = create<UserState>()(
       deleteUser: (id) => {
         const users = get().users
         
+        // 不允许删除管理员用户
+        const user = users.find(u => u.id === id)
+        if (user && user.role === 'admin') {
+          return false
+        }
+        
         // 不允许删除最后一个用户
         if (users.length <= 1) {
           return false
@@ -113,4 +121,3 @@ export const useUserStore = create<UserState>()(
     }
   )
 )
-

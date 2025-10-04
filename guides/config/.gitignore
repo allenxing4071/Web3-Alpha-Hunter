@@ -1,0 +1,33 @@
+# 配置目录 .gitignore
+# 保护敏感信息不被提交到Git
+
+# SSH密钥
+keys/*.pem
+keys/*.key
+keys/id_rsa*
+
+# API密钥文件 (非示例文件)
+keys/api-keys.yaml
+keys/*-keys.yaml
+!keys/*.example.yaml
+
+# 包含真实密钥的配置文件
+**/production.yaml
+!servers/production.yaml  # 服务器配置可以提交(不含密钥)
+!database/production.yaml
+
+# 环境变量文件
+.env
+.env.local
+.env.production
+.env.*.local
+
+# 临时文件
+*.tmp
+*.bak
+*.swp
+*~
+
+# 操作系统文件
+.DS_Store
+Thumbs.db

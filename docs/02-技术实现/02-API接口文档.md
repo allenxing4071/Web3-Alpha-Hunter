@@ -2,20 +2,28 @@
 
 ## 📋 接口概览
 
-**Base URL**: `https://api.web3alphahunter.com/v1`  
-**认证方式**: Bearer Token (JWT)  
-**数据格式**: JSON  
+**Base URL (开发)**: `http://localhost:8000/api/v1`
+**Base URL (生产)**: `https://api.web3alphahunter.com/v1`
+**认证方式**: Bearer Token (JWT)
+**数据格式**: JSON
 **字符编码**: UTF-8
+**API文档**: `http://localhost:8000/docs` (Swagger UI)
+
+## 🎯 已实现接口
+
+以下标记 ✅ 的接口已完全实现并可用,标记 🚧 的接口部分实现,标记 📋 的接口待实现。
 
 ---
 
-## 🔐 认证接口
+## 🔐 认证接口 ✅
 
-### 1. 用户注册
+### 1. 用户注册 ✅
 
 ```http
-POST /auth/register
+POST /api/v1/auth/register
 ```
+
+**实现状态**: ✅ 已完成
 
 **请求体**:
 ```json
@@ -43,11 +51,13 @@ POST /auth/register
 
 ---
 
-### 2. 用户登录
+### 2. 用户登录 ✅
 
 ```http
-POST /auth/login
+POST /api/v1/auth/login
 ```
+
+**实现状态**: ✅ 已完成
 
 **请求体**:
 ```json
@@ -77,11 +87,13 @@ POST /auth/login
 
 ---
 
-### 3. 刷新Token
+### 3. 刷新Token ✅
 
 ```http
-POST /auth/refresh
+POST /api/v1/auth/refresh
 ```
+
+**实现状态**: ✅ 已完成
 
 **请求头**:
 ```
@@ -98,13 +110,15 @@ Authorization: Bearer {refresh_token}
 
 ---
 
-## 📊 项目接口
+## 📊 项目接口 ✅
 
-### 1. 获取项目列表
+### 1. 获取项目列表 ✅
 
 ```http
-GET /projects
+GET /api/v1/projects
 ```
+
+**实现状态**: ✅ 已完成
 
 **查询参数**:
 | 参数 | 类型 | 必填 | 说明 | 示例 |
@@ -182,11 +196,13 @@ GET /projects?grade=S&sort_by=score&order=desc&limit=10
 
 ---
 
-### 2. 获取项目详情
+### 2. 获取项目详情 ✅
 
 ```http
-GET /projects/{project_id}
+GET /api/v1/projects/{project_id}
 ```
+
+**实现状态**: ✅ 已完成
 
 **路径参数**:
 - `project_id`: 项目ID
@@ -280,11 +296,13 @@ GET /projects/{project_id}
 
 ---
 
-### 3. 获取项目历史数据
+### 3. 获取项目历史数据 🚧
 
 ```http
-GET /projects/{project_id}/history
+GET /api/v1/projects/{project_id}/history
 ```
+
+**实现状态**: 🚧 接口已定义,数据待完善
 
 **查询参数**:
 | 参数 | 类型 | 必填 | 说明 |

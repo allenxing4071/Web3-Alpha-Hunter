@@ -8,25 +8,41 @@ from app.core.config import settings
 
 
 class AIAnalyzer:
-    """AI分析器 - 使用Claude/GPT进行项目分析"""
+    """AI分析器 - 支持DeepSeek/Claude/GPT"""
     
     def __init__(self):
         """初始化AI客户端"""
+        self.deepseek_client = None
         self.claude_client = None
         self.openai_client = None
+        self.active_provider = None
         
-        # 初始化Claude
-        if settings.ANTHROPIC_API_KEY:
+        # 优先使用DeepSeek (国内,便宜快速)
+        if settings.DEEPSEEK_API_KEY:
+            try:
+                self.deepseek_client = OpenAI(
+                    api_key=settings.DEEPSEEK_API_KEY,
+                    base_url="https://api.deepseek.com"
+                )
+                self.active_provider = "deepseek"
+                logger.info("✅ DeepSeek v3 client initialized (优先使用)")
+            except Exception as e:
+                logger.warning(f"Failed to initialize DeepSeek: {e}")
+        
+        # 备用: Claude
+        if settings.ANTHROPIC_API_KEY and not self.active_provider:
             try:
                 self.claude_client = Anthropic(api_key=settings.ANTHROPIC_API_KEY)
+                self.active_provider = "claude"
                 logger.info("✅ Claude client initialized")
             except Exception as e:
                 logger.warning(f"Failed to initialize Claude: {e}")
         
-        # 初始化OpenAI
-        if settings.OPENAI_API_KEY:
+        # 备用: OpenAI
+        if settings.OPENAI_API_KEY and not self.active_provider:
             try:
                 self.openai_client = OpenAI(api_key=settings.OPENAI_API_KEY)
+                self.active_provider = "openai"
                 logger.info("✅ OpenAI client initialized")
             except Exception as e:
                 logger.warning(f"Failed to initialize OpenAI: {e}")
@@ -41,7 +57,7 @@ class AIAnalyzer:
         Returns:
             分析结果字典
         """
-        if not self.claude_client and not self.openai_client:
+        if not self.active_provider:
             logger.warning("No AI client available, using mock analysis")
             return self._mock_analysis(text)
         
@@ -73,21 +89,45 @@ class AIAnalyzer:
 """
         
         try:
-            if self.claude_client:
+            # 优先使用DeepSeek v3
+            if self.deepseek_client:
+                response = self.deepseek_client.chat.completions.create(
+                    model="deepseek-chat",  # 自动使用最新v3模型
+                    messages=[
+                        {"role": "system", "content": "你是Web3项目分析专家,擅长从文本中提取项目关键信息。你需要客观、专业地分析项目,识别潜在的投资机会和风险。"},
+                        {"role": "user", "content": prompt}
+                    ],
+                    max_tokens=2048,  # v3支持更长输出
+                    temperature=0.7,
+                    top_p=0.95,
+                    stream=False
+                )
+                result_text = response.choices[0].message.content
+                logger.info(f"✅ DeepSeek v3 analysis completed")
+            
+            # 备用: Claude
+            elif self.claude_client:
                 response = self.claude_client.messages.create(
-                    model="claude-3-sonnet-20240229",
-                    max_tokens=1000,
+                    model="claude-3-haiku-20240307",
+                    max_tokens=1024,
                     messages=[{"role": "user", "content": prompt}]
                 )
                 result_text = response.content[0].text
-            else:
+                logger.info(f"✅ Claude analysis completed")
+            
+            # 备用: OpenAI
+            elif self.openai_client:
                 response = self.openai_client.chat.completions.create(
-                    model="gpt-4o-mini",
+                    model="gpt-3.5-turbo",
                     messages=[{"role": "user", "content": prompt}],
-                    max_tokens=1000,
-                    temperature=0.3
+                    max_tokens=1024,
+                    temperature=0.7
                 )
                 result_text = response.choices[0].message.content
+                logger.info(f"✅ OpenAI analysis completed")
+            else:
+                logger.warning("No AI provider available")
+                return self._mock_analysis(text)
             
             # 解析JSON
             import json

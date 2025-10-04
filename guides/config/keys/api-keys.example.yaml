@@ -1,0 +1,109 @@
+# API密钥配置示例
+# ⚠️ 警告: 不要将真实的API密钥提交到Git!
+# 复制此文件为 api-keys.yaml 并填入真实密钥
+
+# AI服务密钥
+ai_services:
+  # OpenAI
+  openai:
+    api_key: "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    organization: ""
+    base_url: "https://api.openai.com/v1"
+    models:
+      - "gpt-4"
+      - "gpt-4-turbo"
+      - "gpt-3.5-turbo"
+
+  # Anthropic Claude
+  anthropic:
+    api_key: "sk-ant-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    base_url: "https://api.anthropic.com"
+    models:
+      - "claude-3-opus"
+      - "claude-3-sonnet"
+      - "claude-3-haiku"
+
+  # DeepSeek
+  deepseek:
+    api_key: "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    base_url: "https://api.deepseek.com/v1"
+    models:
+      - "deepseek-chat"
+      - "deepseek-coder"
+
+# 数据源API密钥
+data_sources:
+  # Twitter/X API
+  twitter:
+    api_key: "xxxxxxxxxxxxxxxxxxxxxxxx"
+    api_secret: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    bearer_token: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    access_token: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    access_token_secret: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+  # Telegram Bot
+  telegram:
+    bot_token: "xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    api_id: "xxxxxxx"
+    api_hash: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+  # CoinGecko
+  coingecko:
+    api_key: "CG-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    pro_api_key: ""  # Pro版本密钥 (可选)
+
+  # CoinMarketCap
+  coinmarketcap:
+    api_key: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+
+  # DeFiLlama
+  defillama:
+    api_key: ""  # 可选,公开API不需要密钥
+
+  # GitHub
+  github:
+    personal_access_token: "ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+  # YouTube Data API
+  youtube:
+    api_key: "AIzaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+# 云服务密钥
+cloud_services:
+  # 阿里云
+  aliyun:
+    access_key_id: "LTAI5xxxxxxxxxxxxxxx"
+    access_key_secret: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+  # Cloudflare R2
+  cloudflare_r2:
+    account_id: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    access_key_id: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    secret_access_key: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+  # Vercel
+  vercel:
+    token: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    team_id: "team_xxxxxxxxxxxx"
+
+# 监控和错误追踪
+monitoring:
+  # Sentry
+  sentry:
+    dsn: "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@sentry.io/xxxxxxx"
+
+  # Better Stack (Logtail)
+  logtail:
+    source_token: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+# JWT密钥
+security:
+  jwt:
+    secret_key: "your-super-secret-jwt-key-change-this-in-production"
+    algorithm: "HS256"
+    access_token_expire_minutes: 60
+    refresh_token_expire_days: 7
+
+  # 数据加密密钥
+  encryption:
+    key: "your-encryption-key-32-bytes-long"  # 32字节

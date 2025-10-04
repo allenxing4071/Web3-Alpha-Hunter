@@ -1,0 +1,120 @@
+# 域名配置
+# 最后更新: 2025-10-04
+
+# ✅ 当前使用域名
+current_domains:
+  main:
+    domain: "web3.guandongfang.cn"
+    target: "47.253.226.250"
+    status: "✅ 已解析到阿里云服务器"
+    ssl: "⏳ 待配置"
+    provider: "阿里云"
+
+  # 建议配置的子域名
+  recommended_subdomains:
+    api:
+      domain: "api.web3.guandongfang.cn"
+      target: "47.253.226.250"
+      port: 8000
+      description: "后端API接口"
+      status: "⏳ 待配置"
+
+    admin:
+      domain: "admin.web3.guandongfang.cn"
+      target: "47.253.226.250"
+      description: "管理后台"
+      status: "⏳ 待配置"
+
+# 未来规划域名
+planned_domains:
+  main_domain: "web3alphahunter.com"
+  status: "📋 计划中"
+
+  subdomains:
+    # 前端应用
+    app:
+      domain: "app.web3alphahunter.com"
+      target: "vercel"
+      ssl: true
+      description: "前端应用主域名"
+
+    # 后端API
+    api:
+      domain: "api.web3alphahunter.com"
+      target: "47.253.226.250"
+      ssl: true
+      description: "后端API接口"
+
+    # CDN静态资源
+    cdn:
+      domain: "cdn.web3alphahunter.com"
+      target: "cloudflare_r2"
+      ssl: true
+      description: "静态资源CDN"
+
+    # 监控面板
+    monitor:
+      domain: "monitor.web3alphahunter.com"
+      target: "47.253.226.250:19999"
+      ssl: true
+      description: "Netdata监控面板"
+
+# 测试环境域名
+staging:
+  main_domain: "staging.web3alphahunter.com"
+
+  subdomains:
+    app:
+      domain: "staging-app.web3alphahunter.com"
+      target: "vercel_preview"
+      ssl: true
+
+    api:
+      domain: "staging-api.web3alphahunter.com"
+      target: "staging_server_ip"
+      ssl: true
+
+# 开发环境
+development:
+  frontend: "http://localhost:3000"
+  backend: "http://localhost:8000"
+  api_docs: "http://localhost:8000/docs"
+
+# DNS配置建议
+dns_records:
+  # A记录
+  - type: "A"
+    name: "@"
+    value: "47.253.226.250"
+    ttl: 600
+    description: "主域名指向服务器"
+
+  # CNAME记录
+  - type: "CNAME"
+    name: "app"
+    value: "cname.vercel-dns.com"
+    ttl: 600
+    description: "前端应用 -> Vercel"
+
+  - type: "CNAME"
+    name: "api"
+    value: "47.253.226.250"
+    ttl: 600
+    description: "API -> 生产服务器"
+
+  - type: "CNAME"
+    name: "cdn"
+    value: "cloudflare-r2-bucket.r2.dev"
+    ttl: 600
+    description: "CDN -> Cloudflare R2"
+
+# SSL证书配置
+ssl:
+  provider: "Let's Encrypt"
+  auto_renew: true
+  renewal_days_before_expiry: 30
+
+  # 证书存储路径
+  certificates:
+    production: "/app/web3-alpha-hunter/ssl/production"
+    staging: "/app/web3-alpha-hunter/ssl/staging"

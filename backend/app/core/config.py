@@ -36,12 +36,15 @@ class Settings(BaseSettings):
     def parse_cors_origins(cls, v) -> List[str]:
         """解析CORS origins"""
         if isinstance(v, str):
-            return [origin.strip() for origin in v.split(",")]
-        return v
+            return [origin.strip() for origin in v.split(",") if origin.strip()]
+        elif isinstance(v, list):
+            return v
+        return ["http://localhost:3000", "http://localhost:3001"]
     
     # AI服务
     OPENAI_API_KEY: Optional[str] = None
     ANTHROPIC_API_KEY: Optional[str] = None
+    DEEPSEEK_API_KEY: Optional[str] = None  # DeepSeek AI (国内)
     
     # Twitter API
     TWITTER_API_KEY: Optional[str] = None

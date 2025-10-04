@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>修复Admin角色</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .status {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+        }
+        .status-item:last-child {
+            margin-bottom: 0;
+        }
+        .label {
+            font-weight: 600;
+            color: #333;
+        }
+        .value {
+            color: #666;
+            font-family: monospace;
+        }
+        .role-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .role-admin {
+            background: #ef4444;
+            color: white;
+        }
+        .role-user {
+            background: #3b82f6;
+            color: white;
+        }
+        .role-none {
+            background: #9ca3af;
+            color: white;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .success {
+            background: #10b981;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .success.show {
+            display: block;
+        }
+        .warning {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            color: #92400e;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .info {
+            background: #dbeafe;
+            border-left: 4px solid #3b82f6;
+            color: #1e40af;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        .code {
+            background: #1f2937;
+            color: #10b981;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 13px;
+            margin-top: 10px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 修复Admin角色</h1>
+        <p class="subtitle">确保admin用户拥有最高管理员权限</p>
+
+        <div id="success" class="success">
+            ✅ Admin角色已成功修复为管理员!
+        </div>
+
+        <div class="warning">
+            ⚠️ <strong>重要提示:</strong> 此工具将强制设置admin用户为管理员角色
+        </div>
+
+        <div class="status">
+            <h3 style="margin-bottom: 15px; color: #333;">当前状态</h3>
+            <div class="status-item">
+                <span class="label">用户名:</span>
+                <span class="value" id="username">检查中...</span>
+            </div>
+            <div class="status-item">
+                <span class="label">当前角色:</span>
+                <span id="currentRole">检查中...</span>
+            </div>
+            <div class="status-item">
+                <span class="label">邮箱:</span>
+                <span class="value" id="email">检查中...</span>
+            </div>
+        </div>
+
+        <button id="fixBtn" onclick="fixAdminRole()">
+            🔧 立即修复Admin角色
+        </button>
+
+        <button onclick="window.location.href='/login'" style="background: #6b7280;">
+            ← 返回登录页
+        </button>
+
+        <div class="info">
+            <strong>修复后的权限:</strong><br>
+            ✅ 控制面板<br>
+            ✅ 系统管理<br>
+            ✅ 用户管理<br>
+            ✅ 数据库管理<br>
+            ✅ 所有管理功能
+        </div>
+
+        <div class="code" style="display: none;" id="debugInfo">
+            <div id="debugContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // 检查当前admin用户状态
+        function checkCurrentStatus() {
+            try {
+                const usersData = localStorage.getItem('users-storage')
+                const authData = localStorage.getItem('auth-storage')
+
+                if (usersData) {
+                    const users = JSON.parse(usersData).state.users
+                    const adminUser = users.find(u => u.username === 'admin')
+                    
+                    if (adminUser) {
+                        document.getElementById('username').textContent = adminUser.username
+                        document.getElementById('email').textContent = adminUser.email || 'admin@web3hunter.com'
+                        
+                        const roleSpan = document.getElementById('currentRole')
+                        const roleClass = adminUser.role === 'admin' ? 'role-admin' : 
+                                        adminUser.role === 'user' ? 'role-user' : 'role-none'
+                        roleSpan.innerHTML = `<span class="role-badge ${roleClass}">${adminUser.role || '未设置'}</span>`
+                        
+                        if (adminUser.role === 'admin') {
+                            document.getElementById('fixBtn').textContent = '✅ Admin角色正常'
+                            document.getElementById('fixBtn').disabled = true
+                        }
+                    } else {
+                        document.getElementById('username').textContent = '未找到admin用户'
+                        document.getElementById('currentRole').innerHTML = '<span class="role-badge role-none">不存在</span>'
+                    }
+                }
+
+                if (authData) {
+                    const auth = JSON.parse(authData).state
+                    if (auth.user) {
+                        const debugDiv = document.getElementById('debugContent')
+                        debugDiv.innerHTML = `当前登录用户: ${auth.user.username}<br>角色: ${auth.user.role || '未设置'}`
+                    }
+                }
+            } catch (error) {
+                console.error('检查状态失败:', error)
+            }
+        }
+
+        // 修复admin角色
+        function fixAdminRole() {
+            try {
+                // 1. 获取用户数据
+                const usersData = localStorage.getItem('users-storage')
+                if (!usersData) {
+                    alert('❌ 未找到用户数据,请先初始化系统')
+                    return
+                }
+
+                const usersObj = JSON.parse(usersData)
+                const users = usersObj.state.users
+
+                // 2. 找到admin用户并修复角色
+                const adminIndex = users.findIndex(u => u.username === 'admin')
+                
+                if (adminIndex === -1) {
+                    alert('❌ 未找到admin用户')
+                    return
+                }
+
+                // 强制设置为管理员
+                users[adminIndex].role = 'admin'
+                
+                // 如果没有邮箱,设置默认邮箱
+                if (!users[adminIndex].email) {
+                    users[adminIndex].email = 'admin@web3hunter.com'
+                }
+
+                // 保存更新
+                usersObj.state.users = users
+                localStorage.setItem('users-storage', JSON.stringify(usersObj))
+
+                // 3. 更新认证状态中的角色
+                const authData = localStorage.getItem('auth-storage')
+                if (authData) {
+                    const authObj = JSON.parse(authData)
+                    if (authObj.state.user && authObj.state.user.username === 'admin') {
+                        authObj.state.user.role = 'admin'
+                        if (!authObj.state.user.email) {
+                            authObj.state.user.email = 'admin@web3hunter.com'
+                        }
+                        localStorage.setItem('auth-storage', JSON.stringify(authObj))
+                    }
+                }
+
+                // 4. 显示成功消息
+                document.getElementById('success').classList.add('show')
+                document.getElementById('fixBtn').textContent = '✅ 修复成功!'
+                document.getElementById('fixBtn').disabled = true
+
+                // 5. 刷新状态显示
+                checkCurrentStatus()
+
+                // 6. 3秒后自动跳转
+                setTimeout(() => {
+                    if (confirm('修复成功! 是否立即重新登录查看效果?')) {
+                        localStorage.removeItem('auth-storage')
+                        window.location.href = '/login'
+                    }
+                }, 1000)
+
+            } catch (error) {
+                console.error('修复失败:', error)
+                alert('❌ 修复失败: ' + error.message)
+            }
+        }
+
+        // 页面加载时检查状态
+        window.onload = function() {
+            checkCurrentStatus()
+        }
+
+        // 显示调试信息(按D键)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'd' || e.key === 'D') {
+                const debugDiv = document.getElementById('debugInfo')
+                debugDiv.style.display = debugDiv.style.display === 'none' ? 'block' : 'none'
+            }
+        })
+    </script>
+</body>
+</html>

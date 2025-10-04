@@ -78,22 +78,41 @@ faxianjihui/
 │   │   ├── store/       # Zustand状态管理
 │   │   └── types/       # TypeScript类型
 │   └── package.json
-├── docs/                 # 项目文档
+├── docs/                 # 项目技术文档
+├── guides/               # 📚 配置和操作指南
+│   ├── config/          # 配置指南
+│   ├── ai/              # AI配置指南
+│   └── admin/           # 管理员指南
+├── archive/              # 历史文档归档
 ├── docker-compose.yml    # Docker配置
-└── README.md
+├── START.md              # 快速启动指南
+└── README.md             # 项目主文档
 ```
 
 ## 🔧 开发指南
 
 详细开发文档请查看 [README_DEV.md](./README_DEV.md)
 
-## 📚 文档
+## 📚 文档导航
 
-- [项目概述](./docs/01-需求与设计/01-项目概述.md)
-- [功能需求](./docs/01-需求与设计/02-功能需求清单.md)
-- [技术选型](./docs/02-技术实现/01-技术选型.md)
-- [API接口文档](./docs/02-技术实现/02-API接口文档.md)
-- [部署指南](./docs/04-部署与运维/01-部署指南.md)
+### 📖 技术文档 (`docs/`)
+- [📚 文档中心](./docs/README.md) - 完整文档导航
+- [项目概述](./docs/01-需求与设计/01-项目概述.md) - 项目定位和路线图
+- [功能需求清单](./docs/01-需求与设计/02-功能需求清单.md) - 详细功能和实现状态
+- [已实现功能清单](./docs/02-技术实现/03-已实现功能清单.md) - 当前实现详情 ⭐
+- [API接口文档](./docs/02-技术实现/02-API接口文档.md) - RESTful API规范
+- [数据库设计文档](./docs/02-技术实现/04-数据库设计文档.md) - 表结构和优化 ⭐
+- [技术选型](./docs/02-技术实现/01-技术选型.md) - 技术栈说明
+- [部署指南](./docs/04-部署与运维/01-部署指南.md) - 生产环境部署
+
+### 🔧 配置和操作指南 (`guides/`)
+- [📚 指南中心](./guides/README.md) - 所有指南索引
+- [⚙️ 配置中心](./guides/config/README.md) - 服务器/域名/数据库/API密钥配置
+- [🤖 AI配置](./guides/ai/DEEPSEEK_GUIDE.md) - DeepSeek AI模型配置
+- [👥 管理员指南](./guides/admin/ROLE_MANAGEMENT_GUIDE.md) - 用户权限管理
+
+### 🚀 快速入门
+- [START.md](./START.md) - 快速启动指南
 
 ## 🎯 核心技术栈
 

@@ -1,5 +1,5 @@
 /**
- * 用户认证状态管理 - Zustand
+ * 用户认证状态管理 - Zustand (支持角色)
  */
 
 import { create } from 'zustand'
@@ -9,6 +9,7 @@ export interface User {
   id: string
   username: string
   email: string
+  role: 'admin' | 'user'  // 添加角色
   createdAt: string
 }
 
@@ -22,6 +23,7 @@ interface AuthState {
   login: (username: string, password: string) => Promise<boolean>
   logout: () => void
   checkAuth: () => boolean
+  isAdmin: () => boolean  // 新增判断管理员权限
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -58,6 +60,11 @@ export const useAuthStore = create<AuthState>()(
 
       checkAuth: () => {
         return get().isAuthenticated
+      },
+
+      isAdmin: () => {
+        const state = get()
+        return state.user?.role === 'admin'
       }
     }),
     {
@@ -66,4 +73,3 @@ export const useAuthStore = create<AuthState>()(
     }
   )
 )
-

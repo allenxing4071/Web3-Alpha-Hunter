@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>项目文档 - Web3 Alpha Hunter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
+            background: #0a0f1e;
+            color: #d1d5db;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: #1a1f35;
+            border: 1px solid #374151;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .back-btn {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+        }
+
+        .docs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .doc-card {
+            background: #1a1f35;
+            border: 1px solid #374151;
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .doc-card:hover {
+            border-color: #6366f1;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .doc-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .doc-card p {
+            color: #9ca3af;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .doc-card .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(99, 102, 241, 0.2);
+            color: #818cf8;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .quick-links {
+            background: #1a1f35;
+            border: 1px solid #374151;
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .quick-links h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #fff;
+            border-bottom: 1px solid #374151;
+            padding-bottom: 10px;
+        }
+
+        .quick-links ul {
+            list-style: none;
+        }
+
+        .quick-links li {
+            margin-bottom: 12px;
+        }
+
+        .quick-links a {
+            color: #818cf8;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .quick-links a:hover {
+            background: rgba(99, 102, 241, 0.1);
+            padding-left: 15px;
+        }
+
+        .info-box {
+            background: rgba(99, 102, 241, 0.1);
+            border-left: 4px solid #6366f1;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+        }
+
+        .info-box h4 {
+            color: #818cf8;
+            margin-bottom: 10px;
+        }
+
+        .info-box p {
+            color: #9ca3af;
+            line-height: 1.6;
+        }
+
+        code {
+            background: #0a0f1e;
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #10b981;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📖 项目文档</h1>
+            <a href="/dashboard" class="back-btn">← 返回控制面板</a>
+        </div>
+
+        <div class="docs-grid">
+            <div class="doc-card" onclick="window.location.href='https://github.com/deepseek-ai/DeepSeek-V3'">
+                <h3>🤖 DeepSeek AI 配置</h3>
+                <p>AI分析引擎配置教程,了解如何集成DeepSeek v3模型进行项目分析。</p>
+                <span class="badge">AI引擎</span>
+                <span class="badge">必读</span>
+            </div>
+
+            <div class="doc-card" onclick="window.location.href='/admin'">
+                <h3>📊 数据采集系统</h3>
+                <p>数据采集流程和配置说明,管理Twitter、Telegram等多平台数据源。</p>
+                <span class="badge">数据采集</span>
+                <span class="badge">核心功能</span>
+            </div>
+
+            <div class="doc-card" onclick="window.location.href='/users'">
+                <h3>👥 用户权限管理</h3>
+                <p>角色管理和权限配置,管理员和普通用户的权限说明。</p>
+                <span class="badge">权限管理</span>
+            </div>
+
+            <div class="doc-card" onclick="window.location.href='/database.html'">
+                <h3>🗄️ 数据库结构</h3>
+                <p>数据库表结构和字段说明,包含Projects、Social Metrics、Onchain等表。</p>
+                <span class="badge">数据库</span>
+            </div>
+
+            <div class="doc-card" onclick="window.location.href='http://localhost:8000/docs'">
+                <h3>📖 API文档</h3>
+                <p>完整的后端API文档,Swagger交互式接口文档。</p>
+                <span class="badge">API</span>
+            </div>
+
+            <div class="doc-card" onclick="window.location.href='/api-docs.html'">
+                <h3>🔗 第三方API</h3>
+                <p>集成的第三方API文档链接,包括Twitter、Telegram、CoinGecko等。</p>
+                <span class="badge">集成</span>
+            </div>
+        </div>
+
+        <div class="quick-links">
+            <h2>⚡ 快速链接</h2>
+            <ul>
+                <li><a href="/dashboard">📊 控制面板 - 系统总览</a></li>
+                <li><a href="/projects">📋 项目列表 - 查看所有Web3项目</a></li>
+                <li><a href="/admin">⚙️ 系统管理 - 数据采集与任务管理</a></li>
+                <li><a href="/users">👤 用户管理 - 用户增删改查</a></li>
+                <li><a href="http://localhost:8000/health">❤️ 健康检查 - 服务状态</a></li>
+            </ul>
+        </div>
+
+        <div class="info-box">
+            <h4>📌 重要提示</h4>
+            <p>
+                所有文档内容均为管理员专属。如需配置AI API密钥,请访问系统管理页面。
+                默认管理员账号: <code>admin</code> / <code>admin123</code>
+            </p>
+        </div>
+
+        <div class="info-box" style="margin-top: 15px; border-left-color: #10b981; background: rgba(16, 185, 129, 0.1);">
+            <h4>🚀 技术栈</h4>
+            <p>
+                <strong>前端:</strong> Next.js 14 + TypeScript + Tailwind CSS<br>
+                <strong>后端:</strong> FastAPI + Python + PostgreSQL<br>
+                <strong>AI:</strong> DeepSeek v3.2 + Claude + OpenAI<br>
+                <strong>任务队列:</strong> Celery + Redis
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+

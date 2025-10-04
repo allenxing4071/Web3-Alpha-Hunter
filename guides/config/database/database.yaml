@@ -1,0 +1,107 @@
+# 数据库配置
+# 最后更新: 2025-10-04
+
+# 生产环境数据库
+production:
+  # PostgreSQL主数据库
+  postgresql:
+    host: "postgres"  # Docker内部主机名
+    port: 5432
+    database: "web3_alpha_hunter"
+    username: "postgres"
+    password: "${DB_PASSWORD}"  # 从环境变量读取
+
+    # 连接池配置
+    pool:
+      pool_size: 20
+      max_overflow: 10
+      pool_pre_ping: true
+      pool_recycle: 3600  # 1小时回收连接
+
+    # 备份配置
+    backup:
+      enabled: true
+      schedule: "0 2 * * *"  # 每天凌晨2点
+      retention_days: 7
+      backup_path: "/app/web3-alpha-hunter/backups/postgresql"
+
+  # Redis缓存
+  redis:
+    host: "redis"
+    port: 6379
+    database: 0
+    password: ""
+
+    # 持久化
+    persistence:
+      enabled: true
+      strategy: "appendonly"  # AOF持久化
+
+# 开发环境数据库
+development:
+  postgresql:
+    host: "localhost"
+    port: 5432
+    database: "web3_alpha_hunter_dev"
+    username: "postgres"
+    password: "postgres"
+
+  redis:
+    host: "localhost"
+    port: 6379
+    database: 0
+
+# 测试环境数据库
+testing:
+  postgresql:
+    host: "localhost"
+    port: 5432
+    database: "web3_alpha_hunter_test"
+    username: "postgres"
+    password: "postgres"
+
+  redis:
+    host: "localhost"
+    port: 6379
+    database: 1  # 使用不同的数据库
+
+# 数据库表配置
+tables:
+  # 核心表
+  core:
+    - users
+    - projects
+    - ai_config
+
+  # 指标表
+  metrics:
+    - social_metrics
+    - onchain_metrics
+
+  # 分析表
+  analysis:
+    - ai_analysis
+
+  # 待创建表
+  planned:
+    - daily_reports
+    - user_watchlist
+    - alerts
+    - api_usage_logs
+
+# 数据库维护
+maintenance:
+  # 自动VACUUM
+  vacuum:
+    enabled: true
+    schedule: "0 3 * * 0"  # 每周日凌晨3点
+
+  # 索引重建
+  reindex:
+    enabled: false
+    schedule: "0 4 1 * *"  # 每月1号凌晨4点
+
+  # 统计信息更新
+  analyze:
+    enabled: true
+    schedule: "0 1 * * *"  # 每天凌晨1点
