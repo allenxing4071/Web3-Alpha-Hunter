@@ -23,7 +23,7 @@ export function Navbar() {
   useEffect(() => {
     setMounted(true)
     checkAuth()
-  }, [checkAuth])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // 登录页不显示导航栏
   if (!mounted || pathname === '/login') {
