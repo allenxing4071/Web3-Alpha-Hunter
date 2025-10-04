@@ -12,16 +12,9 @@ export function SimpleNavbar() {
   const router = useRouter()
   const pathname = usePathname()
   const [mounted, setMounted] = useState(false)
-  const [isAuth, setIsAuth] = useState(false)
 
   useEffect(() => {
     setMounted(true)
-    
-    // 简单检查sessionStorage
-    if (typeof window !== 'undefined') {
-      const token = sessionStorage.getItem('auth_token')
-      setIsAuth(token === 'authenticated')
-    }
   }, [])
 
   // 登录页不显示
@@ -29,8 +22,9 @@ export function SimpleNavbar() {
     return null
   }
 
-  // 未认证不显示
-  if (!isAuth) {
+  // 检查认证状态(在渲染时实时检查)
+  const token = typeof window !== 'undefined' ? sessionStorage.getItem('auth_token') : null
+  if (token !== 'authenticated') {
     return null
   }
 
