@@ -349,7 +349,7 @@
     <div class="container">
         <div class="header">
             <h1>🗄️ 数据库管理</h1>
-            <a href="/dashboard" class="back-btn">← 返回面板</a>
+            <button onclick="window.location.href = window.location.origin + '/dashboard'" class="back-btn" style="border: none; cursor: pointer;">← 返回面板</button>
         </div>
 
         <div class="stats">
@@ -1595,10 +1595,46 @@ CREATE INDEX idx_discovery_time ON project_discoveries(discovered_at);</div>
             }
         }
 
+        // 从后端加载真实数据
+        async function loadRealData() {
+            try {
+                // 加载项目数据
+                const projectsResponse = await fetch('http://localhost:8000/api/v1/projects?limit=100');
+                const projectsResult = await projectsResponse.json();
+                
+                if (projectsResult.success && projectsResult.data.projects.length > 0) {
+                    // 替换模拟数据为真实数据
+                    const realProjects = projectsResult.data.projects.map(p => ({
+                        id: p.project_id.replace('proj_', ''),
+                        name: p.name,
+                        symbol: p.symbol || 'N/A',
+                        blockchain: p.blockchain || 'Unknown',
+                        category: p.category || 'Other',
+                        score: p.overall_score.toFixed(1),
+                        grade: p.grade || 'C',
+                        source: 'database'
+                    }));
+                    
+                    paginationState.projects.data = realProjects;
+                    paginationState.projects.totalItems = realProjects.length;
+                    
+                    console.log('✅ 已加载真实项目数据:', realProjects.length, '条');
+                } else {
+                    console.log('⚠️ 数据库中暂无项目数据，使用示例数据');
+                }
+            } catch (error) {
+                console.error('❌ 加载真实数据失败:', error);
+                console.log('⚠️ 使用示例数据');
+            }
+        }
+
         // 初始化页面
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
             // 加载数据库统计
-            loadDatabaseStats();
+            await loadDatabaseStats();
+            
+            // 加载真实数据
+            await loadRealData();
             
             // 渲染表格
             renderTable('projects');
