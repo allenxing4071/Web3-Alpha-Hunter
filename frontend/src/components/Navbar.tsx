@@ -8,7 +8,6 @@ import Link from 'next/link'
 import { useRouter, usePathname } from 'next/navigation'
 import { useAuthStore } from '@/store/authStore'
 import { useState, useRef, useEffect } from 'react'
-import { DatabaseModal } from './DatabaseModal'
 
 export function Navbar() {
   const router = useRouter()
@@ -16,7 +15,6 @@ export function Navbar() {
   const { user, logout, isAdmin, checkAuth } = useAuthStore()
   const [adminMenuOpen, setAdminMenuOpen] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
-  const [databaseModalOpen, setDatabaseModalOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   const adminMenuRef = useRef<HTMLDivElement>(null)
   const userMenuRef = useRef<HTMLDivElement>(null)
@@ -61,7 +59,7 @@ export function Navbar() {
     { href: '/', label: '首页' },
     { href: '/projects', label: '项目列表' },
     { href: '/compare', label: '项目对比' },
-    { href: '/api-docs.html', label: 'API文档', external: true },
+    { href: '/api-docs', label: 'API文档' },
   ]
 
   // 管理员菜单项
@@ -69,13 +67,7 @@ export function Navbar() {
     { href: '/dashboard', label: '控制面板', icon: '📊' },
     { href: '/admin', label: '系统管理', icon: '⚙️' },
     { href: '/users', label: '用户管理', icon: '👥' },
-    { 
-      href: '/database.html', 
-      label: '数据库管理', 
-      icon: '🗄️', 
-      external: true,
-      newWindow: true  // 新窗口打开
-    },
+    { href: '/database', label: '数据库管理', icon: '🗄️' },
   ]
 
   return (
@@ -93,30 +85,17 @@ export function Navbar() {
           <div className="flex items-center space-x-1">
             {/* 公共菜单 */}
             {publicNavItems.map((item) => (
-              item.external ? (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-4 py-2 rounded-lg transition-colors text-text-secondary hover:text-text-primary hover:bg-bg-secondary flex items-center gap-1 whitespace-nowrap"
-                >
-                  {item.label}
-                  <span className="text-xs opacity-60">🔗</span>
-                </a>
-              ) : (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`px-4 py-2 rounded-lg transition-colors whitespace-nowrap ${
-                    pathname === item.href
-                      ? 'bg-accent-primary/20 text-accent-primary'
-                      : 'text-text-secondary hover:text-text-primary hover:bg-bg-secondary'
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              )
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`px-4 py-2 rounded-lg transition-colors whitespace-nowrap ${
+                  pathname === item.href
+                    ? 'bg-accent-primary/20 text-accent-primary'
+                    : 'text-text-secondary hover:text-text-primary hover:bg-bg-secondary'
+                }`}
+              >
+                {item.label}
+              </Link>
             ))}
 
             {/* 管理员下拉菜单 */}
@@ -149,34 +128,19 @@ export function Navbar() {
                       🔐 管理员专属功能
                     </div>
                     {adminNavItems.map((item) => (
-                      item.external ? (
-                        <a
-                          key={item.href}
-                          href={item.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-3 px-4 py-2.5 text-text-secondary hover:text-text-primary hover:bg-bg-tertiary transition-colors"
-                          onClick={() => setAdminMenuOpen(false)}
-                        >
-                          <span className="text-lg">{item.icon}</span>
-                          <span>{item.label}</span>
-                          <span className="ml-auto text-xs opacity-60">🔗</span>
-                        </a>
-                      ) : (
-                        <Link
-                          key={item.href}
-                          href={item.href}
-                          className={`flex items-center gap-3 px-4 py-2.5 transition-colors ${
-                            pathname === item.href
-                              ? 'bg-accent-primary/10 text-accent-primary'
-                              : 'text-text-secondary hover:text-text-primary hover:bg-bg-tertiary'
-                          }`}
-                          onClick={() => setAdminMenuOpen(false)}
-                        >
-                          <span className="text-lg">{item.icon}</span>
-                          <span>{item.label}</span>
-                        </Link>
-                      )
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className={`flex items-center gap-3 px-4 py-2.5 transition-colors ${
+                          pathname === item.href
+                            ? 'bg-accent-primary/10 text-accent-primary'
+                            : 'text-text-secondary hover:text-text-primary hover:bg-bg-tertiary'
+                        }`}
+                        onClick={() => setAdminMenuOpen(false)}
+                      >
+                        <span className="text-lg">{item.icon}</span>
+                        <span>{item.label}</span>
+                      </Link>
                     ))}
                   </div>
                 )}
