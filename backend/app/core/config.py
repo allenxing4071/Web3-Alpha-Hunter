@@ -21,11 +21,14 @@ class Settings(BaseSettings):
     DATABASE_POOL_SIZE: int = 20
     DATABASE_MAX_OVERFLOW: int = 10
     
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        # 强制确保数据库名正确
-        if 'web3hunter' in self.DATABASE_URL and 'web3_alpha_hunter' not in self.DATABASE_URL:
-            self.DATABASE_URL = self.DATABASE_URL.replace('web3hunter', 'web3_alpha_hunter')
+    @field_validator("DATABASE_URL", mode="after")
+    @classmethod
+    def validate_database_url(cls, v: str) -> str:
+        """确保数据库名正确"""
+        if 'web3hunter' in v and 'web3_alpha_hunter' not in v:
+            v = v.replace('web3hunter', 'web3_alpha_hunter')
+            print(f"⚠️  修正数据库URL: {v}")
+        return v
     
     # Redis
     REDIS_URL: str = "redis://localhost:6379/0"

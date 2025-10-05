@@ -5,6 +5,9 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from app.core.config import settings
 
+# 打印数据库URL用于调试
+print(f"🔍 数据库URL: {settings.DATABASE_URL}")
+
 # 创建数据库引擎（SQLite特殊处理）
 if settings.DATABASE_URL.startswith('sqlite'):
     engine = create_engine(
