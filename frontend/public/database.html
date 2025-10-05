@@ -1432,41 +1432,44 @@ CREATE INDEX idx_discovery_time ON project_discoveries(discovered_at);</div>
 
     <script>
         // ============================================
-        // 登录验证 - 必须先登录才能访问
+        // 登录状态检查（仅提示，不强制跳转）
         // ============================================
         (function() {
-            const token = localStorage.getItem('token');
+            // 检查 sessionStorage 中的认证信息
+            const token = sessionStorage.getItem('auth_token');
+            const userStr = sessionStorage.getItem('auth_user');
             
-            if (!token) {
-                // 未登录，重定向到登录页
-                console.log('⚠️ 未检测到登录状态，跳转到登录页');
-                window.location.href = 'http://localhost:3000/login';
+            if (!token || token !== 'authenticated' || !userStr) {
+                // 未登录，显示警告但不跳转
+                console.warn('⚠️ 未检测到登录状态');
+                
+                // 在页面顶部显示登录提示
+                const warning = document.createElement('div');
+                warning.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; padding: 15px; text-align: center; z-index: 9999; font-weight: 600; box-shadow: 0 4px 6px rgba(0,0,0,0.3);';
+                warning.innerHTML = '⚠️ 您当前未登录，建议先 <a href="http://localhost:3000/login" style="color: #fef3c7; text-decoration: underline;">登录系统</a> 后再访问';
+                document.body.insertBefore(warning, document.body.firstChild);
+                
+                // 调整容器顶部边距
+                document.querySelector('.container').style.marginTop = '60px';
                 return;
             }
             
-            // 验证token是否有效
-            fetch('http://localhost:8000/api/v1/admin/verify-token', {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    // Token无效，清除并跳转到登录页
-                    localStorage.removeItem('token');
-                    localStorage.removeItem('user');
-                    console.log('⚠️ Token无效，跳转到登录页');
-                    window.location.href = 'http://localhost:3000/login';
-                }
-            })
-            .catch(error => {
-                console.error('Token验证失败:', error);
-                // 验证失败也跳转到登录页
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                window.location.href = 'http://localhost:3000/login';
-            });
+            // 检查用户信息
+            try {
+                const user = JSON.parse(userStr);
+                console.log('✅ 已登录用户:', user.username, '角色:', user.role);
+                
+                // 显示欢迎信息
+                const welcome = document.createElement('div');
+                welcome.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 12px; text-align: center; z-index: 9999; font-weight: 500; box-shadow: 0 4px 6px rgba(0,0,0,0.3);';
+                welcome.innerHTML = `✅ 欢迎，${user.username} (${user.role === 'admin' ? '管理员' : '用户'})`;
+                document.body.insertBefore(welcome, document.body.firstChild);
+                
+                // 调整容器顶部边距
+                document.querySelector('.container').style.marginTop = '60px';
+            } catch (e) {
+                console.error('用户信息解析失败:', e);
+            }
         })();
 
         // 示例数据生成器
