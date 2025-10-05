@@ -16,10 +16,16 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "Web3 Alpha Hunter"
     VERSION: str = "1.0.0"
     
-    # 数据库 (使用PostgreSQL)
+    # 数据库 (使用PostgreSQL) - 强制使用正确的数据库名
     DATABASE_URL: str = "postgresql://postgres:postgres@localhost:5432/web3_alpha_hunter"
     DATABASE_POOL_SIZE: int = 20
     DATABASE_MAX_OVERFLOW: int = 10
+    
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        # 强制确保数据库名正确
+        if 'web3hunter' in self.DATABASE_URL and 'web3_alpha_hunter' not in self.DATABASE_URL:
+            self.DATABASE_URL = self.DATABASE_URL.replace('web3hunter', 'web3_alpha_hunter')
     
     # Redis
     REDIS_URL: str = "redis://localhost:6379/0"
