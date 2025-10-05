@@ -44,20 +44,6 @@
             background-clip: text;
         }
 
-        .back-btn {
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        .back-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
-        }
 
         /* Stats Cards */
         .stats {
@@ -349,7 +335,7 @@
     <div class="container">
         <div class="header">
             <h1>🗄️ 数据库管理</h1>
-            <button onclick="goBack()" class="back-btn" style="border: none; cursor: pointer;">← 返回面板</button>
+            <p style="color: #9ca3af; font-size: 14px; margin: 0;">查看和管理系统数据库表结构与数据</p>
         </div>
 
         <div class="stats">
@@ -1445,19 +1431,43 @@ CREATE INDEX idx_discovery_time ON project_discoveries(discovered_at);</div>
     </div>
 
     <script>
-        // 返回面板函数
-        function goBack() {
-            // 尝试从localStorage获取token
+        // ============================================
+        // 登录验证 - 必须先登录才能访问
+        // ============================================
+        (function() {
             const token = localStorage.getItem('token');
             
-            if (token) {
-                // 如果有token，跳转到dashboard
-                window.location.href = 'http://localhost:3000/dashboard';
-            } else {
-                // 如果没有token，跳转到登录页
+            if (!token) {
+                // 未登录，重定向到登录页
+                console.log('⚠️ 未检测到登录状态，跳转到登录页');
                 window.location.href = 'http://localhost:3000/login';
+                return;
             }
-        }
+            
+            // 验证token是否有效
+            fetch('http://localhost:8000/api/v1/admin/verify-token', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    // Token无效，清除并跳转到登录页
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    console.log('⚠️ Token无效，跳转到登录页');
+                    window.location.href = 'http://localhost:3000/login';
+                }
+            })
+            .catch(error => {
+                console.error('Token验证失败:', error);
+                // 验证失败也跳转到登录页
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                window.location.href = 'http://localhost:3000/login';
+            });
+        })();
 
         // 示例数据生成器
         const mockProjects = [

@@ -8,6 +8,7 @@ import Link from 'next/link'
 import { useRouter, usePathname } from 'next/navigation'
 import { useAuthStore } from '@/store/authStore'
 import { useState, useRef, useEffect } from 'react'
+import { DatabaseModal } from './DatabaseModal'
 
 export function Navbar() {
   const router = useRouter()
@@ -15,6 +16,7 @@ export function Navbar() {
   const { user, logout, isAdmin, checkAuth } = useAuthStore()
   const [adminMenuOpen, setAdminMenuOpen] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
+  const [databaseModalOpen, setDatabaseModalOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   const adminMenuRef = useRef<HTMLDivElement>(null)
   const userMenuRef = useRef<HTMLDivElement>(null)
@@ -67,7 +69,13 @@ export function Navbar() {
     { href: '/dashboard', label: '控制面板', icon: '📊' },
     { href: '/admin', label: '系统管理', icon: '⚙️' },
     { href: '/users', label: '用户管理', icon: '👥' },
-    { href: 'http://localhost:3000/database.html', label: '数据库', icon: '🗄️', external: true },
+    { 
+      href: '/database.html', 
+      label: '数据库管理', 
+      icon: '🗄️', 
+      external: true,
+      newWindow: true  // 新窗口打开
+    },
   ]
 
   return (
