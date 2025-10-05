@@ -349,7 +349,7 @@
     <div class="container">
         <div class="header">
             <h1>🗄️ 数据库管理</h1>
-            <button onclick="window.location.href = 'http://localhost:3000/dashboard'" class="back-btn" style="border: none; cursor: pointer;">← 返回面板</button>
+            <button onclick="goBack()" class="back-btn" style="border: none; cursor: pointer;">← 返回面板</button>
         </div>
 
         <div class="stats">
@@ -1445,6 +1445,20 @@ CREATE INDEX idx_discovery_time ON project_discoveries(discovered_at);</div>
     </div>
 
     <script>
+        // 返回面板函数
+        function goBack() {
+            // 尝试从localStorage获取token
+            const token = localStorage.getItem('token');
+            
+            if (token) {
+                // 如果有token，跳转到dashboard
+                window.location.href = 'http://localhost:3000/dashboard';
+            } else {
+                // 如果没有token，跳转到登录页
+                window.location.href = 'http://localhost:3000/login';
+            }
+        }
+
         // 示例数据生成器
         const mockProjects = [
             { id: 1, name: 'Uniswap', symbol: 'UNI', blockchain: 'Ethereum', category: 'DeFi', score: 92.5, grade: 'S', source: 'coingecko_trending' },
