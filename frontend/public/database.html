@@ -1083,6 +1083,23 @@ CREATE INDEX idx_ai_config_enabled ON ai_configs(enabled);</div>
                     </tbody>
                 </table>
 
+                <h4>示例数据</h4>
+                <table id="tokenlaunchTable">
+                    <thead>
+                        <tr>
+                            <th>项目ID</th>
+                            <th>项目名称</th>
+                            <th>发币概率</th>
+                            <th>预测时间</th>
+                            <th>置信度</th>
+                            <th>关键信号</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tokenlaunchTableBody">
+                        <!-- 数据将从数据库加载 -->
+                    </tbody>
+                </table>
+
                 <h4>创建表SQL</h4>
                 <div class="code-block">CREATE TABLE token_launch_predictions (
     id SERIAL PRIMARY KEY,
@@ -1172,6 +1189,23 @@ CREATE INDEX idx_token_launch_project ON token_launch_predictions(project_id);</
                             <td><span class="nullable">NULL</span></td>
                             <td>创建时间</td>
                         </tr>
+                    </tbody>
+                </table>
+
+                <h4>示例数据</h4>
+                <table id="airdropTable">
+                    <thead>
+                        <tr>
+                            <th>项目ID</th>
+                            <th>项目名称</th>
+                            <th>估值(USD)</th>
+                            <th>估值(CNY)</th>
+                            <th>价值范围</th>
+                            <th>置信度</th>
+                        </tr>
+                    </thead>
+                    <tbody id="airdropTableBody">
+                        <!-- 数据将从数据库加载 -->
                     </tbody>
                 </table>
 
@@ -1267,6 +1301,24 @@ CREATE INDEX idx_airdrop_project ON airdrop_value_estimates(project_id);</div>
                     </tbody>
                 </table>
 
+                <h4>示例数据</h4>
+                <table id="investmentTable">
+                    <thead>
+                        <tr>
+                            <th>项目ID</th>
+                            <th>项目名称</th>
+                            <th>项目等级</th>
+                            <th>预算(USD)</th>
+                            <th>紧急度</th>
+                            <th>预期ROI</th>
+                            <th>行动步骤数</th>
+                        </tr>
+                    </thead>
+                    <tbody id="investmentTableBody">
+                        <!-- 数据将从数据库加载 -->
+                    </tbody>
+                </table>
+
                 <h4>创建表SQL</h4>
                 <div class="code-block">CREATE TABLE investment_action_plans (
     id SERIAL PRIMARY KEY,
@@ -1351,6 +1403,24 @@ CREATE INDEX idx_investment_priority ON investment_action_plans(priority);</div>
                             <td><span class="nullable">NULL</span></td>
                             <td>创建时间</td>
                         </tr>
+                    </tbody>
+                </table>
+
+                <h4>示例数据</h4>
+                <table id="discoveryTable">
+                    <thead>
+                        <tr>
+                            <th>项目名称</th>
+                            <th>总提及数</th>
+                            <th>平台数</th>
+                            <th>热度评分</th>
+                            <th>24h提及</th>
+                            <th>增长率</th>
+                            <th>状态</th>
+                        </tr>
+                    </thead>
+                    <tbody id="discoveryTableBody">
+                        <!-- 数据将从数据库加载 -->
                     </tbody>
                 </table>
 
@@ -1628,6 +1698,160 @@ CREATE INDEX idx_discovery_time ON project_discoveries(discovered_at);</div>
             }
         }
 
+        // 从数据库加载新4张表的数据（使用模拟数据）
+        async function loadNewTablesData() {
+            // 1. 发币预测数据
+            const tokenLaunchData = [
+                { project_id: 12, launch_probability: 85, estimated_timeline: 'Q2 2025 (3-6个月)', confidence: 'High', signal_count: 3 },
+                { project_id: 13, launch_probability: 72, estimated_timeline: 'Q3 2025 (6-9个月)', confidence: 'Medium', signal_count: 2 },
+                { project_id: 17, launch_probability: 65, estimated_timeline: 'Q2-Q3 2025 (4-8个月)', confidence: 'Medium', signal_count: 3 },
+                { project_id: 20, launch_probability: 58, estimated_timeline: 'Q4 2025 (9-12个月)', confidence: 'Medium-Low', signal_count: 2 }
+            ];
+            renderNewTableData('tokenlaunch', tokenLaunchData);
+
+            // 2. 空投估算数据
+            const airdropData = [
+                { project_id: 12, estimated_value_usd: 1200, estimated_value_cny: 8400, min_value_usd: 500, max_value_usd: 2000, confidence: 'High' },
+                { project_id: 13, estimated_value_usd: 750, estimated_value_cny: 5250, min_value_usd: 300, max_value_usd: 1200, confidence: 'Medium' },
+                { project_id: 17, estimated_value_usd: 1500, estimated_value_cny: 10500, min_value_usd: 800, max_value_usd: 2500, confidence: 'High' },
+                { project_id: 19, estimated_value_usd: 1800, estimated_value_cny: 12600, min_value_usd: 1000, max_value_usd: 3000, confidence: 'High' },
+                { project_id: 20, estimated_value_usd: 900, estimated_value_cny: 6300, min_value_usd: 400, max_value_usd: 1500, confidence: 'Medium' }
+            ];
+            renderNewTableData('airdrop', airdropData);
+
+            // 3. 投资计划数据
+            const investmentData = [
+                { project_id: 1, project_tier: 'S', total_budget: 5000, urgency: 'Medium', expected_roi: '15-25%', total_steps: 4 },
+                { project_id: 3, project_tier: 'S', total_budget: 2000, urgency: 'High', expected_roi: '20-40%', total_steps: 4 },
+                { project_id: 12, project_tier: 'A', total_budget: 300, urgency: 'High', expected_roi: '300-600%', total_steps: 5 },
+                { project_id: 13, project_tier: 'B', total_budget: 1000, urgency: 'Medium', expected_roi: '50-100%', total_steps: 4 },
+                { project_id: 17, project_tier: 'B', total_budget: 500, urgency: 'Medium', expected_roi: '100-200%', total_steps: 5 },
+                { project_id: 19, project_tier: 'A', total_budget: 500, urgency: 'High', expected_roi: '200-500%', total_steps: 5 }
+            ];
+            renderNewTableData('investment', investmentData);
+
+            // 4. 项目发现数据
+            const discoveryData = [
+                { project_name: 'Uniswap', total_mentions: 1250, num_platforms: 4, heat_score: 92, mentions_24h: 85, growth_rate: 1.45, is_trending: 1, is_surge: 0 },
+                { project_name: 'Arbitrum', total_mentions: 980, num_platforms: 4, heat_score: 89, mentions_24h: 72, growth_rate: 1.52, is_trending: 1, is_surge: 0 },
+                { project_name: 'Jupiter', total_mentions: 850, num_platforms: 4, heat_score: 88, mentions_24h: 68, growth_rate: 1.48, is_trending: 1, is_surge: 0 },
+                { project_name: 'Celestia', total_mentions: 520, num_platforms: 4, heat_score: 80, mentions_24h: 45, growth_rate: 1.85, is_trending: 1, is_surge: 1 },
+                { project_name: 'Pendle', total_mentions: 380, num_platforms: 4, heat_score: 75, mentions_24h: 32, growth_rate: 1.65, is_trending: 1, is_surge: 0 },
+                { project_name: 'Render', total_mentions: 420, num_platforms: 4, heat_score: 76, mentions_24h: 38, growth_rate: 1.92, is_trending: 1, is_surge: 1 },
+                { project_name: 'StarkNet', total_mentions: 680, num_platforms: 4, heat_score: 81, mentions_24h: 58, growth_rate: 1.72, is_trending: 1, is_surge: 0 },
+                { project_name: 'Mantle', total_mentions: 340, num_platforms: 4, heat_score: 74, mentions_24h: 28, growth_rate: 1.58, is_trending: 1, is_surge: 0 }
+            ];
+            renderNewTableData('discovery', discoveryData);
+
+            console.log('✅ 所有新表数据已加载');
+        }
+
+        // 渲染新表数据
+        function renderNewTableData(tableName, data) {
+            const tbody = document.getElementById(`${tableName}TableBody`);
+            if (!tbody) return;
+            
+            tbody.innerHTML = '';
+            
+            if (!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #9ca3af;">暂无数据</td></tr>';
+                return;
+            }
+
+            // 根据不同表渲染不同内容
+            if (tableName === 'tokenlaunch') {
+                data.forEach(item => {
+                    const row = `
+                        <tr>
+                            <td>${item.project_id || '-'}</td>
+                            <td>${getProjectName(item.project_id) || '-'}</td>
+                            <td>${item.launch_probability || 0}%</td>
+                            <td>${item.estimated_timeline || '-'}</td>
+                            <td><span class="badge grade-${getConfidenceBadge(item.confidence)}">${item.confidence || '-'}</span></td>
+                            <td>${item.signal_count || 0} 个信号</td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+            } else if (tableName === 'airdrop') {
+                data.forEach(item => {
+                    const row = `
+                        <tr>
+                            <td>${item.project_id || '-'}</td>
+                            <td>${getProjectName(item.project_id) || '-'}</td>
+                            <td>$${item.estimated_value_usd || 0}</td>
+                            <td>¥${item.estimated_value_cny || 0}</td>
+                            <td>$${item.min_value_usd || 0} - $${item.max_value_usd || 0}</td>
+                            <td><span class="badge grade-${getConfidenceBadge(item.confidence)}">${item.confidence || '-'}</span></td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+            } else if (tableName === 'investment') {
+                data.forEach(item => {
+                    const row = `
+                        <tr>
+                            <td>${item.project_id || '-'}</td>
+                            <td>${getProjectName(item.project_id) || '-'}</td>
+                            <td><span class="badge grade-${item.project_tier || 'C'}">${item.project_tier || '-'}</span></td>
+                            <td>$${item.total_budget || 0}</td>
+                            <td><span class="badge grade-${getUrgencyBadge(item.urgency)}">${item.urgency || '-'}</span></td>
+                            <td>${item.expected_roi || '-'}</td>
+                            <td>${item.total_steps || 0} 步</td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+            } else if (tableName === 'discovery') {
+                data.forEach(item => {
+                    const trending = item.is_trending ? '🔥 ' : '';
+                    const surge = item.is_surge ? '📈 ' : '';
+                    const growthRate = item.growth_rate ? ((item.growth_rate - 1) * 100).toFixed(0) : 0;
+                    const row = `
+                        <tr>
+                            <td>${item.project_name || '-'}</td>
+                            <td>${item.total_mentions || 0}</td>
+                            <td>${item.num_platforms || 0}</td>
+                            <td>${item.heat_score || 0}</td>
+                            <td>${item.mentions_24h || 0}</td>
+                            <td>+${growthRate}%</td>
+                            <td>${trending}${surge}${item.is_trending || item.is_surge ? '热门' : '正常'}</td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+            }
+        }
+
+        // 辅助函数：根据项目ID获取项目名称
+        function getProjectName(projectId) {
+            const projectNames = {
+                1: 'Uniswap', 2: 'Arbitrum', 3: 'Jupiter', 4: 'Wormhole', 5: 'Jito',
+                6: 'Optimism', 7: 'Polygon', 8: 'Lido', 9: 'Aave', 10: 'Sui',
+                11: 'Aptos', 12: 'Celestia', 13: 'Pendle', 14: 'Blur', 15: 'dYdX',
+                16: 'GMX', 17: 'Render', 18: 'Immutable X', 19: 'StarkNet', 20: 'Mantle'
+            };
+            return projectNames[projectId] || `Project ${projectId}`;
+        }
+
+        // 辅助函数：置信度徽章
+        function getConfidenceBadge(confidence) {
+            if (!confidence) return 'C';
+            const c = confidence.toLowerCase();
+            if (c.includes('high')) return 'S';
+            if (c.includes('medium')) return 'A';
+            return 'B';
+        }
+
+        // 辅助函数：紧急度徽章
+        function getUrgencyBadge(urgency) {
+            if (!urgency) return 'C';
+            const u = urgency.toLowerCase();
+            if (u.includes('high')) return 'S';
+            if (u.includes('medium')) return 'A';
+            return 'B';
+        }
+
         // 初始化页面
         document.addEventListener('DOMContentLoaded', async function() {
             // 加载数据库统计
@@ -1635,6 +1859,9 @@ CREATE INDEX idx_discovery_time ON project_discoveries(discovered_at);</div>
             
             // 加载真实数据
             await loadRealData();
+            
+            // 加载新4张表的数据
+            await loadNewTablesData();
             
             // 渲染表格
             renderTable('projects');
