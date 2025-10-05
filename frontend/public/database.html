@@ -1457,12 +1457,16 @@ CREATE INDEX idx_discovery_time ON project_discoveries(discovered_at);</div>
             // 检查用户信息
             try {
                 const user = JSON.parse(userStr);
-                console.log('✅ 已登录用户:', user.username, '角色:', user.role);
+                // 兼容中英文字段名
+                const username = user.username || user['用户名'] || user.name || 'Unknown';
+                const role = user.role || user['角色'] || 'user';
+                
+                console.log('✅ 已登录用户:', username, '角色:', role);
                 
                 // 显示欢迎信息
                 const welcome = document.createElement('div');
                 welcome.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 12px; text-align: center; z-index: 9999; font-weight: 500; box-shadow: 0 4px 6px rgba(0,0,0,0.3);';
-                welcome.innerHTML = `✅ 欢迎，${user.username} (${user.role === 'admin' ? '管理员' : '用户'})`;
+                welcome.innerHTML = `✅ 欢迎，${username} (${role === 'admin' ? '管理员' : '用户'})`;
                 document.body.insertBefore(welcome, document.body.firstChild);
                 
                 // 调整容器顶部边距
