@@ -377,6 +377,10 @@
             <button class="tab-btn" onclick="showTab('onchain')">⛓️ Onchain Metrics (链上数据)</button>
             <button class="tab-btn" onclick="showTab('ai')">🤖 AI Analysis (AI分析)</button>
             <button class="tab-btn" onclick="showTab('aiconfig')">🔑 AI Config (AI配置)</button>
+            <button class="tab-btn" onclick="showTab('tokenlaunch')">🚀 Token Launch Predictions (发币预测)</button>
+            <button class="tab-btn" onclick="showTab('airdrop')">💰 Airdrop Value Estimates (空投估算)</button>
+            <button class="tab-btn" onclick="showTab('investment')">📋 Investment Action Plans (行动计划)</button>
+            <button class="tab-btn" onclick="showTab('discovery')">🔍 Project Discoveries (项目发现)</button>
         </div>
 
         <div class="content">
@@ -1002,6 +1006,370 @@ CREATE INDEX idx_project_analysis ON ai_analysis(project_id);</div>
 
 CREATE INDEX idx_ai_config_name ON ai_configs(name);
 CREATE INDEX idx_ai_config_enabled ON ai_configs(enabled);</div>
+            </div>
+
+            <!-- Token Launch Predictions Table -->
+            <div id="tokenlaunch" class="table-section">
+                <div class="table-info">
+                    <h3>🚀 Token Launch Predictions - 发币概率预测</h3>
+                    <p>AI预测项目发币概率、时间和价格范围</p>
+                </div>
+
+                <h4>表结构</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>字段名</th>
+                            <th>类型</th>
+                            <th>可空</th>
+                            <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>id</strong></td>
+                            <td><span class="field-type">INTEGER</span></td>
+                            <td><span class="not-nullable">NOT NULL</span></td>
+                            <td>主键</td>
+                        </tr>
+                        <tr>
+                            <td>project_id</td>
+                            <td><span class="field-type">INTEGER</span></td>
+                            <td><span class="not-nullable">NOT NULL</span></td>
+                            <td>关联项目ID</td>
+                        </tr>
+                        <tr>
+                            <td>launch_probability</td>
+                            <td><span class="field-type">FLOAT</span></td>
+                            <td><span class="nullable">NULL</span></td>
+                            <td>发币概率 (0-100)</td>
+                        </tr>
+                        <tr>
+                            <td>predicted_timeframe</td>
+                            <td><span class="field-type">VARCHAR(50)</span></td>
+                            <td><span class="nullable">NULL</span></td>
+                            <td>预测时间范围</td>
+                        </tr>
+                        <tr>
+                            <td>estimated_fdv_min</td>
+                            <td><span class="field-type">FLOAT</span></td>
+                            <td><span class="nullable">NULL</span></td>
+                            <td>预估FDV最小值</td>
+                        </tr>
+                        <tr>
+                            <td>estimated_fdv_max</td>
+                            <td><span class="field-type">FLOAT</span></td>
+                            <td><span class="nullable">NULL</span></td>
+                            <td>预估FDV最大值</td>
+                        </tr>
+                        <tr>
+                            <td>confidence_score</td>
+                            <td><span class="field-type">FLOAT</span></td>
+                            <td><span class="nullable">NULL</span></td>
+                            <td>预测置信度</td>
+                        </tr>
+                        <tr>
+                            <td>key_indicators</td>
+                            <td><span class="field-type">JSON</span></td>
+                            <td><span class="nullable">NULL</span></td>
+                            <td>关键指标</td>
+                        </tr>
+                        <tr>
+                            <td>created_at</td>
+                            <td><span class="field-type">TIMESTAMP</span></td>
+                            <td><span class="nullable">NULL</span></td>
+                            <td>创建时间</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>创建表SQL</h4>
+                <div class="code-block">CREATE TABLE token_launch_predictions (
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL,
+    launch_probability FLOAT,
+    predicted_timeframe VARCHAR(50),
+    estimated_fdv_min FLOAT,
+    estimated_fdv_max FLOAT,
+    confidence_score FLOAT,
+    key_indicators JSON,
+    created_at TIMESTAMP DEFAULT NOW(),
+    FOREIGN KEY (project_id) REFERENCES projects(id)
+);
+
+CREATE INDEX idx_token_launch_project ON token_launch_predictions(project_id);</div>
+            </div>
+
+            <!-- Airdrop Value Estimates Table -->
+            <div id="airdrop" class="table-section">
+                <div class="table-info">
+                    <h3>💰 Airdrop Value Estimates - 空投价值估算</h3>
+                    <p>预测项目空投价值和参与成本</p>
+                </div>
+
+                <h4>表结构</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>字段名</th>
+                            <th>类型</th>
+                            <th>可空</th>
+                            <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>id</strong></td>
+                            <td><span class="field-type">INTEGER</span></td>
+                            <td><span class="not-nullable">NOT NULL</span></td>
+                            <td>主键</td>
+                        </tr>
+                        <tr>
+                            <td>project_id</td>
+                            <td><span class="field-type">INTEGER</span></td>
+                            <td><span class="not-nullable">NOT NULL</span></td>
+                            <td>关联项目ID</td>
+                        </tr>
+                        <tr>
+                            <td>airdrop_probability</td>
+                            <td><span class="field-type">FLOAT</span></td>
+                            <td><span class="nullable">NULL</span></td>
+                            <td>空投概率 (0-100)</td>
+                        </tr>
+                        <tr>
+                            <td>estimated_value_min</td>
+                            <td><span class="field-type">FLOAT</span></td>
+                            <td><span class="nullable">NULL</span></td>
+                            <td>预估价值最小值</td>
+                        </tr>
+                        <tr>
+                            <td>estimated_value_max</td>
+                            <td><span class="field-type">FLOAT</span></td>
+                            <td><span class="nullable">NULL</span></td>
+                            <td>预估价值最大值</td>
+                        </tr>
+                        <tr>
+                            <td>participation_cost</td>
+                            <td><span class="field-type">FLOAT</span></td>
+                            <td><span class="nullable">NULL</span></td>
+                            <td>参与成本</td>
+                        </tr>
+                        <tr>
+                            <td>roi_ratio</td>
+                            <td><span class="field-type">FLOAT</span></td>
+                            <td><span class="nullable">NULL</span></td>
+                            <td>投资回报率</td>
+                        </tr>
+                        <tr>
+                            <td>eligibility_criteria</td>
+                            <td><span class="field-type">JSON</span></td>
+                            <td><span class="nullable">NULL</span></td>
+                            <td>资格标准</td>
+                        </tr>
+                        <tr>
+                            <td>created_at</td>
+                            <td><span class="field-type">TIMESTAMP</span></td>
+                            <td><span class="nullable">NULL</span></td>
+                            <td>创建时间</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>创建表SQL</h4>
+                <div class="code-block">CREATE TABLE airdrop_value_estimates (
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL,
+    airdrop_probability FLOAT,
+    estimated_value_min FLOAT,
+    estimated_value_max FLOAT,
+    participation_cost FLOAT,
+    roi_ratio FLOAT,
+    eligibility_criteria JSON,
+    created_at TIMESTAMP DEFAULT NOW(),
+    FOREIGN KEY (project_id) REFERENCES projects(id)
+);
+
+CREATE INDEX idx_airdrop_project ON airdrop_value_estimates(project_id);</div>
+            </div>
+
+            <!-- Investment Action Plans Table -->
+            <div id="investment" class="table-section">
+                <div class="table-info">
+                    <h3>📋 Investment Action Plans - 投资行动计划</h3>
+                    <p>AI生成的具体投资行动建议</p>
+                </div>
+
+                <h4>表结构</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>字段名</th>
+                            <th>类型</th>
+                            <th>可空</th>
+                            <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>id</strong></td>
+                            <td><span class="field-type">INTEGER</span></td>
+                            <td><span class="not-nullable">NOT NULL</span></td>
+                            <td>主键</td>
+                        </tr>
+                        <tr>
+                            <td>project_id</td>
+                            <td><span class="field-type">INTEGER</span></td>
+                            <td><span class="not-nullable">NOT NULL</span></td>
+                            <td>关联项目ID</td>
+                        </tr>
+                        <tr>
+                            <td>action_type</td>
+                            <td><span class="field-type">VARCHAR(50)</span></td>
+                            <td><span class="nullable">NULL</span></td>
+                            <td>行动类型</td>
+                        </tr>
+                        <tr>
+                            <td>priority</td>
+                            <td><span class="field-type">VARCHAR(20)</span></td>
+                            <td><span class="nullable">NULL</span></td>
+                            <td>优先级</td>
+                        </tr>
+                        <tr>
+                            <td>action_steps</td>
+                            <td><span class="field-type">JSON</span></td>
+                            <td><span class="nullable">NULL</span></td>
+                            <td>行动步骤</td>
+                        </tr>
+                        <tr>
+                            <td>expected_outcome</td>
+                            <td><span class="field-type">TEXT</span></td>
+                            <td><span class="nullable">NULL</span></td>
+                            <td>预期结果</td>
+                        </tr>
+                        <tr>
+                            <td>time_commitment</td>
+                            <td><span class="field-type">VARCHAR(50)</span></td>
+                            <td><span class="nullable">NULL</span></td>
+                            <td>时间投入</td>
+                        </tr>
+                        <tr>
+                            <td>resource_requirements</td>
+                            <td><span class="field-type">JSON</span></td>
+                            <td><span class="nullable">NULL</span></td>
+                            <td>资源需求</td>
+                        </tr>
+                        <tr>
+                            <td>created_at</td>
+                            <td><span class="field-type">TIMESTAMP</span></td>
+                            <td><span class="nullable">NULL</span></td>
+                            <td>创建时间</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>创建表SQL</h4>
+                <div class="code-block">CREATE TABLE investment_action_plans (
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL,
+    action_type VARCHAR(50),
+    priority VARCHAR(20),
+    action_steps JSON,
+    expected_outcome TEXT,
+    time_commitment VARCHAR(50),
+    resource_requirements JSON,
+    created_at TIMESTAMP DEFAULT NOW(),
+    FOREIGN KEY (project_id) REFERENCES projects(id)
+);
+
+CREATE INDEX idx_investment_project ON investment_action_plans(project_id);
+CREATE INDEX idx_investment_priority ON investment_action_plans(priority);</div>
+            </div>
+
+            <!-- Project Discoveries Table -->
+            <div id="discovery" class="table-section">
+                <div class="table-info">
+                    <h3>🔍 Project Discoveries - 项目发现记录</h3>
+                    <p>记录项目的发现来源和时间</p>
+                </div>
+
+                <h4>表结构</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>字段名</th>
+                            <th>类型</th>
+                            <th>可空</th>
+                            <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>id</strong></td>
+                            <td><span class="field-type">INTEGER</span></td>
+                            <td><span class="not-nullable">NOT NULL</span></td>
+                            <td>主键</td>
+                        </tr>
+                        <tr>
+                            <td>project_id</td>
+                            <td><span class="field-type">INTEGER</span></td>
+                            <td><span class="not-nullable">NOT NULL</span></td>
+                            <td>关联项目ID</td>
+                        </tr>
+                        <tr>
+                            <td>source_type</td>
+                            <td><span class="field-type">VARCHAR(50)</span></td>
+                            <td><span class="nullable">NULL</span></td>
+                            <td>发现来源类型</td>
+                        </tr>
+                        <tr>
+                            <td>source_url</td>
+                            <td><span class="field-type">TEXT</span></td>
+                            <td><span class="nullable">NULL</span></td>
+                            <td>来源URL</td>
+                        </tr>
+                        <tr>
+                            <td>discovered_at</td>
+                            <td><span class="field-type">TIMESTAMP</span></td>
+                            <td><span class="nullable">NULL</span></td>
+                            <td>发现时间</td>
+                        </tr>
+                        <tr>
+                            <td>initial_score</td>
+                            <td><span class="field-type">FLOAT</span></td>
+                            <td><span class="nullable">NULL</span></td>
+                            <td>初始评分</td>
+                        </tr>
+                        <tr>
+                            <td>discovery_context</td>
+                            <td><span class="field-type">JSON</span></td>
+                            <td><span class="nullable">NULL</span></td>
+                            <td>发现上下文</td>
+                        </tr>
+                        <tr>
+                            <td>created_at</td>
+                            <td><span class="field-type">TIMESTAMP</span></td>
+                            <td><span class="nullable">NULL</span></td>
+                            <td>创建时间</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>创建表SQL</h4>
+                <div class="code-block">CREATE TABLE project_discoveries (
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL,
+    source_type VARCHAR(50),
+    source_url TEXT,
+    discovered_at TIMESTAMP,
+    initial_score FLOAT,
+    discovery_context JSON,
+    created_at TIMESTAMP DEFAULT NOW(),
+    FOREIGN KEY (project_id) REFERENCES projects(id)
+);
+
+CREATE INDEX idx_discovery_project ON project_discoveries(project_id);
+CREATE INDEX idx_discovery_source ON project_discoveries(source_type);
+CREATE INDEX idx_discovery_time ON project_discoveries(discovered_at);</div>
             </div>
         </div>
     </div>
