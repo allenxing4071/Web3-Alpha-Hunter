@@ -166,21 +166,27 @@ export function PlatformInfluencers() {
     }
     
     const container = scrollContainerRef.current
-    const cardWidth = 320 + 16 // 卡片宽度 + gap
+    const cardWidth = 320 + 16 // 卡片宽度 320px + gap 16px
     const containerWidth = container.clientWidth
+    const padding = 64 // px-16 = 64px padding
     const scrollLeft = scrollPosition
     
-    // 计算卡片中心相对于可视区域中心的距离
-    const cardCenter = index * cardWidth + 160 - scrollLeft
+    // 计算卡片左边缘位置（考虑padding）
+    const cardLeft = padding + index * cardWidth
+    // 计算卡片中心位置
+    const cardCenter = cardLeft + 160 - scrollLeft
+    // 可视区域中心
     const viewportCenter = containerWidth / 2
+    // 卡片中心到可视区域中心的距离
     const distanceFromCenter = Math.abs(cardCenter - viewportCenter)
     
-    // 计算缩放比例（中间1，两边0.85）
+    // 计算缩放比例（中间1.0，两边0.85）
     const maxDistance = containerWidth / 2
-    const scale = Math.max(0.85, 1 - (distanceFromCenter / maxDistance) * 0.15)
+    const normalizedDistance = Math.min(distanceFromCenter / maxDistance, 1)
+    const scale = 1 - (normalizedDistance * 0.15)  // 1.0 → 0.85
     
-    // 计算透明度（中间1，两边0.5）
-    const opacity = Math.max(0.5, 1 - (distanceFromCenter / maxDistance) * 0.5)
+    // 计算透明度（中间1.0，两边0.5）
+    const opacity = 1 - (normalizedDistance * 0.5)  // 1.0 → 0.5
     
     return {
       transform: `scale(${scale})`,
