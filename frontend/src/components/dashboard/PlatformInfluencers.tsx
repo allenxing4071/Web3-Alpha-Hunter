@@ -162,10 +162,15 @@ export function PlatformInfluencers() {
   }
 
   // 计算卡片的样式（缩放和透明度）
-  const getCardStyle = (index: number) => {
+  const getCardStyle = useCallback((index: number) => {
     if (!scrollContainerRef.current) {
       console.log('⚠️ scrollContainerRef not ready for index:', index)
-      return {}
+      // 返回默认样式而不是空对象，确保至少有基础样式
+      return {
+        transform: 'scale(1)',
+        opacity: 1,
+        transition: 'all 0.3s ease-out'
+      }
     }
     
     const container = scrollContainerRef.current
@@ -203,7 +208,7 @@ export function PlatformInfluencers() {
       opacity: opacity,
       transition: 'all 0.3s ease-out'
     }
-  }
+  }, [scrollPosition])
 
   // 加载状态
   if (loading) {
