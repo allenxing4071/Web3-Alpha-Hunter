@@ -232,9 +232,18 @@ async def get_ai_configs(db: Session = Depends(get_db)) -> Dict[str, Any]:
     
     config_list = []
     for config in configs:
+        # 尝试解密,如果失败则返回原始值(可能是未加密的测试数据)
+        decrypted_key = ""
+        if config.api_key:
+            try:
+                decrypted_key = decrypt_api_key(config.api_key)
+            except Exception:
+                # 解密失败,可能是未加密的数据,直接返回(或返回空字符串以保护隐私)
+                decrypted_key = config.api_key if len(config.api_key) < 100 else ""
+        
         config_list.append({
             "name": config.name,
-            "key": decrypt_api_key(config.api_key) if config.api_key else "",  # 解密返回
+            "key": decrypted_key,
             "enabled": config.enabled,
             "model": config.model
         })
