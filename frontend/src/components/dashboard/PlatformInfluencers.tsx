@@ -180,13 +180,13 @@ export function PlatformInfluencers() {
     // 卡片中心到可视区域中心的距离
     const distanceFromCenter = Math.abs(cardCenter - viewportCenter)
     
-    // 计算缩放比例（中间1.0，两边0.85）
+    // 计算缩放比例（中间1.0，两边0.7）- 加大差异让效果更明显
     const maxDistance = containerWidth / 2
     const normalizedDistance = Math.min(distanceFromCenter / maxDistance, 1)
-    const scale = 1 - (normalizedDistance * 0.15)  // 1.0 → 0.85
+    const scale = 1 - (normalizedDistance * 0.3)  // 1.0 → 0.7 (加大到30%差异)
     
-    // 计算透明度（中间1.0，两边0.5）
-    const opacity = 1 - (normalizedDistance * 0.5)  // 1.0 → 0.5
+    // 计算透明度（中间1.0，两边0.3）- 加大差异
+    const opacity = 1 - (normalizedDistance * 0.7)  // 1.0 → 0.3 (加大到70%差异)
     
     return {
       transform: `scale(${scale})`,
