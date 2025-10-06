@@ -4,15 +4,59 @@
 
 "use client"
 
-import { useState } from 'react'
-import { getRealProjects } from '@/lib/realdata'
+import { useState, useEffect } from 'react'
+import { API_BASE_URL } from '@/lib/config'
 import { Project } from '@/types/project'
 import { ProjectComparison } from '@/components/projects/ProjectComparison'
 import { GradeBadge } from '@/components/projects/GradeBadge'
 
 export default function ComparePage() {
-  const allProjects = getRealProjects()
+  const [allProjects, setAllProjects] = useState<Project[]>([])
+  const [loading, setLoading] = useState(true)
   const [selectedProjects, setSelectedProjects] = useState<Project[]>([])
+  
+  // 从API加载项目列表
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/projects?limit=100`)
+        if (!response.ok) throw new Error('Failed to fetch')
+        const data = await response.json()
+        
+        const projects: Project[] = data.projects.map((p: any) => ({
+          project_id: String(p.id),
+          name: p.project_name,
+          symbol: p.symbol,
+          grade: p.grade || '?',
+          overall_score: p.overall_score || 0,
+          category: p.category || 'Unknown',
+          blockchain: p.blockchain || 'Unknown',
+          description: p.description || '',
+          logo_url: p.logo_url,
+          website: p.website,
+          social_links: {
+            twitter: p.twitter_handle,
+            telegram: p.telegram_channel,
+            github: p.github_repo,
+          },
+          key_highlights: [],
+          risk_flags: [],
+          metrics: {},
+          first_discovered_at: p.first_discovered_at || p.created_at,
+          last_updated_at: p.last_updated_at || p.updated_at,
+        }))
+        
+        setAllProjects(projects)
+      } catch (error) {
+        console.error('Failed to load projects:', error)
+        setAllProjects([])
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    fetchProjects()
+  }, [])
 
   const toggleProject = (project: Project) => {
     if (selectedProjects.find(p => p.project_id === project.project_id)) {
