@@ -1,103 +1,130 @@
-import Link from "next/link"
+/**
+ * 首页 - 实时监控大屏
+ * 团队工作时实时监控，10秒自动刷新，支持交互
+ */
 
-export default function Home() {
-  return (
-    <main className="min-h-screen p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center py-20">
-          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-accent-primary to-accent-purple bg-clip-text text-transparent">
-            Web3 Alpha Hunter
-          </h1>
-          <p className="text-xl text-text-secondary mb-8">
-            AI驱动的Web3项目早期发现与分析平台
-          </p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 mb-12">
-            {/* 今日概览 */}
-            <div className="bg-bg-tertiary border border-gray-700 rounded-xl p-6 hover:border-accent-primary transition-colors">
-              <div className="text-text-secondary mb-2">扫描项目</div>
-              <div className="text-4xl font-bold text-accent-primary">127</div>
-            </div>
-            
-            <div className="bg-bg-tertiary border border-gray-700 rounded-xl p-6 hover:border-success transition-colors">
-              <div className="text-text-secondary mb-2">新发现</div>
-              <div className="text-4xl font-bold text-success">18</div>
-            </div>
-            
-            <div className="bg-bg-tertiary border border-accent-gold rounded-xl p-6 glow-gold">
-              <div className="text-text-secondary mb-2">S级机会</div>
-              <div className="text-4xl font-bold text-accent-gold">3</div>
-            </div>
-          </div>
-          
-          {/* 功能特性 */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16 text-left">
-            <div className="bg-bg-tertiary border border-gray-700 rounded-xl p-6">
-              <div className="text-2xl mb-3">🔍</div>
-              <h3 className="text-xl font-semibold text-text-primary mb-2">
-                全球情报收集
-              </h3>
-              <p className="text-text-secondary text-sm">
-                7x24小时监控Twitter、Telegram等10+平台,第一时间发现优质项目
-              </p>
-            </div>
-            
-            <div className="bg-bg-tertiary border border-gray-700 rounded-xl p-6">
-              <div className="text-2xl mb-3">🤖</div>
-              <h3 className="text-xl font-semibold text-text-primary mb-2">
-                AI智能分析
-              </h3>
-              <p className="text-text-secondary text-sm">
-                6维度评分系统,Claude/GPT-4驱动,准确识别百倍千倍潜力项目
-              </p>
-            </div>
-            
-            <div className="bg-bg-tertiary border border-gray-700 rounded-xl p-6">
-              <div className="text-2xl mb-3">⭐</div>
-              <h3 className="text-xl font-semibold text-text-primary mb-2">
-                S/A/B/C分级
-              </h3>
-              <p className="text-text-secondary text-sm">
-                清晰的四级分级系统,S级项目平均涨幅&gt;200% (历史回测)
-              </p>
-            </div>
-            
-            <div className="bg-bg-tertiary border border-gray-700 rounded-xl p-6">
-              <div className="text-2xl mb-3">🛡️</div>
-              <h3 className="text-xl font-semibold text-text-primary mb-2">
-                风险智能识别
-              </h3>
-              <p className="text-text-secondary text-sm">
-                自动检测骗局项目,识别准确率&gt;85%,保护投资安全
-              </p>
-            </div>
-          </div>
-          
-          {/* CTA按钮 */}
-          <div className="mt-16 flex gap-4 justify-center">
-            <Link
-              href="/projects"
-              className="px-8 py-3 bg-gradient-to-r from-accent-primary to-accent-purple rounded-lg font-semibold text-white hover:scale-105 transition-transform"
-            >
-              查看项目列表 →
-            </Link>
-            <a
-              href="http://localhost:8000/docs"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-8 py-3 bg-bg-tertiary border border-gray-700 rounded-lg font-semibold text-text-primary hover:border-accent-primary transition-colors"
-            >
-              API文档
-            </a>
-          </div>
-          
-          <div className="mt-12">
-            <p className="text-text-tertiary text-sm">
-              🚀 MVP已上线 · 后端API 100%完成 · 前端UI开发中
-            </p>
-          </div>
+"use client"
+
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { Toaster } from 'react-hot-toast'
+import { TrendingUp } from 'lucide-react'
+
+// Hooks
+import { useDashboardData, ProjectItem } from '@/hooks/useDashboardData'
+
+// Components
+import { StatsCards } from '@/components/dashboard/StatsCards'
+import { TopProjects } from '@/components/dashboard/TopProjects'
+import { GradeDistributionChart, CategoryStatsChart } from '@/components/dashboard/Charts'
+import { ActivityTimeline } from '@/components/dashboard/ActivityTimeline'
+import { RecentDiscoveries } from '@/components/dashboard/RecentDiscoveries'
+import { NewProjectAlert } from '@/components/dashboard/NewProjectAlert'
+import { RefreshIndicator } from '@/components/dashboard/RefreshIndicator'
+
+export default function Dashboard() {
+  const { data, loading, error, lastUpdate, refetch } = useDashboardData(10000) // 10秒刷新
+  const [newProjects, setNewProjects] = useState<ProjectItem[]>([])
+  const [previousProjects, setPreviousProjects] = useState<Set<number>>(new Set())
+
+  // 检测新S/A级项目
+  useEffect(() => {
+    if (!data?.recent?.items) return
+
+    const currentProjects = new Set(data.recent.items.map(p => p.id))
+    const highGradeNewProjects = data.recent.items.filter(p => 
+      p.is_new && 
+      ['S', 'A'].includes(p.grade) &&
+      !previousProjects.has(p.id)
+    )
+
+    if (highGradeNewProjects.length > 0) {
+      setNewProjects(highGradeNewProjects)
+    }
+
+    setPreviousProjects(currentProjects)
+  }, [data?.recent?.items])
+
+  if (loading && !data) {
+    return (
+      <div className="min-h-screen bg-bg-primary flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-accent-primary mx-auto mb-4"></div>
+          <div className="text-text-secondary">加载大屏数据中...</div>
         </div>
       </div>
-    </main>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-bg-primary p-4 lg:p-6">
+      {/* Toast容器 */}
+      <Toaster position="top-right" />
+
+      {/* 头部 */}
+      <header className="mb-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <Link href="/">
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-accent-primary to-accent-purple bg-clip-text text-transparent">
+                🚀 Web3 Alpha Hunter
+              </h1>
+            </Link>
+            <p className="text-text-secondary text-sm mt-1">
+              AI驱动的实时监控大屏 · 10秒自动刷新
+            </p>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <RefreshIndicator 
+              lastUpdate={lastUpdate} 
+              onRefresh={refetch}
+              error={error}
+            />
+
+            <Link
+              href="/projects"
+              className="px-4 py-2 bg-gradient-to-r from-accent-primary to-accent-purple rounded-lg font-semibold text-white hover:scale-105 transition-transform"
+            >
+              <TrendingUp className="w-4 h-4 inline mr-2" />
+              查看项目列表
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      {/* 统计卡片区 */}
+      <StatsCards stats={data?.stats} />
+
+      {/* 主内容区: 3列布局 */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
+        {/* 左列: 热门项目 Top10 */}
+        <div className="lg:col-span-4">
+          <TopProjects projects={data?.top_projects?.items} />
+        </div>
+
+        {/* 中列: 图表区 */}
+        <div className="lg:col-span-5 space-y-6">
+          <GradeDistributionChart data={data?.distribution} />
+          <CategoryStatsChart data={data?.categories} />
+        </div>
+
+        {/* 右列: 实时活动流 */}
+        <div className="lg:col-span-3">
+          <ActivityTimeline activities={data?.timeline?.activities} />
+        </div>
+      </div>
+
+      {/* 底部: 最新发现项目 */}
+      <RecentDiscoveries projects={data?.recent?.items} />
+
+      {/* 新项目提醒 (不可见组件，只触发通知) */}
+      <NewProjectAlert projects={newProjects} />
+
+      {/* 页脚 */}
+      <footer className="mt-8 text-center text-text-tertiary text-sm">
+        <p>🔥 实时监控 · {data?.stats?.total_projects || 0} 个项目 · 更新于 {new Date(lastUpdate).toLocaleTimeString('zh-CN')}</p>
+      </footer>
+    </div>
   )
 }

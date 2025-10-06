@@ -63,3 +63,99 @@
   }
 }
 
+/* 金色脉冲发光效果 (大屏专用) */
+@keyframes pulse-gold {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); 
+  }
+  50% { 
+    box-shadow: 0 0 40px rgba(255, 215, 0, 0.6); 
+  }
+}
+
+.glow-gold-pulse {
+  animation: pulse-gold 2s infinite;
+}
+
+/* 从顶部滑入动画 */
+@keyframes slide-in-top {
+  from { 
+    transform: translateY(-20px); 
+    opacity: 0; 
+  }
+  to { 
+    transform: translateY(0); 
+    opacity: 1; 
+  }
+}
+
+.slide-in {
+  animation: slide-in-top 0.3s ease-out;
+}
+
+/* 慢速脉冲动画 */
+@keyframes pulse-slow {
+  0%, 100% { 
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 0.9;
+    transform: scale(1.02);
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
+/* Toast动画 */
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes leave {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+.animate-enter {
+  animation: enter 0.3s ease-out;
+}
+
+.animate-leave {
+  animation: leave 0.2s ease-in forwards;
+}
+
+/* 自定义滚动条样式 (细滚动条) */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #4B5563;
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: #6B7280;
+}
+
