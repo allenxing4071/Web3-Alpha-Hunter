@@ -133,31 +133,38 @@ class AIAnalyzer:
             logger.warning("No AI client available, using mock analysis")
             return self._mock_analysis(text)
         
-        prompt = f"""分析以下Web3项目相关信息,提取关键内容:
+        prompt = f"""分析以下Web3项目相关信息,提供专业评估:
 
 来源: {source}
 内容: {text}
 
-请从以下角度分析:
-1. 项目类型 (DeFi/NFT/GameFi/Infrastructure/AI等)
-2. 核心功能/创新点
-3. 团队信息 (如果提到)
-4. 融资情况 (如果提到)
-5. 技术特点
-6. 潜在风险点
-7. 整体评价 (1-10分)
+请分析并评分(0-100分制):
+1. 项目类型/分类
+2. 团队实力 (team_score)
+3. 技术创新 (tech_score)  
+4. 社区活跃度 (community_score)
+5. 代币经济学 (tokenomics_score)
+6. 市场时机 (market_timing_score)
+7. 风险评估 (risk_score, 越低越好)
 
-请用JSON格式返回,包含以下字段:
+返回JSON格式(必须包含所有字段):
 {{
-  "category": "项目分类",
+  "category": "DeFi/NFT/GameFi/Infrastructure/AI/Layer2",
+  "overall_score": 75.0,
+  "team_score": 70.0,
+  "tech_score": 80.0,
+  "community_score": 75.0,
+  "tokenomics_score": 70.0,
+  "market_timing_score": 80.0,
+  "risk_score": 30.0,
+  "grade": "A",
+  "reasoning": "分析理由",
   "key_features": ["特点1", "特点2"],
-  "team_info": "团队信息",
-  "funding": "融资信息",
-  "tech_highlights": "技术亮点",
-  "risks": ["风险1", "风险2"],
-  "score_estimate": 8,
+  "risks": ["风险1"],
   "summary": "一句话总结"
 }}
+
+评分规则: overall_score>=90为S级, >=80为A级, >=70为B级, >=60为C级, <60为D级
 """
         
         try:
