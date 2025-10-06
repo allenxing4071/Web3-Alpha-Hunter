@@ -97,20 +97,20 @@ export default function Dashboard() {
       <StatsCards stats={data?.stats} />
 
       {/* 主内容区: 3列布局 */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6 lg:items-start">
         {/* 左列: 热门项目 Top10 */}
-        <div className="lg:col-span-4">
+        <div className="lg:col-span-4 flex flex-col">
           <TopProjects projects={data?.top_projects?.items} />
         </div>
 
         {/* 中列: 图表区 */}
-        <div className="lg:col-span-5 space-y-6">
+        <div className="lg:col-span-5 space-y-6 flex flex-col">
           <GradeDistributionChart data={data?.distribution} />
           <CategoryStatsChart data={data?.categories} />
         </div>
 
         {/* 右列: 实时活动流 */}
-        <div className="lg:col-span-3">
+        <div className="lg:col-span-3 flex flex-col">
           <ActivityTimeline activities={data?.timeline?.activities} />
         </div>
       </div>
