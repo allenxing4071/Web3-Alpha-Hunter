@@ -261,11 +261,17 @@ export function PlatformInfluencers() {
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           <div className="flex gap-4 py-2">
-            {influencers.map((influencer, index) => (
-              <div key={influencer.id} style={getCardStyle(index)}>
-                <InfluencerCard influencer={influencer} />
-              </div>
-            ))}
+            {influencers.map((influencer, index) => {
+              const cardStyle = getCardStyle(index)
+              if (index === 0) {
+                console.log('🎯 Applying style to card 0:', cardStyle)
+              }
+              return (
+                <div key={influencer.id} style={cardStyle}>
+                  <InfluencerCard influencer={influencer} />
+                </div>
+              )
+            })}
           </div>
         </div>
       </div>
