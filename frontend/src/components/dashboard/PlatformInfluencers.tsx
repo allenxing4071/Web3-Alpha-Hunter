@@ -6,7 +6,7 @@
 'use client'
 
 import { ExternalLink, Users, ChevronLeft, ChevronRight } from 'lucide-react'
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect, useCallback } from 'react'
 import { API_BASE_URL } from '@/lib/config'
 
 interface Influencer {
@@ -85,6 +85,13 @@ export function PlatformInfluencers() {
   const [influencers, setInfluencers] = useState<Influencer[]>([])
   const [loading, setLoading] = useState(true)
 
+  // 使用useCallback确保handleScroll函数稳定
+  const handleScroll = useCallback(() => {
+    if (scrollContainerRef.current) {
+      setScrollPosition(scrollContainerRef.current.scrollLeft)
+    }
+  }, [])
+
   // 从API加载KOL数据
   useEffect(() => {
     const loadInfluencers = async () => {
@@ -111,14 +118,15 @@ export function PlatformInfluencers() {
   // 初始化时触发一次滚动位置计算，确保3D效果正确显示
   useEffect(() => {
     if (!loading && influencers.length > 0 && scrollContainerRef.current) {
-      // 延迟执行，确保DOM已渲染
+      // 立即执行一次，然后延迟再执行确保万无一失
+      handleScroll()
       const timer = setTimeout(() => {
         handleScroll()
       }, 100)
       
       return () => clearTimeout(timer)
     }
-  }, [loading, influencers])
+  }, [loading, influencers, handleScroll])
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
@@ -128,12 +136,6 @@ export function PlatformInfluencers() {
         left: newScrollLeft,
         behavior: 'smooth'
       })
-    }
-  }
-
-  const handleScroll = () => {
-    if (scrollContainerRef.current) {
-      setScrollPosition(scrollContainerRef.current.scrollLeft)
     }
   }
 
