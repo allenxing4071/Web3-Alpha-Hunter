@@ -33,7 +33,7 @@ function InfluencerCard({ influencer }: { influencer: Influencer }) {
     <div 
       onClick={handleClick}
       className="flex-shrink-0 w-80 p-6 rounded-xl border-2 border-gray-700 bg-bg-tertiary
-                 hover:border-accent-primary hover:scale-105 transition-all cursor-pointer group my-2"
+                 hover:border-accent-primary transition-colors cursor-pointer group my-2"
     >
       {/* 头部：平台和验证标识 */}
       <div className="flex items-center justify-between mb-3">
