@@ -23,7 +23,10 @@ export default function ComparePage() {
         if (!response.ok) throw new Error('Failed to fetch')
         const data = await response.json()
         
-        const projects: Project[] = data.projects.map((p: any) => ({
+        // API返回格式: { success: true, data: { projects: [...] } }
+        const projectsData = data.data?.projects || data.projects || []
+        
+        const projects: Project[] = projectsData.map((p: any) => ({
           project_id: String(p.id),
           name: p.project_name,
           symbol: p.symbol,

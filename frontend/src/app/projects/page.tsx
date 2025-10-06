@@ -161,8 +161,11 @@ export default function ProjectsPage() {
         
         const data = await response.json()
         
+        // API返回格式: { success: true, data: { projects: [...] } }
+        const projectsData = data.data?.projects || data.projects || []
+        
         // 转换后端数据格式为前端Project类型
-        const projects: Project[] = data.projects.map((p: any) => ({
+        const projects: Project[] = projectsData.map((p: any) => ({
           project_id: String(p.id),
           name: p.project_name,
           symbol: p.symbol,
