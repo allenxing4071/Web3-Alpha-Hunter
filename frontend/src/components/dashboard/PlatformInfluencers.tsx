@@ -98,26 +98,17 @@ export function PlatformInfluencers() {
       try {
         setLoading(true)
         const url = `${API_BASE_URL}/kols/top-influencers?limit=15&tier=1`
-        console.log('🔄 开始加载KOL数据:', url)
-        const startTime = Date.now()
-        
         const response = await fetch(url)
-        console.log(`⏱️  请求完成，耗时: ${Date.now() - startTime}ms, 状态: ${response.status}`)
-        
         const data = await response.json()
-        console.log('📦 收到数据:', data)
         
         if (data.success && data.influencers) {
           setInfluencers(data.influencers)
-          console.log(`✅ 成功加载 ${data.influencers.length} 位KOL`)
         }
       } catch (error) {
         console.error('❌ 加载KOL数据失败:', error)
-        // 如果加载失败，使用默认数据
         setInfluencers([])
       } finally {
         setLoading(false)
-        console.log('✅ 加载完成')
       }
     }
 
@@ -129,29 +120,26 @@ export function PlatformInfluencers() {
     if (!loading && influencers.length > 0 && scrollContainerRef.current) {
       const container = scrollContainerRef.current
       
-      console.log('🎬 开始初始化3D效果')
-      
-      // 计算应该滚动到第2张卡片居中的位置
-      // 卡片宽度336px (320 + 16gap)，padding 64px
-      // 让第2张卡片(index=1)居中
-      const cardWidth = 336
-      const padding = 64
-      const containerWidth = container.clientWidth
-      
-      // 第2张卡片的左边距 = padding + 1 * cardWidth
-      const secondCardLeft = padding + cardWidth
-      // 第2张卡片中心位置 = secondCardLeft + cardWidth/2
-      const secondCardCenter = secondCardLeft + cardWidth / 2
-      // 需要滚动的距离 = 卡片中心 - 视口中心
-      const scrollTo = secondCardCenter - containerWidth / 2
-      
-      // 滚动到计算的位置
-      container.scrollLeft = Math.max(0, scrollTo)
-      
-      // 更新scrollPosition状态
-      setScrollPosition(container.scrollLeft)
-      
-      console.log('✅ 3D效果已初始化，滚动到:', container.scrollLeft, '第2张卡片居中')
+      // 使用requestAnimationFrame确保DOM完全渲染
+      requestAnimationFrame(() => {
+        // 计算应该滚动到第2张卡片居中的位置
+        const cardWidth = 336 // 320px + 16px gap
+        const padding = 64
+        const containerWidth = container.clientWidth
+        
+        // 第2张卡片的左边距 = padding + 1 * cardWidth
+        const secondCardLeft = padding + cardWidth
+        // 第2张卡片中心位置 = secondCardLeft + cardWidth/2
+        const secondCardCenter = secondCardLeft + cardWidth / 2
+        // 需要滚动的距离 = 卡片中心 - 视口中心
+        const scrollTo = secondCardCenter - containerWidth / 2
+        
+        // 滚动到计算的位置
+        container.scrollLeft = Math.max(0, scrollTo)
+        
+        // 强制更新scrollPosition状态，触发重新渲染
+        setScrollPosition(container.scrollLeft)
+      })
     }
   }, [loading, influencers.length])
 
@@ -211,7 +199,6 @@ export function PlatformInfluencers() {
 
   // 加载状态
   if (loading) {
-    console.log('🔄 渲染加载状态...')
     return (
       <div className="bg-bg-secondary rounded-xl border border-gray-700 p-6 mt-6">
         <h3 className="text-xl font-bold text-text-primary mb-6 flex items-center">
@@ -229,8 +216,6 @@ export function PlatformInfluencers() {
       </div>
     )
   }
-  
-  console.log('🎨 渲染KOL列表, 数量:', influencers.length)
 
   return (
     <div className="bg-bg-secondary rounded-xl border border-gray-700 p-6 mt-6">
