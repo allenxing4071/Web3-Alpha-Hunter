@@ -116,12 +116,140 @@ FIELD_DESCRIPTIONS = {
     "estimated_timeline": "预计时间线",
     "confidence": "置信度",
     "signal_count": "信号数量",
+    "detected_signals": "检测到的信号(JSON)",
+    "has_snapshot_announced": "是否宣布快照",
+    "has_tokenomics_published": "是否发布代币经济学",
+    "has_points_system": "是否有积分系统",
+    "has_audit_completed": "是否完成审计",
+    "has_mainnet_live": "主网是否上线",
+    "has_roadmap_token_mention": "路线图是否提及代币",
+    "predicted_at": "预测时间",
     
     # airdrop_value_estimates 表
     "estimated_value_usd": "预估价值(USD)",
     "estimated_value_cny": "预估价值(CNY)",
     "min_value_usd": "最小值(USD)",
     "max_value_usd": "最大值(USD)",
+    "basis": "估算依据",
+    "comparable_projects": "可比项目(JSON)",
+    "estimated_at": "估算时间",
+    
+    # investment_action_plans 表
+    "project_tier": "项目等级",
+    "total_budget": "总预算(USD)",
+    "urgency": "紧急程度",
+    "expected_roi": "预期回报率",
+    "total_steps": "总步骤数",
+    "steps": "行动步骤(JSON)",
+    "timeline": "时间线",
+    "risk_mitigation": "风险缓解措施(JSON)",
+    "success_criteria": "成功标准(JSON)",
+    "plan_created_at": "计划创建时间",
+    
+    # project_discoveries 表
+    "total_mentions": "总提及次数",
+    "num_platforms": "平台数量",
+    "heat_score": "热度分值",
+    "mentions_24h": "24小时提及",
+    "growth_rate": "增长率",
+    "is_trending": "是否热门",
+    "is_surge": "是否暴涨",
+    "first_seen_at": "首次发现时间",
+    "last_seen_at": "最后发现时间",
+    "platforms": "平台列表(JSON)",
+    
+    # projects_pending 表
+    "ai_score": "AI评分",
+    "ai_grade": "AI等级 (S/A/B/C)",
+    "review_status": "审核状态",
+    "rejection_reason": "拒绝原因",
+    "reviewed_by": "审核人",
+    "reviewed_at": "审核时间",
+    "submitted_at": "提交时间",
+    
+    # ai_work_config 表
+    "primary_goal": "主要目标",
+    "target_roi": "目标ROI (%)",
+    "risk_tolerance": "风险偏好",
+    "min_ai_score": "最低推荐分数",
+    "max_projects_per_day": "每日项目上限",
+    "preferred_categories": "偏好类别(JSON)",
+    "excluded_categories": "排除类别(JSON)",
+    "min_market_cap": "最小市值要求",
+    "max_market_cap": "最大市值要求",
+    
+    # ai_learning_feedback 表
+    "feedback_type": "反馈类型",
+    "user_decision": "用户决策",
+    "reason": "原因说明",
+    "related_project_id": "关联项目ID",
+    "feedback_value": "反馈值",
+    
+    # kols 表
+    "twitter_handle": "Twitter用户名",
+    "followers_count": "粉丝数",
+    "tier": "层级 (1-3)",
+    "verified": "是否认证",
+    "bio": "个人简介",
+    "location": "所在地",
+    "website_url": "个人网站",
+    "avg_engagement_rate": "平均互动率",
+    "focus_areas": "关注领域(JSON)",
+    "influence_score": "影响力评分",
+    "added_at": "添加时间",
+    
+    # kols_pending 表
+    "recommendation_reason": "推荐理由",
+    
+    # kol_performances 表
+    "kol_id": "KOL ID",
+    "prediction_accuracy": "预测准确率",
+    "total_predictions": "总预测数",
+    "successful_predictions": "成功预测数",
+    "avg_roi": "平均投资回报率",
+    "best_call": "最佳推荐(JSON)",
+    "worst_call": "最差推荐(JSON)",
+    "evaluation_period_start": "评估开始时间",
+    "evaluation_period_end": "评估结束时间",
+    
+    # platform_search_rules 表
+    "platform_name": "平台名称",
+    "search_frequency_hours": "搜索频率(小时)",
+    "search_keywords": "搜索关键词(JSON)",
+    "filters": "过滤条件(JSON)",
+    "priority": "优先级",
+    "last_search_at": "最后搜索时间",
+    
+    # twitter_keywords 表
+    "keyword": "关键词",
+    "priority": "优先级 (1-3)",
+    "search_count": "搜索次数",
+    "hit_count": "命中次数",
+    "last_used_at": "最后使用时间",
+    
+    # telegram_channels 表
+    "channel_id": "频道ID",
+    "channel_name": "频道名称",
+    "channel_username": "频道用户名",
+    "member_count": "成员数",
+    "description": "频道描述",
+    "last_monitored_at": "最后监控时间",
+    
+    # discord_servers 表
+    "server_id": "服务器ID",
+    "server_name": "服务器名称",
+    "invite_link": "邀请链接",
+    "member_count": "成员数",
+    "online_count": "在线人数",
+    "last_monitored_at": "最后监控时间",
+    
+    # platform_daily_stats 表
+    "platform_name": "平台名称",
+    "date": "日期",
+    "collections": "采集次数",
+    "projects_discovered": "发现项目数",
+    "new_keywords_added": "新增关键词数",
+    "errors_count": "错误次数",
     
     # users 表
     "username": "用户名",
