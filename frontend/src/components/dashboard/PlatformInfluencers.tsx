@@ -124,21 +124,34 @@ export function PlatformInfluencers() {
     loadInfluencers()
   }, [])
 
-  // 初始化时立即触发3D效果计算
+  // 初始化时立即触发3D效果计算，并滚动到中间卡片
   useEffect(() => {
     if (!loading && influencers.length > 0 && scrollContainerRef.current) {
       const container = scrollContainerRef.current
       
       console.log('🎬 开始初始化3D效果')
       
-      // 强制更新scrollPosition
-      const currentScroll = container.scrollLeft
-      setScrollPosition(currentScroll)
+      // 计算应该滚动到第2张卡片居中的位置
+      // 卡片宽度336px (320 + 16gap)，padding 64px
+      // 让第2张卡片(index=1)居中
+      const cardWidth = 336
+      const padding = 64
+      const containerWidth = container.clientWidth
       
-      // 使用setTimeout(0)确保状态更新后再渲染
-      setTimeout(() => {
-        console.log('✅ 3D效果已初始化，scrollLeft:', currentScroll)
-      }, 0)
+      // 第2张卡片的左边距 = padding + 1 * cardWidth
+      const secondCardLeft = padding + cardWidth
+      // 第2张卡片中心位置 = secondCardLeft + cardWidth/2
+      const secondCardCenter = secondCardLeft + cardWidth / 2
+      // 需要滚动的距离 = 卡片中心 - 视口中心
+      const scrollTo = secondCardCenter - containerWidth / 2
+      
+      // 滚动到计算的位置
+      container.scrollLeft = Math.max(0, scrollTo)
+      
+      // 更新scrollPosition状态
+      setScrollPosition(container.scrollLeft)
+      
+      console.log('✅ 3D效果已初始化，滚动到:', container.scrollLeft, '第2张卡片居中')
     }
   }, [loading, influencers.length])
 
@@ -181,12 +194,12 @@ export function PlatformInfluencers() {
     // 卡片中心到可视区域中心的距离
     const distanceFromCenter = Math.abs(cardCenter - viewportCenter)
     
-    // 计算缩放比例（中间1.0，两边0.8）- 适中的差异
+    // 计算缩放比例（中间1.0，两边0.85）
     const maxDistance = containerWidth / 2
     const normalizedDistance = Math.min(distanceFromCenter / maxDistance, 1)
-    const scale = 1 - (normalizedDistance * 0.2)  // 1.0 → 0.8 (20%差异)
+    const scale = 1 - (normalizedDistance * 0.15)  // 1.0 → 0.85 (15%差异)
     
-    // 计算透明度（中间1.0，两边0.5）- 适中的差异
+    // 计算透明度（中间1.0，两边0.5）
     const opacity = 1 - (normalizedDistance * 0.5)  // 1.0 → 0.5 (50%差异)
     
     return {
