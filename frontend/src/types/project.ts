@@ -61,11 +61,13 @@ export interface ProjectDetail extends Project {
   contract_address?: string
   whitepaper_url?: string
   github_repo?: string
+  source?: string
   scores: ProjectScores
   ai_analysis?: AIAnalysis
   discovery: {
     source: string
     discovered_at: string
+    discovered_from?: string
   }
 }
 

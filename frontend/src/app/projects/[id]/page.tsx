@@ -301,10 +301,12 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
                       ⛓️ {project.blockchain}
                     </span>
                     <span className="px-3 py-1 bg-gray-800 text-text-tertiary text-sm rounded-md">
-                      🕐 发现于 {formatDistanceToNow(new Date(project.first_discovered_at), { 
-                        addSuffix: true,
-                        locale: zhCN 
-                      })}
+                      🕐 发现于 {project.first_discovered_at && !isNaN(new Date(project.first_discovered_at).getTime())
+                        ? formatDistanceToNow(new Date(project.first_discovered_at), { 
+                            addSuffix: true,
+                            locale: zhCN 
+                          })
+                        : '未知时间'}
                     </span>
                   </div>
                 </div>
@@ -495,10 +497,12 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
                   <div className="flex justify-between">
                     <span className="text-text-tertiary">最后更新</span>
                     <span className="text-text-primary font-mono">
-                      {formatDistanceToNow(new Date(project.last_updated_at), { 
-                        addSuffix: true,
-                        locale: zhCN 
-                      })}
+                      {project.last_updated_at && !isNaN(new Date(project.last_updated_at).getTime())
+                        ? formatDistanceToNow(new Date(project.last_updated_at), { 
+                            addSuffix: true,
+                            locale: zhCN 
+                          })
+                        : '未知时间'}
                     </span>
                   </div>
                   <div className="flex justify-between">
@@ -530,10 +534,12 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
                   <div className="flex justify-between">
                     <span className="text-text-tertiary">发现于</span>
                     <span className="text-text-primary">
-                      {formatDistanceToNow(new Date(project.discovery.discovered_at), { 
-                        addSuffix: true,
-                        locale: zhCN 
-                      })}
+                      {project.discovery.discovered_at && !isNaN(new Date(project.discovery.discovered_at).getTime())
+                        ? formatDistanceToNow(new Date(project.discovery.discovered_at), { 
+                            addSuffix: true,
+                            locale: zhCN 
+                          })
+                        : '未知时间'}
                     </span>
                   </div>
                   {project.discovery.discovered_from && (
@@ -558,7 +564,9 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
                   <h3 className="text-blue-300 font-semibold mb-1">AI分析说明</h3>
                   <p className="text-sm text-blue-200/80">
                     以下分析由Claude/GPT-4生成,综合了来自<strong>CoinGecko、GitHub、DefiLlama、Dune Analytics</strong>等多个数据源的实时信息。
-                    数据每24小时自动更新一次,最后更新于 {formatDistanceToNow(new Date(project.last_updated_at), { locale: zhCN, addSuffix: true })}。
+                    数据每24小时自动更新一次,最后更新于 {project.last_updated_at && !isNaN(new Date(project.last_updated_at).getTime())
+                      ? formatDistanceToNow(new Date(project.last_updated_at), { locale: zhCN, addSuffix: true })
+                      : '未知时间'}。
                   </p>
                 </div>
               </div>
