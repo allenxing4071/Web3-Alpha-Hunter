@@ -194,8 +194,7 @@ def collect_coingecko_data():
                             project_name=project_data.get('name', 'Unknown'),
                             symbol=project_data.get('symbol'),
                             description=project_data.get('description'),
-                            coingecko_id=project_data.get('coingecko_id'),
-                            market_cap_rank=project_data.get('market_cap_rank'),
+                            website=project_data.get('website'),
                             discovered_from='coingecko',
                             status='discovered'
                         )
@@ -204,6 +203,12 @@ def collect_coingecko_data():
                 
                 db.commit()
                 logger.info(f"💾 Saved {saved_count} new projects to database")
+                
+                # 触发AI分析
+                if saved_count > 0:
+                    from app.tasks.analyzers import analyze_new_projects
+                    analyze_new_projects.delay()
+                    logger.info(f"🤖 Triggered AI analysis for {saved_count} new CoinGecko projects")
                 
             except Exception as db_error:
                 logger.error(f"❌ Database save failed: {db_error}")

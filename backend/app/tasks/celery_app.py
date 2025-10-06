@@ -26,13 +26,19 @@ celery_app.conf.update(
 
 # 定时任务配置
 celery_app.conf.beat_schedule = {
-    # 每5分钟采集Twitter数据
+    # 每30分钟采集CoinGecko数据（免费API）
+    "collect-coingecko-data": {
+        "task": "app.tasks.collectors.collect_coingecko_data",
+        "schedule": crontab(minute="*/30"),  # 每30分钟
+    },
+    
+    # 每5分钟采集Twitter数据（需要API配置）
     "collect-twitter-data": {
         "task": "app.tasks.collectors.collect_twitter_data",
         "schedule": crontab(minute="*/5"),  # 每5分钟
     },
     
-    # 每15分钟采集Telegram数据
+    # 每15分钟采集Telegram数据（需要API配置）
     "collect-telegram-data": {
         "task": "app.tasks.collectors.collect_telegram_data",
         "schedule": crontab(minute="*/15"),  # 每15分钟
