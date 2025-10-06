@@ -69,7 +69,8 @@ export function GradeBadge({
   showScore = true,
   className 
 }: GradeBadgeProps) {
-  const style = gradeStyles[grade]
+  // 使用默认样式作为fallback，防止undefined
+  const style = gradeStyles[grade as keyof typeof gradeStyles] || gradeStyles.C
   const sizeStyle = sizeStyles[size]
   
   return (
