@@ -120,25 +120,33 @@ export function PlatformInfluencers() {
     if (!loading && influencers.length > 0 && scrollContainerRef.current) {
       const container = scrollContainerRef.current
       
-      // 使用requestAnimationFrame确保DOM完全渲染
+      // 使用双重requestAnimationFrame确保DOM完全渲染
       requestAnimationFrame(() => {
-        // 计算应该滚动到第2张卡片居中的位置
-        const cardWidth = 336 // 320px + 16px gap
-        const padding = 64
-        const containerWidth = container.clientWidth
-        
-        // 第2张卡片的左边距 = padding + 1 * cardWidth
-        const secondCardLeft = padding + cardWidth
-        // 第2张卡片中心位置 = secondCardLeft + cardWidth/2
-        const secondCardCenter = secondCardLeft + cardWidth / 2
-        // 需要滚动的距离 = 卡片中心 - 视口中心
-        const scrollTo = secondCardCenter - containerWidth / 2
-        
-        // 滚动到计算的位置
-        container.scrollLeft = Math.max(0, scrollTo)
-        
-        // 强制更新scrollPosition状态，触发重新渲染
-        setScrollPosition(container.scrollLeft)
+        requestAnimationFrame(() => {
+          // 计算应该滚动到第2张卡片居中的位置
+          const cardWidth = 336 // 320px + 16px gap
+          const padding = 64
+          const containerWidth = container.clientWidth
+          
+          console.log('📐 容器宽度:', containerWidth)
+          
+          // 第2张卡片的左边距 = padding + 1 * cardWidth
+          const secondCardLeft = padding + cardWidth
+          // 第2张卡片中心位置 = secondCardLeft + cardWidth/2
+          const secondCardCenter = secondCardLeft + cardWidth / 2
+          // 需要滚动的距离 = 卡片中心 - 视口中心
+          const scrollTo = secondCardCenter - containerWidth / 2
+          
+          console.log('🎯 计算滚动位置:', scrollTo)
+          
+          // 滚动到计算的位置
+          container.scrollLeft = Math.max(0, scrollTo)
+          
+          console.log('📍 实际滚动到:', container.scrollLeft)
+          
+          // 强制更新scrollPosition状态，触发重新渲染
+          setScrollPosition(container.scrollLeft)
+        })
       })
     }
   }, [loading, influencers.length])
