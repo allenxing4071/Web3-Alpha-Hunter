@@ -5,7 +5,8 @@
 
 'use client'
 
-import { ExternalLink, Users } from 'lucide-react'
+import { ExternalLink, Users, ChevronLeft, ChevronRight } from 'lucide-react'
+import { useRef, useState } from 'react'
 
 interface Influencer {
   id: string
@@ -175,6 +176,29 @@ function InfluencerCard({ influencer }: { influencer: Influencer }) {
 }
 
 export function PlatformInfluencers() {
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const [showLeftArrow, setShowLeftArrow] = useState(false)
+  const [showRightArrow, setShowRightArrow] = useState(true)
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = 400 // 滚动距离
+      const newScrollLeft = scrollContainerRef.current.scrollLeft + (direction === 'left' ? -scrollAmount : scrollAmount)
+      scrollContainerRef.current.scrollTo({
+        left: newScrollLeft,
+        behavior: 'smooth'
+      })
+    }
+  }
+
+  const handleScroll = () => {
+    if (scrollContainerRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current
+      setShowLeftArrow(scrollLeft > 0)
+      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 10)
+    }
+  }
+
   return (
     <div className="bg-bg-secondary rounded-xl border border-gray-700 p-6 mt-6">
       <h3 className="text-xl font-bold text-text-primary mb-6 flex items-center">
@@ -188,11 +212,47 @@ export function PlatformInfluencers() {
         </span>
       </h3>
 
-      <div className="overflow-x-auto pb-4 scrollbar-thin">
-        <div className="flex gap-4 py-2">
-          {influencers.map((influencer) => (
-            <InfluencerCard key={influencer.id} influencer={influencer} />
-          ))}
+      <div className="relative">
+        {/* 左箭头 */}
+        {showLeftArrow && (
+          <button
+            onClick={() => scroll('left')}
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 
+                     bg-accent-primary/90 hover:bg-accent-primary
+                     text-white rounded-full p-3 shadow-lg
+                     transition-all hover:scale-110"
+            aria-label="向左滚动"
+          >
+            <ChevronLeft className="w-6 h-6 stroke-[3]" />
+          </button>
+        )}
+
+        {/* 右箭头 */}
+        {showRightArrow && (
+          <button
+            onClick={() => scroll('right')}
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10
+                     bg-accent-primary/90 hover:bg-accent-primary
+                     text-white rounded-full p-3 shadow-lg
+                     transition-all hover:scale-110"
+            aria-label="向右滚动"
+          >
+            <ChevronRight className="w-6 h-6 stroke-[3]" />
+          </button>
+        )}
+
+        {/* 滚动容器 - 隐藏滚动条 */}
+        <div 
+          ref={scrollContainerRef}
+          onScroll={handleScroll}
+          className="overflow-x-auto pb-4 scrollbar-hide"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        >
+          <div className="flex gap-4 py-2">
+            {influencers.map((influencer) => (
+              <InfluencerCard key={influencer.id} influencer={influencer} />
+            ))}
+          </div>
         </div>
       </div>
     </div>
