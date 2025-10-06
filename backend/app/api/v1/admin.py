@@ -429,7 +429,7 @@ async def update_ai_work_config(
                 project_age_limit_days = :project_age_limit_days,
                 max_projects_per_day = :max_projects_per_day,
                 max_kols_per_day = :max_kols_per_day,
-                rules = :rules::jsonb,
+                rules = CAST(:rules AS jsonb),
                 updated_at = CURRENT_TIMESTAMP
             WHERE id = 1
         """), {
