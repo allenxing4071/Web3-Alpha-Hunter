@@ -83,7 +83,7 @@ export function PlatformInfluencers() {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [scrollPosition, setScrollPosition] = useState(0)
   const [influencers, setInfluencers] = useState<Influencer[]>([])
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false) // 改为false，使用静态数据
 
   // 使用useCallback确保handleScroll函数稳定
   const handleScroll = useCallback(() => {

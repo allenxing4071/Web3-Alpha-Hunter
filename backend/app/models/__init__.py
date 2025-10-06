@@ -15,6 +15,7 @@ from app.models.prediction import (
 )
 
 from app.models.user import User
+from app.models.kol import KOL
 
 __all__ = [
     "Project",
@@ -26,5 +27,6 @@ __all__ = [
     "InvestmentActionPlan",
     "ProjectDiscovery",
     "User",
+    "KOL",
 ]
 
