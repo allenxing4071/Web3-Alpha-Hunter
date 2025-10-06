@@ -120,7 +120,7 @@ export function ActivityTimeline({ activities }: ActivityTimelineProps) {
         实时活动流
       </h3>
       
-      <div className="space-y-3 max-h-[650px] overflow-y-auto pr-2 scrollbar-thin">
+      <div className="space-y-3 max-h-[996px] overflow-y-auto pr-2 scrollbar-thin">
         {activities.map((activity, index) => (
           <ActivityItem key={index} activity={activity} />
         ))}

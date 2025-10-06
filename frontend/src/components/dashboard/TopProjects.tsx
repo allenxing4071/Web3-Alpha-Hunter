@@ -64,7 +64,7 @@ export function TopProjects({ projects }: TopProjectsProps) {
         Top 10 热门项目
       </h3>
       
-      <div className="space-y-3 max-h-[650px] overflow-y-auto pr-2 scrollbar-thin">
+      <div className="space-y-3 max-h-[996px] overflow-y-auto pr-2 scrollbar-thin">
         {projects.map((project) => (
           <div
             key={project.id}
