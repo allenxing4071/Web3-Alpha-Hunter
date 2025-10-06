@@ -127,11 +127,10 @@ export function PlatformInfluencers() {
   // 初始化时触发一次滚动位置计算，确保3D效果正确显示
   useEffect(() => {
     if (!loading && influencers.length > 0 && scrollContainerRef.current) {
-      // 立即触发一次，然后稍微延迟再触发确保DOM完全渲染
-      handleScroll()
-      const timer = setTimeout(() => handleScroll(), 100)
-      
-      return () => clearTimeout(timer)
+      // 立即触发，使用requestAnimationFrame确保DOM已渲染
+      requestAnimationFrame(() => {
+        handleScroll()
+      })
     }
   }, [loading, influencers, handleScroll])
 
@@ -199,6 +198,7 @@ export function PlatformInfluencers() {
 
   // 加载状态
   if (loading) {
+    console.log('🔄 渲染加载状态...')
     return (
       <div className="bg-bg-secondary rounded-xl border border-gray-700 p-6 mt-6">
         <h3 className="text-xl font-bold text-text-primary mb-6 flex items-center">
@@ -216,6 +216,8 @@ export function PlatformInfluencers() {
       </div>
     )
   }
+  
+  console.log('🎨 渲染KOL列表, 数量:', influencers.length)
 
   return (
     <div className="bg-bg-secondary rounded-xl border border-gray-700 p-6 mt-6">
