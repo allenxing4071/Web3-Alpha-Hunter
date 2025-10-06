@@ -147,3 +147,91 @@ async def get_table_info(
         }
     }
 
+
+@router.get("/tables/{table_name}/data")
+async def get_table_data(
+    table_name: str,
+    page: int = 1,
+    limit: int = 20,
+    db: Session = Depends(get_db)
+) -> Dict[str, Any]:
+    """
+    获取指定表的数据
+    
+    参数:
+    - table_name: 表名
+    - page: 页码 (从1开始)
+    - limit: 每页数量 (默认20, 最大50)
+    
+    返回:
+    - data: 数据列表
+    - total: 总行数
+    - page: 当前页
+    - limit: 每页数量
+    - total_pages: 总页数
+    """
+    
+    inspector = inspect(db.bind)
+    
+    # 检查表是否存在
+    if table_name not in inspector.get_table_names():
+        return {
+            "success": False,
+            "error": f"Table '{table_name}' not found"
+        }
+    
+    # 限制每页数量
+    limit = min(limit, 50)
+    offset = (page - 1) * limit
+    
+    try:
+        # 获取总行数
+        count_result = db.execute(text(f"SELECT COUNT(*) as count FROM {table_name}"))
+        total = count_result.fetchone()[0]
+        
+        # 获取数据
+        data_result = db.execute(text(f"SELECT * FROM {table_name} ORDER BY id DESC LIMIT :limit OFFSET :offset"), 
+                                 {"limit": limit, "offset": offset})
+        
+        # 获取列名
+        columns = [col['name'] for col in inspector.get_columns(table_name)]
+        
+        # 转换为字典列表
+        data = []
+        for row in data_result:
+            row_dict = {}
+            for i, col_name in enumerate(columns):
+                value = row[i]
+                # 处理特殊类型
+                if value is not None:
+                    if isinstance(value, (dict, list)):
+                        row_dict[col_name] = value
+                    else:
+                        row_dict[col_name] = str(value) if not isinstance(value, (int, float, bool)) else value
+                else:
+                    row_dict[col_name] = None
+            data.append(row_dict)
+        
+        total_pages = (total + limit - 1) // limit if total > 0 else 0
+        
+        return {
+            "success": True,
+            "data": {
+                "table_name": table_name,
+                "columns": columns,
+                "rows": data,
+                "total": total,
+                "page": page,
+                "limit": limit,
+                "total_pages": total_pages
+            }
+        }
+        
+    except Exception as e:
+        print(f"❌ 获取表数据失败: {e}")
+        return {
+            "success": False,
+            "error": str(e)
+        }
+
+

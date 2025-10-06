@@ -18,9 +18,22 @@ interface TableStructure {
   description: string
 }
 
+interface TableData {
+  columns: string[]
+  rows: any[]
+  total: number
+  page: number
+  limit: number
+  total_pages: number
+}
+
 export default function DatabasePage() {
   const { user } = useAuthStore()
   const [activeTab, setActiveTab] = useState('projects')
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pageSize, setPageSize] = useState(20)
+  const [tableData, setTableData] = useState<TableData | null>(null)
+  const [loading, setLoading] = useState(false)
   const [stats, setStats] = useState<DatabaseStats>({
     tableCount: 9,
     projectCount: 0,
@@ -31,6 +44,10 @@ export default function DatabasePage() {
   useEffect(() => {
     loadDatabaseStats()
   }, [])
+
+  useEffect(() => {
+    loadTableData()
+  }, [activeTab, currentPage, pageSize])
 
   const loadDatabaseStats = async () => {
     try {
@@ -47,6 +64,35 @@ export default function DatabasePage() {
     } catch (error) {
       console.error('加载数据库统计失败:', error)
     }
+  }
+
+  const loadTableData = async () => {
+    setLoading(true)
+    try {
+      const response = await fetch(
+        `http://localhost:8000/api/v1/database/tables/${activeTab}/data?page=${currentPage}&limit=${pageSize}`
+      )
+      const result = await response.json()
+      if (result.success) {
+        setTableData(result.data)
+      } else {
+        setTableData(null)
+      }
+    } catch (error) {
+      console.error('加载表数据失败:', error)
+      setTableData(null)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+  }
+
+  const handlePageSizeChange = (size: number) => {
+    setPageSize(size)
+    setCurrentPage(1) // 重置到第一页
   }
 
   const tabs = [
@@ -362,18 +408,129 @@ export default function DatabasePage() {
                 </div>
               </div>
 
-              {/* Sample Data Info */}
-              <div className="mt-6 bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">💡</span>
-                  <div>
-                    <h5 className="font-bold text-blue-400 mb-1">提示</h5>
-                    <p className="text-sm text-gray-400">
-                      当前显示的是 <code className="px-2 py-1 bg-gray-800 rounded text-cyan-400 font-mono text-xs">{activeTab}</code> 表的结构信息。
-                      完整的数据查询和管理功能正在开发中...
-                    </p>
-                  </div>
+              {/* Table Data */}
+              <div className="mt-6 bg-gray-900/50 rounded-xl border border-gray-800 overflow-hidden">
+                <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 px-6 py-4 border-b border-gray-800 flex items-center justify-between">
+                  <h4 className="text-lg font-bold text-white">示例数据</h4>
+                  {tableData && (
+                    <div className="text-sm text-gray-400">
+                      显示 1-{Math.min(pageSize, tableData.total)} 条，共 {tableData.total} 条
+                    </div>
+                  )}
                 </div>
+
+                {loading ? (
+                  <div className="p-12 text-center">
+                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500"></div>
+                    <p className="mt-4 text-gray-400">加载中...</p>
+                  </div>
+                ) : tableData && tableData.rows.length > 0 ? (
+                  <>
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="bg-gradient-to-r from-purple-500/10 to-pink-500/10">
+                            {tableData.columns.map((col, idx) => (
+                              <th key={idx} className="px-6 py-3 text-left text-xs font-bold text-purple-300 uppercase tracking-wider whitespace-nowrap">
+                                {col}
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-800">
+                          {tableData.rows.map((row, rowIdx) => (
+                            <tr key={rowIdx} className="hover:bg-gray-800/50 transition-colors">
+                              {tableData.columns.map((col, colIdx) => (
+                                <td key={colIdx} className="px-6 py-4 text-sm text-gray-300 max-w-xs truncate">
+                                  {row[col] !== null && row[col] !== undefined ? (
+                                    typeof row[col] === 'object' ? (
+                                      <code className="text-xs text-cyan-400">{JSON.stringify(row[col])}</code>
+                                    ) : typeof row[col] === 'boolean' ? (
+                                      <span className={`px-2 py-1 rounded text-xs ${row[col] ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+                                        {row[col] ? 'true' : 'false'}
+                                      </span>
+                                    ) : (
+                                      String(row[col])
+                                    )
+                                  ) : (
+                                    <span className="text-gray-600 italic">NULL</span>
+                                  )}
+                                </td>
+                              ))}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+
+                    {/* Pagination */}
+                    <div className="bg-gray-900/80 px-6 py-4 border-t border-gray-800 flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <span className="text-sm text-gray-400">每页显示:</span>
+                        <select
+                          value={pageSize}
+                          onChange={(e) => handlePageSizeChange(Number(e.target.value))}
+                          className="bg-gray-800 border border-gray-700 rounded px-3 py-1 text-sm text-white focus:outline-none focus:border-purple-500"
+                        >
+                          <option value={20}>20</option>
+                          <option value={50}>50</option>
+                        </select>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => handlePageChange(1)}
+                          disabled={currentPage === 1}
+                          className="px-3 py-1 bg-gray-800 text-white rounded hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                        >
+                          « 上一页
+                        </button>
+
+                        <div className="flex gap-1">
+                          {Array.from({ length: Math.min(tableData.total_pages, 5) }, (_, i) => {
+                            let pageNum;
+                            if (tableData.total_pages <= 5) {
+                              pageNum = i + 1;
+                            } else if (currentPage <= 3) {
+                              pageNum = i + 1;
+                            } else if (currentPage >= tableData.total_pages - 2) {
+                              pageNum = tableData.total_pages - 4 + i;
+                            } else {
+                              pageNum = currentPage - 2 + i;
+                            }
+                            
+                            return (
+                              <button
+                                key={i}
+                                onClick={() => handlePageChange(pageNum)}
+                                className={`px-3 py-1 rounded text-sm ${
+                                  currentPage === pageNum
+                                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
+                                    : 'bg-gray-800 text-white hover:bg-gray-700'
+                                }`}
+                              >
+                                {pageNum}
+                              </button>
+                            );
+                          })}
+                        </div>
+
+                        <button
+                          onClick={() => handlePageChange(currentPage + 1)}
+                          disabled={currentPage >= tableData.total_pages}
+                          className="px-3 py-1 bg-gray-800 text-white rounded hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                        >
+                          下一页 »
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="p-12 text-center">
+                    <div className="text-6xl mb-4">📭</div>
+                    <p className="text-gray-400">暂无数据</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
