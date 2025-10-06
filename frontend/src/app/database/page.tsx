@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useAuthStore } from '@/store/authStore'
 import { AuthGuard } from '@/components/AuthGuard'
+import { API_BASE_URL } from '@/lib/config'
 
 interface DatabaseStats {
   tableCount: number
@@ -64,7 +65,7 @@ export default function DatabasePage() {
 
   const loadDatabaseStats = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/v1/database/stats')
+      const response = await fetch(`${API_BASE_URL}/database/stats`)
       const result = await response.json()
       if (result.success) {
         setStats({
@@ -83,7 +84,7 @@ export default function DatabasePage() {
 
   const loadTableInfo = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/api/v1/database/tables/${activeTab}/info`)
+      const response = await fetch(`${API_BASE_URL}/database/tables/${activeTab}/info`)
       const result = await response.json()
       if (result.success) {
         setTableInfo(result.data)
@@ -100,7 +101,7 @@ export default function DatabasePage() {
     setLoading(true)
     try {
       const response = await fetch(
-        `http://localhost:8000/api/v1/database/tables/${activeTab}/data?page=${currentPage}&limit=${pageSize}`
+        `${API_BASE_URL}/database/tables/${activeTab}/data?page=${currentPage}&limit=${pageSize}`
       )
       const result = await response.json()
       if (result.success) {

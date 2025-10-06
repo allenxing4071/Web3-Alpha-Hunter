@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { AuthGuard } from '@/components/AuthGuard'
+import { API_BASE_URL } from '@/lib/config'
 
 export default function AdminToolsPage() {
   const [result, setResult] = useState<string>('')
@@ -11,7 +12,7 @@ export default function AdminToolsPage() {
     setLoading(true)
     setResult('')
     try {
-      const response = await fetch('http://localhost:8000/api/v1/admin/fix-admin-role', {
+      const response = await fetch(`${API_BASE_URL}/admin/fix-admin-role`, {
         method: 'POST'
       })
       const data = await response.json()

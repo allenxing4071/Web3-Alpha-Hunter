@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuthStore } from '@/store/authStore'
+import { HEALTH_CHECK_URL } from '@/lib/config'
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -25,7 +26,7 @@ export default function DashboardPage() {
 
   const checkBackendStatus = async () => {
     try {
-      const response = await fetch('http://localhost:8000/health')
+      const response = await fetch(HEALTH_CHECK_URL)
       if (response.ok) {
         setBackendStatus('✅ 运行正常')
       } else {

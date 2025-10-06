@@ -8,6 +8,7 @@
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { AuthGuard } from '@/components/AuthGuard'
+import { API_BASE_URL } from '@/lib/config'
 
 interface PendingProject {
   id: number
@@ -25,7 +26,7 @@ interface PendingProject {
 }
 
 export default function ReviewPage() {
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1'
+  
   
   const [projects, setProjects] = useState<PendingProject[]>([])
   const [loading, setLoading] = useState(true)
@@ -38,7 +39,7 @@ export default function ReviewPage() {
   const loadProjects = async () => {
     try {
       setLoading(true)
-      const response = await fetch(`${API_URL}/admin/pending-projects?limit=50`)
+      const response = await fetch(`${API_BASE_URL}/admin/pending-projects?limit=50`)
       if (response.ok) {
         const data = await response.json()
         if (data.success) {
@@ -56,7 +57,7 @@ export default function ReviewPage() {
   // 批准项目
   const approveProject = async (projectId: number) => {
     try {
-      const response = await fetch(`${API_URL}/admin/pending-projects/${projectId}/approve`, {
+      const response = await fetch(`${API_BASE_URL}/admin/pending-projects/${projectId}/approve`, {
         method: 'POST'
       })
       
@@ -75,7 +76,7 @@ export default function ReviewPage() {
   // 拒绝项目
   const rejectProject = async (projectId: number, reason: string) => {
     try {
-      const response = await fetch(`${API_URL}/admin/pending-projects/${projectId}/reject`, {
+      const response = await fetch(`${API_BASE_URL}/admin/pending-projects/${projectId}/reject`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ reason })

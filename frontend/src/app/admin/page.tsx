@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { AuthGuard } from '@/components/AuthGuard'
+import { API_BASE_URL } from '@/lib/config'
 
 interface Platform {
   id: string
@@ -51,7 +52,6 @@ interface AIWorkConfig {
 
 export default function AdminPage() {
   const router = useRouter()
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1'
   
   // Celery状态
   const [celeryRunning, setCeleryRunning] = useState(false)
@@ -89,7 +89,7 @@ export default function AdminPage() {
   // 检查Celery状态
   const checkCeleryStatus = async () => {
     try {
-      const response = await fetch(`${API_URL}/admin/celery-status`)
+      const response = await fetch(`${API_BASE_URL}/admin/celery-status`)
       if (response.ok) {
         const data = await response.json()
         setCeleryRunning(data.worker_running)
@@ -105,7 +105,7 @@ export default function AdminPage() {
   const loadPlatforms = async () => {
     try {
       setLoadingPlatforms(true)
-      const response = await fetch(`${API_URL}/platforms/`)
+      const response = await fetch(`${API_BASE_URL}/platforms/`)
       if (response.ok) {
         const data = await response.json()
         if (data.success && data.platforms) {
@@ -123,7 +123,7 @@ export default function AdminPage() {
   // 切换平台启用状态
   const togglePlatform = async (platformId: string, enabled: boolean) => {
     try {
-      const response = await fetch(`${API_URL}/platforms/${platformId}/toggle`, {
+      const response = await fetch(`${API_BASE_URL}/platforms/${platformId}/toggle`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ enabled })
@@ -142,7 +142,7 @@ export default function AdminPage() {
   const triggerPlatformCollection = async (platformId: string) => {
     try {
       addLog(`[采集] 正在触发 ${platformId} 数据采集...`)
-      const response = await fetch(`${API_URL}/platforms/${platformId}/collect`, {
+      const response = await fetch(`${API_BASE_URL}/platforms/${platformId}/collect`, {
         method: 'POST'
       })
       
@@ -158,7 +158,7 @@ export default function AdminPage() {
   // 加载AI配置
   const loadAiConfigs = async () => {
     try {
-      const response = await fetch(`${API_URL}/admin/ai-configs`)
+      const response = await fetch(`${API_BASE_URL}/admin/ai-configs`)
       if (response.ok) {
         const data = await response.json()
         if (data.configs && data.configs.length > 0) {
@@ -179,7 +179,7 @@ export default function AdminPage() {
   // 加载AI工作配置
   const loadAiWorkConfig = async () => {
     try {
-      const response = await fetch(`${API_URL}/admin/ai-work-config`)
+      const response = await fetch(`${API_BASE_URL}/admin/ai-work-config`)
       if (response.ok) {
         const data = await response.json()
         if (data.success && data.config) {
@@ -197,7 +197,7 @@ export default function AdminPage() {
     if (!aiWorkConfig) return
     
     try {
-      const response = await fetch(`${API_URL}/admin/ai-work-config`, {
+      const response = await fetch(`${API_BASE_URL}/admin/ai-work-config`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(aiWorkConfig)
@@ -228,7 +228,7 @@ export default function AdminPage() {
     addLog(`[AI测试] 正在测试 ${config.name} 连接...`)
 
     try {
-      const response = await fetch(`${API_URL}/admin/test-ai`, {
+      const response = await fetch(`${API_BASE_URL}/admin/test-ai`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -260,7 +260,7 @@ export default function AdminPage() {
   // 保存AI配置到数据库
   const saveAiConfigs = async () => {
     try {
-      const response = await fetch(`${API_URL}/admin/ai-configs`, {
+      const response = await fetch(`${API_BASE_URL}/admin/ai-configs`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ configs: aiConfigs })
