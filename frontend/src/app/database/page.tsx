@@ -285,12 +285,12 @@ export default function DatabasePage() {
 
           {/* Tabs */}
           <div className="bg-bg-tertiary rounded-xl border border-gray-800 overflow-hidden">
-            <div className="flex gap-2 p-4 border-b border-gray-800 overflow-x-auto">
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-2 p-4 border-b border-gray-800">
               {tabs.map(tab => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`px-4 py-2 rounded-lg whitespace-nowrap transition-all text-sm font-medium ${
+                  className={`px-4 py-2 rounded-lg transition-all text-sm font-medium ${
                     activeTab === tab.id
                       ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
                       : 'bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-gray-300'
