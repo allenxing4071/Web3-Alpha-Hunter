@@ -127,8 +127,8 @@ function InfluencerCard({ influencer }: { influencer: Influencer }) {
   return (
     <div 
       onClick={handleClick}
-      className="flex-shrink-0 w-80 p-5 rounded-xl border-2 border-gray-700 bg-bg-tertiary
-                 hover:border-accent-primary hover:scale-105 transition-all cursor-pointer group"
+      className="flex-shrink-0 w-80 p-6 rounded-xl border-2 border-gray-700 bg-bg-tertiary
+                 hover:border-accent-primary hover:scale-105 transition-all cursor-pointer group my-2"
     >
       {/* 头部：平台和验证标识 */}
       <div className="flex items-center justify-between mb-3">
@@ -177,7 +177,7 @@ function InfluencerCard({ influencer }: { influencer: Influencer }) {
 export function PlatformInfluencers() {
   return (
     <div className="bg-bg-secondary rounded-xl border border-gray-700 p-6 mt-6">
-      <h3 className="text-xl font-bold text-text-primary mb-4 flex items-center">
+      <h3 className="text-xl font-bold text-text-primary mb-6 flex items-center">
         <Users className="w-5 h-5 mr-2 text-accent-purple" />
         推荐关注
         <span className="ml-2 text-sm text-text-secondary font-normal">
@@ -188,8 +188,8 @@ export function PlatformInfluencers() {
         </span>
       </h3>
 
-      <div className="overflow-x-auto pb-2 scrollbar-thin">
-        <div className="flex gap-4">
+      <div className="overflow-x-auto pb-4 scrollbar-thin">
+        <div className="flex gap-4 py-2">
           {influencers.map((influencer) => (
             <InfluencerCard key={influencer.id} influencer={influencer} />
           ))}
