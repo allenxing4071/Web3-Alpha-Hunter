@@ -82,18 +82,22 @@ export function GradeDistributionChart({ data }: GradeDistributionProps) {
           </Pie>
           <Tooltip 
             contentStyle={{ 
-              backgroundColor: 'rgba(30, 58, 138, 0.95)', // 深蓝色背景
-              border: '1px solid rgba(59, 130, 246, 0.5)', // 蓝色边框
-              borderRadius: '8px'
+              backgroundColor: 'rgba(30, 58, 138, 0.95) !important', // 深蓝色背景
+              border: '1px solid rgba(59, 130, 246, 0.5) !important', // 蓝色边框
+              borderRadius: '8px !important'
+            }}
+            wrapperStyle={{
+              outline: 'none'
             }}
             labelStyle={{
-              color: '#fff',
+              color: '#fff !important',
               fontWeight: 'bold',
               marginBottom: '8px'
             }}
             itemStyle={{
-              color: '#e5e7eb'
+              color: '#e5e7eb !important'
             }}
+            cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }}
           />
         </PieChart>
       </ResponsiveContainer>
@@ -154,18 +158,22 @@ export function CategoryStatsChart({ data }: CategoryStatsProps) {
           <YAxis stroke="#9CA3AF" style={{ fontSize: '12px' }} />
           <Tooltip 
             contentStyle={{ 
-              backgroundColor: 'rgba(30, 58, 138, 0.95)', // 深蓝色背景
-              border: '1px solid rgba(59, 130, 246, 0.5)', // 蓝色边框
-              borderRadius: '8px'
+              backgroundColor: 'rgba(30, 58, 138, 0.95) !important', // 深蓝色背景
+              border: '1px solid rgba(59, 130, 246, 0.5) !important', // 蓝色边框
+              borderRadius: '8px !important'
+            }}
+            wrapperStyle={{
+              outline: 'none'
             }}
             labelStyle={{
-              color: '#fff',
+              color: '#fff !important',
               fontWeight: 'bold',
               marginBottom: '8px'
             }}
             itemStyle={{
-              color: '#e5e7eb'
+              color: '#e5e7eb !important'
             }}
+            cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }}
             formatter={(value: any, name: string) => {
               if (name === '高分项目') return [value, 'S/A级项目']
               return [value, name]
