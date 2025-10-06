@@ -139,7 +139,7 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
       
       // 转换后端数据格式
       const projectDetail: ProjectDetail = {
-        project_id: String(data.id),
+        project_id: data.project_id || String(data.id),
         name: data.project_name,
         symbol: data.symbol,
         grade: data.grade || '?',

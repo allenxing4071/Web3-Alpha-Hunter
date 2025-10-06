@@ -166,7 +166,7 @@ export default function ProjectsPage() {
         
         // 转换后端数据格式为前端Project类型
         const projects: Project[] = projectsData.map((p: any) => ({
-          project_id: String(p.id),
+          project_id: p.project_id || String(p.id),
           name: p.project_name,
           symbol: p.symbol,
           grade: p.grade || '?',

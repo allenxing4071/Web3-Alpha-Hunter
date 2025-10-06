@@ -27,7 +27,7 @@ export default function ComparePage() {
         const projectsData = data.data?.projects || data.projects || []
         
         const projects: Project[] = projectsData.map((p: any) => ({
-          project_id: String(p.id),
+          project_id: p.project_id || String(p.id),
           name: p.project_name,
           symbol: p.symbol,
           grade: p.grade || '?',
