@@ -108,6 +108,18 @@ export function PlatformInfluencers() {
     loadInfluencers()
   }, [])
 
+  // 初始化时触发一次滚动位置计算，确保3D效果正确显示
+  useEffect(() => {
+    if (!loading && influencers.length > 0 && scrollContainerRef.current) {
+      // 延迟执行，确保DOM已渲染
+      const timer = setTimeout(() => {
+        handleScroll()
+      }, 100)
+      
+      return () => clearTimeout(timer)
+    }
+  }, [loading, influencers])
+
   const scroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
       const scrollAmount = 400 // 滚动距离
