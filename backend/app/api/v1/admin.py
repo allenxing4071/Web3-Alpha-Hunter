@@ -558,25 +558,19 @@ async def approve_pending_project(
         if not row:
             raise HTTPException(status_code=404, detail="项目不存在或已审核")
         
-        # 创建正式项目
+        # 创建正式项目（只使用projects表中存在的字段）
         db.execute(text("""
             INSERT INTO projects (
-                name, symbol, description, discovered_from,
-                overall_score, grade, status, website,
-                discovered_at, created_at, updated_at
+                name, description, overall_score,
+                created_at, updated_at
             ) VALUES (
-                :name, :symbol, :description, :discovered_from,
-                :overall_score, :grade, 'active', :website,
-                CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+                :name, :description, :overall_score,
+                CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
             )
         """), {
             "name": row[0],
-            "symbol": row[1],
             "description": row[2],
-            "discovered_from": row[3],
-            "overall_score": row[4],
-            "grade": row[5],
-            "website": (row[6] or {}).get("website") if row[6] else None
+            "overall_score": row[4]
         })
         
         # 更新待审核项目状态
