@@ -124,12 +124,20 @@ export function PlatformInfluencers() {
     loadInfluencers()
   }, [])
 
-  // 初始化时触发一次滚动位置计算，确保3D效果正确显示
+  // 初始化时立即触发3D效果计算
   useEffect(() => {
     if (!loading && influencers.length > 0 && scrollContainerRef.current) {
-      // 立即触发，使用requestAnimationFrame确保DOM已渲染
+      const container = scrollContainerRef.current
+      
+      // 立即触发一次计算
+      handleScroll()
+      
+      // 使用双重RAF确保DOM完全渲染后再次计算
       requestAnimationFrame(() => {
-        handleScroll()
+        requestAnimationFrame(() => {
+          handleScroll()
+          console.log('✅ 3D效果已初始化，scrollLeft:', container.scrollLeft)
+        })
       })
     }
   }, [loading, influencers, handleScroll])
