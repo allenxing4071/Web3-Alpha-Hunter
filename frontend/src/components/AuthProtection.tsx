@@ -25,8 +25,10 @@ export function AuthProtection({ children }: { children: React.ReactNode }) {
     // 检查认证状态
     if (typeof window !== 'undefined') {
       const token = sessionStorage.getItem('auth_token')
+      const user = sessionStorage.getItem('auth_user')
       
-      if (token === 'authenticated') {
+      if (token && user) {
+        // 有token和用户信息，认为已登录
         setIsAuthenticated(true)
         setIsChecking(false)
       } else {
