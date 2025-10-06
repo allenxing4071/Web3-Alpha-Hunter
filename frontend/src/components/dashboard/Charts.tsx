@@ -58,7 +58,7 @@ export function GradeDistributionChart({ data }: GradeDistributionProps) {
         项目等级分布
       </h3>
 
-      <ResponsiveContainer width="100%" height={350}>
+      <ResponsiveContainer width="100%" height={320}>
         <PieChart>
           <Pie
             data={chartData}
@@ -135,7 +135,7 @@ export function CategoryStatsChart({ data }: CategoryStatsProps) {
         类别分布统计
       </h3>
 
-      <ResponsiveContainer width="100%" height={350}>
+      <ResponsiveContainer width="100%" height={320}>
         <BarChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
           <XAxis 
