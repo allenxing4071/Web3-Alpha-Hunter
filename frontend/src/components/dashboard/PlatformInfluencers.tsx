@@ -177,8 +177,7 @@ function InfluencerCard({ influencer }: { influencer: Influencer }) {
 
 export function PlatformInfluencers() {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
-  const [showLeftArrow, setShowLeftArrow] = useState(false)
-  const [showRightArrow, setShowRightArrow] = useState(true)
+  const [scrollPosition, setScrollPosition] = useState(0)
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
@@ -193,9 +192,35 @@ export function PlatformInfluencers() {
 
   const handleScroll = () => {
     if (scrollContainerRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current
-      setShowLeftArrow(scrollLeft > 0)
-      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 10)
+      setScrollPosition(scrollContainerRef.current.scrollLeft)
+    }
+  }
+
+  // 计算卡片的样式（缩放和透明度）
+  const getCardStyle = (index: number) => {
+    if (!scrollContainerRef.current) return {}
+    
+    const container = scrollContainerRef.current
+    const cardWidth = 320 + 16 // 卡片宽度 + gap
+    const containerWidth = container.clientWidth
+    const scrollLeft = scrollPosition
+    
+    // 计算卡片中心相对于可视区域中心的距离
+    const cardCenter = index * cardWidth + 160 - scrollLeft
+    const viewportCenter = containerWidth / 2
+    const distanceFromCenter = Math.abs(cardCenter - viewportCenter)
+    
+    // 计算缩放比例（中间1，两边0.85）
+    const maxDistance = containerWidth / 2
+    const scale = Math.max(0.85, 1 - (distanceFromCenter / maxDistance) * 0.15)
+    
+    // 计算透明度（中间1，两边0.5）
+    const opacity = Math.max(0.5, 1 - (distanceFromCenter / maxDistance) * 0.5)
+    
+    return {
+      transform: `scale(${scale})`,
+      opacity: opacity,
+      transition: 'all 0.3s ease-out'
     }
   }
 
@@ -213,44 +238,48 @@ export function PlatformInfluencers() {
       </h3>
 
       <div className="relative">
-        {/* 左箭头 */}
-        {showLeftArrow && (
-          <button
-            onClick={() => scroll('left')}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 
-                     bg-accent-primary/90 hover:bg-accent-primary
-                     text-white rounded-full p-3 shadow-lg
-                     transition-all hover:scale-110"
-            aria-label="向左滚动"
-          >
-            <ChevronLeft className="w-6 h-6 stroke-[3]" />
-          </button>
-        )}
+        {/* 左箭头 - 始终显示 */}
+        <button
+          onClick={() => scroll('left')}
+          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 
+                   bg-accent-primary/90 hover:bg-accent-primary
+                   text-white rounded-full p-3 shadow-lg
+                   transition-all hover:scale-110"
+          aria-label="向左滚动"
+        >
+          <ChevronLeft className="w-6 h-6 stroke-[3]" />
+        </button>
 
-        {/* 右箭头 */}
-        {showRightArrow && (
-          <button
-            onClick={() => scroll('right')}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10
-                     bg-accent-primary/90 hover:bg-accent-primary
-                     text-white rounded-full p-3 shadow-lg
-                     transition-all hover:scale-110"
-            aria-label="向右滚动"
-          >
-            <ChevronRight className="w-6 h-6 stroke-[3]" />
-          </button>
-        )}
+        {/* 右箭头 - 始终显示 */}
+        <button
+          onClick={() => scroll('right')}
+          className="absolute right-0 top-1/2 -translate-y-1/2 z-10
+                   bg-accent-primary/90 hover:bg-accent-primary
+                   text-white rounded-full p-3 shadow-lg
+                   transition-all hover:scale-110"
+          aria-label="向右滚动"
+        >
+          <ChevronRight className="w-6 h-6 stroke-[3]" />
+        </button>
+
+        {/* 左侧渐变遮罩 */}
+        <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-bg-secondary to-transparent pointer-events-none z-[5]" />
+        
+        {/* 右侧渐变遮罩 */}
+        <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-bg-secondary to-transparent pointer-events-none z-[5]" />
 
         {/* 滚动容器 - 隐藏滚动条 */}
         <div 
           ref={scrollContainerRef}
           onScroll={handleScroll}
-          className="overflow-x-auto pb-4 scrollbar-hide"
+          className="overflow-x-auto pb-4 scrollbar-hide px-16"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           <div className="flex gap-4 py-2">
-            {influencers.map((influencer) => (
-              <InfluencerCard key={influencer.id} influencer={influencer} />
+            {influencers.map((influencer, index) => (
+              <div key={influencer.id} style={getCardStyle(index)}>
+                <InfluencerCard influencer={influencer} />
+              </div>
             ))}
           </div>
         </div>
