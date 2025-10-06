@@ -125,43 +125,89 @@ export default function DatabasePage() {
     setCurrentPage(1) // 重置到第一页
   }
 
-  // 表名映射（emoji和描述）
-  const tableMetadata: Record<string, { emoji: string; desc: string; name: string }> = {
-    'projects': { emoji: '📊', desc: '存储Web3项目的完整数据库', name: '项目表' },
-    'social_metrics': { emoji: '📱', desc: '社交媒体数据指标', name: '社交指标' },
-    'onchain_metrics': { emoji: '⛓️', desc: '区块链上的实际数据', name: '链上数据' },
-    'ai_analysis': { emoji: '🤖', desc: 'AI智能分析结果', name: 'AI分析' },
-    'ai_configs': { emoji: '🔑', desc: 'AI模型配置', name: 'AI配置' },
-    'token_launch_predictions': { emoji: '🚀', desc: '代币发行预测', name: '发币预测' },
-    'airdrop_value_estimates': { emoji: '💰', desc: '空投价值估算', name: '空投估值' },
-    'investment_action_plans': { emoji: '📋', desc: '投资行动计划', name: '行动计划' },
-    'project_discoveries': { emoji: '🔍', desc: '多平台项目热度追踪', name: '项目发现' },
-    'projects_pending': { emoji: '⏳', desc: 'AI推荐的待审核项目', name: '待审核项目' },
-    'ai_work_config': { emoji: '🧠', desc: 'AI智能助理工作参数', name: 'AI工作配置' },
-    'ai_learning_feedback': { emoji: '📚', desc: 'AI学习反馈记录', name: 'AI学习反馈' },
-    'kols': { emoji: '👤', desc: 'KOL数据和表现追踪', name: 'KOL列表' },
-    'kols_pending': { emoji: '👥', desc: 'AI推荐的待审核KOL', name: '待审核KOL' },
-    'kol_performances': { emoji: '📈', desc: 'KOL历史表现追踪', name: 'KOL表现' },
-    'platform_search_rules': { emoji: '🌍', desc: '平台搜索规则配置', name: '平台规则' },
-    'twitter_keywords': { emoji: '🐦', desc: 'Twitter搜索关键词库', name: 'Twitter关键词' },
-    'telegram_channels': { emoji: '💬', desc: 'Telegram监控频道列表', name: 'Telegram频道' },
-    'discord_servers': { emoji: '🎮', desc: 'Discord监控服务器列表', name: 'Discord服务器' },
-    'platform_daily_stats': { emoji: '📊', desc: '平台每日数据统计', name: '平台统计' },
-    'users': { emoji: '👥', desc: '系统用户管理', name: '用户表' },
+  // 表分类定义
+  const tableCategories = {
+    core: {
+      name: '核心表',
+      emoji: '⭐',
+      tables: ['projects', 'social_metrics', 'onchain_metrics', 'ai_analysis']
+    },
+    config: {
+      name: 'AI配置表',
+      emoji: '⚙️',
+      tables: ['ai_configs', 'ai_work_config', 'platform_search_rules']
+    },
+    prediction: {
+      name: '预测表',
+      emoji: '🔮',
+      tables: ['token_launch_predictions', 'airdrop_value_estimates']
+    },
+    discovery: {
+      name: '发现表',
+      emoji: '🔍',
+      tables: ['project_discoveries', 'projects_pending']
+    },
+    kol: {
+      name: 'KOL表',
+      emoji: '👥',
+      tables: ['kols', 'kols_pending', 'kol_performances']
+    },
+    platform: {
+      name: '平台表',
+      emoji: '🌐',
+      tables: ['twitter_keywords', 'telegram_channels', 'discord_servers', 'platform_daily_stats']
+    },
+    other: {
+      name: '其他表',
+      emoji: '📋',
+      tables: ['investment_action_plans', 'ai_learning_feedback', 'users']
+    }
   }
 
-  // 动态生成tabs
-  const tabs = availableTables.map(tableName => {
-    const meta = tableMetadata[tableName] || { emoji: '📄', desc: '数据表', name: tableName }
-    return {
-      id: tableName,
-      label: `${meta.emoji} ${tableName}`,
-      name: `${tableName} (${meta.name})`,
-      desc: meta.desc
-    }
-  })
+  // 表名映射（emoji和描述）
+  const tableMetadata: Record<string, { emoji: string; desc: string; name: string; category: string }> = {
+    'projects': { emoji: '📊', desc: '存储Web3项目的完整数据库', name: '项目表', category: 'core' },
+    'social_metrics': { emoji: '📱', desc: '社交媒体数据指标', name: '社交指标', category: 'core' },
+    'onchain_metrics': { emoji: '⛓️', desc: '区块链上的实际数据', name: '链上数据', category: 'core' },
+    'ai_analysis': { emoji: '🤖', desc: 'AI智能分析结果', name: 'AI分析', category: 'core' },
+    'ai_configs': { emoji: '🔑', desc: 'AI模型配置', name: 'AI配置', category: 'config' },
+    'ai_work_config': { emoji: '🧠', desc: 'AI智能助理工作参数', name: 'AI工作配置', category: 'config' },
+    'platform_search_rules': { emoji: '🌍', desc: '平台搜索规则配置', name: '平台规则', category: 'config' },
+    'token_launch_predictions': { emoji: '🚀', desc: '代币发行预测', name: '发币预测', category: 'prediction' },
+    'airdrop_value_estimates': { emoji: '💰', desc: '空投价值估算', name: '空投估值', category: 'prediction' },
+    'project_discoveries': { emoji: '🔍', desc: '多平台项目热度追踪', name: '项目发现', category: 'discovery' },
+    'projects_pending': { emoji: '⏳', desc: 'AI推荐的待审核项目', name: '待审核项目', category: 'discovery' },
+    'kols': { emoji: '👤', desc: 'KOL数据和表现追踪', name: 'KOL列表', category: 'kol' },
+    'kols_pending': { emoji: '👥', desc: 'AI推荐的待审核KOL', name: '待审核KOL', category: 'kol' },
+    'kol_performances': { emoji: '📈', desc: 'KOL历史表现追踪', name: 'KOL表现', category: 'kol' },
+    'twitter_keywords': { emoji: '🐦', desc: 'Twitter搜索关键词库', name: 'Twitter关键词', category: 'platform' },
+    'telegram_channels': { emoji: '💬', desc: 'Telegram监控频道列表', name: 'Telegram频道', category: 'platform' },
+    'discord_servers': { emoji: '🎮', desc: 'Discord监控服务器列表', name: 'Discord服务器', category: 'platform' },
+    'platform_daily_stats': { emoji: '📊', desc: '平台每日数据统计', name: '平台统计', category: 'platform' },
+    'investment_action_plans': { emoji: '📋', desc: '投资行动计划', name: '行动计划', category: 'other' },
+    'ai_learning_feedback': { emoji: '📚', desc: 'AI学习反馈记录', name: 'AI学习反馈', category: 'other' },
+    'users': { emoji: '👥', desc: '系统用户管理', name: '用户表', category: 'other' },
+  }
 
-  const currentTab = tabs.find(t => t.id === activeTab)
+  // 按分类组织表
+  const groupedTables = Object.entries(tableCategories).map(([key, category]) => ({
+    key,
+    name: category.name,
+    emoji: category.emoji,
+    tables: availableTables
+      .filter(tableName => category.tables.includes(tableName))
+      .map(tableName => {
+        const meta = tableMetadata[tableName] || { emoji: '📄', desc: '数据表', name: tableName, category: 'other' }
+        return {
+          id: tableName,
+          label: `${meta.emoji} ${tableName}`,
+          name: `${tableName} (${meta.name})`,
+          desc: meta.desc
+        }
+      })
+  })).filter(group => group.tables.length > 0)
+
+  const currentTableMeta = tableMetadata[activeTab]
 
   return (
     <AuthGuard requireAdmin>
@@ -209,25 +255,39 @@ export default function DatabasePage() {
             </div>
           </div>
 
-          {/* Tabs */}
+          {/* Tabs - 分类显示 */}
           <div className="bg-bg-tertiary rounded-xl border border-gray-800 overflow-hidden">
-            <div className="grid grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 gap-2 p-4 border-b border-gray-800 max-h-96 overflow-y-auto">
-              {tabs.map(tab => (
+            <div className="p-4 border-b border-gray-800 max-h-96 overflow-y-auto space-y-4">
+              {groupedTables.map(group => (
+                <div key={group.key} className="space-y-2">
+                  {/* 分类标题 */}
+                  <div className="flex items-center gap-2 px-2">
+                    <span className="text-lg">{group.emoji}</span>
+                    <h3 className="text-sm font-bold text-purple-300">{group.name}</h3>
+                    <span className="text-xs text-gray-500">({group.tables.length}个表)</span>
+                  </div>
+                  
+                  {/* 该分类下的表 */}
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
+                    {group.tables.map(tab => (
                 <button
                   key={tab.id}
-                  onClick={() => {
-                    setActiveTab(tab.id)
-                    setCurrentPage(1)
-                  }}
-                  className={`px-3 py-2 rounded-lg transition-all text-xs font-medium truncate ${
+                        onClick={() => {
+                          setActiveTab(tab.id)
+                          setCurrentPage(1)
+                        }}
+                        className={`px-3 py-2 rounded-lg transition-all text-xs font-medium truncate ${
                     activeTab === tab.id
                       ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
                       : 'bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-gray-300'
                   }`}
-                  title={tab.name}
+                        title={tab.name}
                 >
                   {tab.label}
                 </button>
+                    ))}
+                  </div>
+                </div>
               ))}
             </div>
 
@@ -235,10 +295,25 @@ export default function DatabasePage() {
             <div className="p-6">
               {/* Table Info */}
               <div className="bg-gradient-to-br from-purple-500/5 to-pink-500/5 rounded-xl p-6 border border-purple-500/10 mb-6">
-                <h3 className="text-2xl font-bold text-white mb-2 flex items-center gap-2">
-                  {currentTab?.label.split(' ')[0]} {currentTab?.name}
-                </h3>
-                <p className="text-gray-400 text-sm">{currentTab?.desc}</p>
+                <div className="flex items-center gap-3 mb-2">
+                  {currentTableMeta && (
+                    <>
+                      <span className="text-3xl">{currentTableMeta.emoji}</span>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <h3 className="text-2xl font-bold text-white">{activeTab}</h3>
+                          <span className="text-sm text-gray-400">({currentTableMeta.name})</span>
+                          {currentTableMeta.category && (
+                            <span className="px-2 py-1 bg-purple-500/20 text-purple-300 rounded text-xs">
+                              {tableCategories[currentTableMeta.category as keyof typeof tableCategories]?.emoji} {tableCategories[currentTableMeta.category as keyof typeof tableCategories]?.name}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-gray-400 text-sm mt-1">{currentTableMeta.desc}</p>
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
 
               {/* Table Structure */}
@@ -267,7 +342,7 @@ export default function DatabasePage() {
                         </th>
                           <th className="px-6 py-3 text-left text-xs font-bold text-purple-300 uppercase tracking-wider">
                             默认值
-                          </th>
+                        </th>
                         <th className="px-6 py-3 text-left text-xs font-bold text-purple-300 uppercase tracking-wider">
                           说明
                         </th>
@@ -297,7 +372,7 @@ export default function DatabasePage() {
                               ) : (
                                 <span className="text-gray-600 italic">-</span>
                               )}
-                            </td>
+                          </td>
                           <td className="px-6 py-4 text-sm text-gray-300">
                               <span className="text-purple-300">{field.description}</span>
                           </td>
