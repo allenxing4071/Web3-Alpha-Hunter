@@ -73,7 +73,7 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
               <div className="flex items-center gap-2 mb-1">
                 {/* 项目Logo占位 */}
                 <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-accent-primary to-accent-purple flex items-center justify-center text-white font-bold">
-                  {name[0]}
+                  {name?.[0] || '?'}
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="text-lg font-bold text-text-primary truncate group-hover:text-accent-primary transition-colors">
