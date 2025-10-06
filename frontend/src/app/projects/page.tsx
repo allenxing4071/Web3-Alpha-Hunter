@@ -8,12 +8,12 @@ import { useState, useEffect, useMemo } from "react"
 import { ProjectList } from "@/components/projects/ProjectList"
 import { ProjectFilter, FilterOptions } from "@/components/projects/ProjectFilter"
 import { Project } from "@/types/project"
-import { getRealProjects } from "@/lib/realdata"
+import { API_BASE_URL } from "@/lib/config"
 
-// 使用真实数据
-const realProjects = getRealProjects()
+// 不再使用硬编码数据，改为从API获取
+// const realProjects = getRealProjects()
 
-// Mock数据(作为补充)
+// Mock数据(仅在API失败时使用)
 const mockProjects: Project[] = [
   {
     project_id: "proj_1",
@@ -149,11 +149,53 @@ export default function ProjectsPage() {
   })
   
   useEffect(() => {
-    // 加载真实数据 + Mock数据
-    setTimeout(() => {
-      setAllProjects([...realProjects, ...mockProjects])
-      setLoading(false)
-    }, 500)
+    // 从后端API加载真实数据
+    const fetchProjects = async () => {
+      try {
+        setLoading(true)
+        const response = await fetch(`${API_BASE_URL}/projects?limit=100`)
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch projects')
+        }
+        
+        const data = await response.json()
+        
+        // 转换后端数据格式为前端Project类型
+        const projects: Project[] = data.projects.map((p: any) => ({
+          project_id: String(p.id),
+          name: p.project_name,
+          symbol: p.symbol,
+          grade: p.grade || '?',
+          overall_score: p.overall_score || 0,
+          category: p.category || 'Unknown',
+          blockchain: p.blockchain || 'Unknown',
+          description: p.description || '',
+          logo_url: p.logo_url,
+          website: p.website,
+          social_links: {
+            twitter: p.twitter_handle,
+            telegram: p.telegram_channel,
+            github: p.github_repo,
+          },
+          key_highlights: [], // 后续可从AI分析获取
+          risk_flags: [],
+          metrics: {},
+          first_discovered_at: p.first_discovered_at || p.created_at,
+          last_updated_at: p.last_updated_at || p.updated_at,
+        }))
+        
+        setAllProjects(projects)
+      } catch (error) {
+        console.error('Failed to load projects from API:', error)
+        // API失败时使用Mock数据作为fallback
+        setAllProjects(mockProjects)
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    fetchProjects()
   }, [])
   
   // 筛选和排序项目
