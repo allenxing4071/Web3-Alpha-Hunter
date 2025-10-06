@@ -430,7 +430,7 @@ async def get_dashboard_summary(db: Session = Depends(get_db)) -> Dict[str, Any]
         top_projects = await get_top_projects(10, db)
         distribution = await get_grade_distribution(db)
         categories = await get_category_stats(db)
-        timeline = await get_activity_timeline(1, db)
+        timeline = await get_activity_timeline(24, db)  # 改为24小时
         
         return {
             "success": True,
