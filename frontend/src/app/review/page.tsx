@@ -103,13 +103,22 @@ export default function ReviewPage() {
       <div className="min-h-screen p-8">
         <div className="max-w-7xl mx-auto">
           {/* 页面标题 */}
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-accent-primary to-accent-purple bg-clip-text text-transparent">
-              🎯 AI项目审核面板
-            </h1>
-            <p className="text-text-secondary">
-              AI智能助理为您精选的优质项目，等待您的审核确认
-            </p>
+          <div className="mb-8 flex items-center justify-between">
+            <div>
+              <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-accent-primary to-accent-purple bg-clip-text text-transparent">
+                🎯 AI项目审核面板
+              </h1>
+              <p className="text-text-secondary">
+                AI智能助理为您精选的优质项目，等待您的审核确认
+              </p>
+            </div>
+            <button
+              onClick={loadProjects}
+              disabled={loading}
+              className="px-4 py-2 bg-accent-primary hover:bg-accent-primary/80 text-white rounded-lg transition-colors disabled:opacity-50"
+            >
+              {loading ? '⏳ 加载中...' : '🔄 刷新'}
+            </button>
           </div>
 
           {/* 统计卡片 */}
@@ -237,7 +246,7 @@ export default function ReviewPage() {
                     {project.ai_recommendation_reason && (
                       <div className="bg-bg-secondary rounded-lg p-4 mb-4">
                         <h4 className="text-sm font-semibold text-white mb-2">🤖 AI推荐理由：</h4>
-                        <ul className="space-y-1 text-sm text-text-secondary">
+                        <ul className="space-y-1 text-sm text-text-secondary mb-3">
                           {Array.isArray(project.ai_recommendation_reason.reasons) ? (
                             project.ai_recommendation_reason.reasons.map((reason: string, idx: number) => (
                               <li key={idx} className="flex items-start gap-2">
@@ -249,6 +258,39 @@ export default function ReviewPage() {
                             <li>完整的AI分析报告</li>
                           )}
                         </ul>
+                        
+                        {/* 评分详情 */}
+                        {project.ai_recommendation_reason.scores && (
+                          <div className="border-t border-gray-700 pt-3 mt-3">
+                            <h5 className="text-xs text-gray-400 mb-2">📊 评分详情：</h5>
+                            <div className="grid grid-cols-3 gap-2 text-xs">
+                              <div className="flex items-center justify-between bg-bg-primary rounded px-2 py-1">
+                                <span className="text-gray-400">团队</span>
+                                <span className="text-white font-semibold">{project.ai_recommendation_reason.scores.team}</span>
+                              </div>
+                              <div className="flex items-center justify-between bg-bg-primary rounded px-2 py-1">
+                                <span className="text-gray-400">技术</span>
+                                <span className="text-white font-semibold">{project.ai_recommendation_reason.scores.tech}</span>
+                              </div>
+                              <div className="flex items-center justify-between bg-bg-primary rounded px-2 py-1">
+                                <span className="text-gray-400">社区</span>
+                                <span className="text-white font-semibold">{project.ai_recommendation_reason.scores.community}</span>
+                              </div>
+                              <div className="flex items-center justify-between bg-bg-primary rounded px-2 py-1">
+                                <span className="text-gray-400">代币</span>
+                                <span className="text-white font-semibold">{project.ai_recommendation_reason.scores.tokenomics}</span>
+                              </div>
+                              <div className="flex items-center justify-between bg-bg-primary rounded px-2 py-1">
+                                <span className="text-gray-400">市场</span>
+                                <span className="text-white font-semibold">{project.ai_recommendation_reason.scores.market}</span>
+                              </div>
+                              <div className="flex items-center justify-between bg-bg-primary rounded px-2 py-1">
+                                <span className="text-gray-400">风险</span>
+                                <span className="text-white font-semibold">{project.ai_recommendation_reason.scores.risk}</span>
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     )}
 
