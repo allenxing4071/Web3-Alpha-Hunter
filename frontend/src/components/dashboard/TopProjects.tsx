@@ -58,13 +58,13 @@ export function TopProjects({ projects }: TopProjectsProps) {
   }
 
   return (
-    <div className="bg-bg-secondary rounded-xl border border-gray-700 p-6 flex flex-col w-full h-full min-h-[800px]">
-      <h3 className="text-xl font-bold text-text-primary mb-4 flex items-center flex-shrink-0">
+    <div className="bg-bg-secondary rounded-xl border border-gray-700 p-6">
+      <h3 className="text-xl font-bold text-text-primary mb-4 flex items-center">
         <Trophy className="w-5 h-5 mr-2 text-accent-gold" />
         Top 10 热门项目
       </h3>
       
-      <div className="space-y-3 overflow-y-auto pr-2 scrollbar-thin flex-1">
+      <div className="space-y-3 max-h-[650px] overflow-y-auto pr-2 scrollbar-thin">
         {projects.map((project) => (
           <div
             key={project.id}

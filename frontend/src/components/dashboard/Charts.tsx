@@ -52,13 +52,13 @@ export function GradeDistributionChart({ data }: GradeDistributionProps) {
   }))
 
   return (
-    <div className="bg-bg-secondary rounded-xl border border-gray-700 p-6 flex flex-col">
+    <div className="bg-bg-secondary rounded-xl border border-gray-700 p-6">
       <h3 className="text-xl font-bold text-text-primary mb-4 flex items-center">
         <TrendingUp className="w-5 h-5 mr-2 text-accent-primary" />
         项目等级分布
       </h3>
 
-      <ResponsiveContainer width="100%" height={280}>
+      <ResponsiveContainer width="100%" height={250}>
         <PieChart>
           <Pie
             data={chartData}
@@ -129,13 +129,13 @@ export function CategoryStatsChart({ data }: CategoryStatsProps) {
   }))
 
   return (
-    <div className="bg-bg-secondary rounded-xl border border-gray-700 p-6 flex flex-col">
+    <div className="bg-bg-secondary rounded-xl border border-gray-700 p-6">
       <h3 className="text-xl font-bold text-text-primary mb-4 flex items-center">
         <BarChart3 className="w-5 h-5 mr-2 text-accent-primary" />
         类别分布统计
       </h3>
 
-      <ResponsiveContainer width="100%" height={280}>
+      <ResponsiveContainer width="100%" height={250}>
         <BarChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
           <XAxis 
