@@ -83,7 +83,7 @@ export function PlatformInfluencers() {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [scrollPosition, setScrollPosition] = useState(0)
   const [influencers, setInfluencers] = useState<Influencer[]>([])
-  const [loading, setLoading] = useState(false) // 改为false，使用静态数据
+  const [loading, setLoading] = useState(true)
 
   // 使用useCallback确保handleScroll函数稳定
   const handleScroll = useCallback(() => {
@@ -97,18 +97,27 @@ export function PlatformInfluencers() {
     const loadInfluencers = async () => {
       try {
         setLoading(true)
-        const response = await fetch(`${API_BASE_URL}/kols/top-influencers?limit=15&tier=1`)
+        const url = `${API_BASE_URL}/kols/top-influencers?limit=15&tier=1`
+        console.log('🔄 开始加载KOL数据:', url)
+        const startTime = Date.now()
+        
+        const response = await fetch(url)
+        console.log(`⏱️  请求完成，耗时: ${Date.now() - startTime}ms, 状态: ${response.status}`)
+        
         const data = await response.json()
+        console.log('📦 收到数据:', data)
         
         if (data.success && data.influencers) {
           setInfluencers(data.influencers)
+          console.log(`✅ 成功加载 ${data.influencers.length} 位KOL`)
         }
       } catch (error) {
-        console.error('加载KOL数据失败:', error)
+        console.error('❌ 加载KOL数据失败:', error)
         // 如果加载失败，使用默认数据
         setInfluencers([])
       } finally {
         setLoading(false)
+        console.log('✅ 加载完成')
       }
     }
 
