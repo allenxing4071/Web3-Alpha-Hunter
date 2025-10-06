@@ -205,15 +205,70 @@ class AIAnalyzer:
                 logger.warning("No AI provider available")
                 return self._mock_analysis(text)
             
-            # 解析JSON
+            # 解析JSON（处理Markdown代码块）
             import json
-            result = json.loads(result_text)
-            logger.info(f"✅ AI analysis completed: {result.get('category')}")
-            return result
+            import re
+            
+            # 移除可能的Markdown代码块标记
+            if "```json" in result_text:
+                # 提取```json和```之间的内容
+                match = re.search(r'```json\s*(.*?)\s*```', result_text, re.DOTALL)
+                if match:
+                    result_text = match.group(1)
+            elif "```" in result_text:
+                # 提取```和```之间的内容
+                match = re.search(r'```\s*(.*?)\s*```', result_text, re.DOTALL)
+                if match:
+                    result_text = match.group(1)
+            
+            result_text = result_text.strip()
+            
+            # 尝试解析JSON
+            try:
+                result = json.loads(result_text)
+                logger.info(f"✅ AI analysis completed: {result.get('category', 'Unknown')}")
+                return result
+            except json.JSONDecodeError as je:
+                logger.error(f"JSON解析失败: {je}")
+                logger.error(f"原始响应: {result_text[:500]}")
+                # 如果JSON解析失败，尝试从文本中提取信息
+                return self._extract_from_text(result_text, text)
             
         except Exception as e:
             logger.error(f"AI analysis failed: {e}")
             return self._mock_analysis(text)
+    
+    def _extract_from_text(self, ai_response: str, original_text: str) -> Dict:
+        """从AI文本响应中提取结构化信息"""
+        # 基础结构
+        result = {
+            "category": "Unknown",
+            "key_features": [],
+            "team_info": "",
+            "funding": "",
+            "tech_highlights": "",
+            "risks": [],
+            "score_estimate": 5,
+            "summary": ai_response[:200] if ai_response else "AI分析失败",
+            "overall_score": 50.0,
+            "team_score": 50.0,
+            "tech_score": 50.0,
+            "community_score": 50.0,
+            "tokenomics_score": 50.0,
+            "market_timing_score": 50.0,
+            "risk_score": 50.0,
+            "grade": "C",
+            "reasoning": ai_response[:500] if ai_response else "无法生成分析"
+        }
+        
+        # 尝试从文本中提取分类
+        categories = ["DeFi", "NFT", "GameFi", "Infrastructure", "AI", "Layer2", "DEX"]
+        for cat in categories:
+            if cat.lower() in ai_response.lower() or cat.lower() in original_text.lower():
+                result["category"] = cat
+                break
+        
+        return result
     
     def _mock_analysis(self, text: str) -> Dict:
         """模拟AI分析(当没有API密钥时使用)"""
