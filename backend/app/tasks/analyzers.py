@@ -4,7 +4,7 @@ from loguru import logger
 from app.tasks.celery_app import celery_app
 from app.db import SessionLocal
 from app.models import Project, AIAnalysis
-from app.services.ai_analyzer import ai_analyzer
+from app.services.analyzers import ai_analyzer
 from sqlalchemy import and_
 
 
