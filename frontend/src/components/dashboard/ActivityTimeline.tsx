@@ -1,6 +1,6 @@
 /**
  * 活动时间线组件
- * 显示最近1小时的项目活动
+ * 显示最近活动，自动滚动展示实时数据
  */
 
 'use client'
@@ -9,6 +9,7 @@ import { Activity as ActivityIcon, Clock, CheckCircle, AlertCircle } from 'lucid
 import { Activity } from '@/hooks/useDashboardData'
 import { formatDistanceToNow } from 'date-fns'
 import { zhCN } from 'date-fns/locale'
+import { useEffect, useRef } from 'react'
 
 interface ActivityTimelineProps {
   activities: Activity[] | null | undefined
@@ -97,6 +98,45 @@ function ActivityItem({ activity }: { activity: Activity }) {
 }
 
 export function ActivityTimeline({ activities }: ActivityTimelineProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const prevActivitiesRef = useRef<Activity[]>([])
+
+  // 自动滚动动画
+  useEffect(() => {
+    if (!containerRef.current || !activities || activities.length === 0) return
+
+    // 检测是否有新活动
+    const hasNewActivity = activities.length > prevActivitiesRef.current.length
+    
+    if (hasNewActivity) {
+      // 新活动时滚动到顶部
+      containerRef.current.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+
+    prevActivitiesRef.current = activities
+  }, [activities])
+
+  // 自动滚动效果 - 每5秒向下滚动一个活动
+  useEffect(() => {
+    if (!containerRef.current || !activities || activities.length <= 5) return
+
+    const interval = setInterval(() => {
+      if (containerRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = containerRef.current
+        
+        // 如果滚动到底部，回到顶部
+        if (scrollTop + clientHeight >= scrollHeight - 10) {
+          containerRef.current.scrollTo({ top: 0, behavior: 'smooth' })
+        } else {
+          // 否则向下滚动一个活动的高度（约100px）
+          containerRef.current.scrollBy({ top: 100, behavior: 'smooth' })
+        }
+      }
+    }, 5000) // 每5秒滚动一次
+
+    return () => clearInterval(interval)
+  }, [activities])
+
   if (!activities || activities.length === 0) {
     return (
       <div className="bg-bg-secondary rounded-xl border border-gray-700 p-6">
@@ -105,7 +145,7 @@ export function ActivityTimeline({ activities }: ActivityTimelineProps) {
           实时活动流
         </h3>
         <div className="space-y-3">
-          {[...Array(8)].map((_, i) => (
+          {[...Array(5)].map((_, i) => (
             <div key={i} className="h-20 bg-bg-tertiary rounded-lg animate-pulse" />
           ))}
         </div>
@@ -113,24 +153,26 @@ export function ActivityTimeline({ activities }: ActivityTimelineProps) {
     )
   }
 
+  // 只显示最近10条活动
+  const displayActivities = activities.slice(0, 10)
+
   return (
     <div className="bg-bg-secondary rounded-xl border border-gray-700 p-6">
       <h3 className="text-xl font-bold text-text-primary mb-4 flex items-center">
         <Clock className="w-5 h-5 mr-2 text-accent-primary" />
         实时活动流
+        <span className="ml-auto text-xs text-text-tertiary">自动滚动</span>
       </h3>
       
-      <div className="space-y-3 max-h-[996px] overflow-y-auto pr-2 scrollbar-thin">
-        {activities.map((activity, index) => (
-          <ActivityItem key={index} activity={activity} />
+      <div 
+        ref={containerRef}
+        className="space-y-3 max-h-[996px] overflow-y-auto scrollbar-hide"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      >
+        {displayActivities.map((activity, index) => (
+          <ActivityItem key={`${activity.timestamp}-${index}`} activity={activity} />
         ))}
       </div>
-
-      {activities.length === 0 && (
-        <div className="text-center text-text-secondary py-8">
-          暂无最近活动
-        </div>
-      )}
     </div>
   )
 }
