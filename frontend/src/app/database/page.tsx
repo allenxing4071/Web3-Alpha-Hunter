@@ -16,6 +16,7 @@ interface TableStructure {
   type: string
   nullable: boolean
   default: string | null
+  description: string
 }
 
 interface TableInfo {
@@ -238,6 +239,9 @@ export default function DatabasePage() {
                           <th className="px-6 py-3 text-left text-xs font-bold text-purple-300 uppercase tracking-wider">
                             默认值
                           </th>
+                          <th className="px-6 py-3 text-left text-xs font-bold text-purple-300 uppercase tracking-wider">
+                            说明
+                          </th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-800">
@@ -258,12 +262,15 @@ export default function DatabasePage() {
                                 {field.nullable ? 'NULL' : 'NOT NULL'}
                               </span>
                             </td>
-                            <td className="px-6 py-4 text-sm text-gray-300">
+                            <td className="px-6 py-4 text-sm text-gray-300 max-w-xs truncate">
                               {field.default ? (
                                 <code className="text-xs text-yellow-400">{field.default}</code>
                               ) : (
                                 <span className="text-gray-600 italic">-</span>
                               )}
+                            </td>
+                            <td className="px-6 py-4 text-sm text-gray-300">
+                              <span className="text-purple-300">{field.description}</span>
                             </td>
                           </tr>
                         ))}
