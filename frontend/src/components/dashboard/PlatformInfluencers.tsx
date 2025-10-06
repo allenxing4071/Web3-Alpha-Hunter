@@ -165,18 +165,10 @@ export function PlatformInfluencers() {
 
   // 计算卡片的样式（缩放和透明度）
   const getCardStyle = useCallback((index: number) => {
-    if (!scrollContainerRef.current) {
-      // 返回默认样式，确保至少有基础样式
-      return {
-        transform: 'scale(1)',
-        opacity: 1,
-        transition: 'all 0.2s ease-out' // 加快动画速度
-      }
-    }
-    
+    // 使用当前容器或假设默认宽度
     const container = scrollContainerRef.current
+    const containerWidth = container?.clientWidth || 1200 // 默认宽度
     const cardWidth = 320 + 16 // 卡片宽度 320px + gap 16px
-    const containerWidth = container.clientWidth
     const padding = 64 // px-16 = 64px padding
     const scrollLeft = scrollPosition
     
