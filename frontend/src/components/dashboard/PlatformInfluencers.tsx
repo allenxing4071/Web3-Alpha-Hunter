@@ -6,7 +6,8 @@
 'use client'
 
 import { ExternalLink, Users, ChevronLeft, ChevronRight } from 'lucide-react'
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
+import { API_BASE_URL } from '@/lib/config'
 
 interface Influencer {
   id: string
@@ -19,106 +20,9 @@ interface Influencer {
   category: string
   description: string
   verified?: boolean
+  tier?: number
+  influenceScore?: number
 }
-
-const influencers: Influencer[] = [
-  {
-    id: '1',
-    name: 'Vitalik Buterin',
-    platform: 'Twitter',
-    platformIcon: '𝕏',
-    handle: '@VitalikButerin',
-    url: 'https://twitter.com/VitalikButerin',
-    followers: '5.2M',
-    category: 'Ethereum',
-    description: '以太坊创始人，区块链技术先驱',
-    verified: true
-  },
-  {
-    id: '2',
-    name: 'CZ (Binance)',
-    platform: 'Twitter',
-    platformIcon: '𝕏',
-    handle: '@cz_binance',
-    url: 'https://twitter.com/cz_binance',
-    followers: '8.7M',
-    category: 'CEX/DeFi',
-    description: 'Binance创始人，加密货币领袖',
-    verified: true
-  },
-  {
-    id: '3',
-    name: 'Messari',
-    platform: 'Twitter',
-    platformIcon: '𝕏',
-    handle: '@messaricrypto',
-    url: 'https://twitter.com/messaricrypto',
-    followers: '589K',
-    category: 'Research',
-    description: '加密研究机构，深度行业分析',
-    verified: true
-  },
-  {
-    id: '4',
-    name: 'DeFi Llama',
-    platform: 'Twitter',
-    platformIcon: '𝕏',
-    handle: '@DefiLlama',
-    url: 'https://twitter.com/DefiLlama',
-    followers: '342K',
-    category: 'DeFi',
-    description: 'DeFi数据聚合平台，TVL追踪专家',
-    verified: true
-  },
-  {
-    id: '5',
-    name: 'The Block',
-    platform: 'Twitter',
-    platformIcon: '𝕏',
-    handle: '@TheBlock__',
-    url: 'https://twitter.com/TheBlock__',
-    followers: '823K',
-    category: 'News',
-    description: '加密新闻媒体，实时行业动态',
-    verified: true
-  },
-  {
-    id: '6',
-    name: 'Bankless',
-    platform: 'Twitter',
-    platformIcon: '𝕏',
-    handle: '@BanklessHQ',
-    url: 'https://twitter.com/BanklessHQ',
-    followers: '614K',
-    category: 'Education',
-    description: 'Web3教育平台，DeFi深度内容',
-    verified: true
-  },
-  {
-    id: '7',
-    name: 'Dune Analytics',
-    platform: 'Twitter',
-    platformIcon: '𝕏',
-    handle: '@DuneAnalytics',
-    url: 'https://twitter.com/DuneAnalytics',
-    followers: '287K',
-    category: 'Analytics',
-    description: '链上数据分析，可视化工具',
-    verified: true
-  },
-  {
-    id: '8',
-    name: 'Coingecko',
-    platform: 'Twitter',
-    platformIcon: '𝕏',
-    handle: '@coingecko',
-    url: 'https://twitter.com/coingecko',
-    followers: '1.2M',
-    category: 'Data',
-    description: '加密货币数据平台，市场追踪',
-    verified: true
-  }
-]
 
 function InfluencerCard({ influencer }: { influencer: Influencer }) {
   const handleClick = () => {
@@ -178,6 +82,31 @@ function InfluencerCard({ influencer }: { influencer: Influencer }) {
 export function PlatformInfluencers() {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [scrollPosition, setScrollPosition] = useState(0)
+  const [influencers, setInfluencers] = useState<Influencer[]>([])
+  const [loading, setLoading] = useState(true)
+
+  // 从API加载KOL数据
+  useEffect(() => {
+    const loadInfluencers = async () => {
+      try {
+        setLoading(true)
+        const response = await fetch(`${API_BASE_URL}/kols/top-influencers?limit=15&tier=1`)
+        const data = await response.json()
+        
+        if (data.success && data.influencers) {
+          setInfluencers(data.influencers)
+        }
+      } catch (error) {
+        console.error('加载KOL数据失败:', error)
+        // 如果加载失败，使用默认数据
+        setInfluencers([])
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadInfluencers()
+  }, [])
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
@@ -224,6 +153,26 @@ export function PlatformInfluencers() {
     }
   }
 
+  // 加载状态
+  if (loading) {
+    return (
+      <div className="bg-bg-secondary rounded-xl border border-gray-700 p-6 mt-6">
+        <h3 className="text-xl font-bold text-text-primary mb-6 flex items-center">
+          <Users className="w-5 h-5 mr-2 text-accent-purple" />
+          推荐关注
+          <span className="ml-2 text-sm text-text-secondary font-normal">
+            (Web3 影响力大V)
+          </span>
+        </h3>
+        <div className="flex gap-4 overflow-hidden">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="flex-shrink-0 w-80 h-48 bg-bg-tertiary/50 rounded-xl animate-pulse" />
+          ))}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="bg-bg-secondary rounded-xl border border-gray-700 p-6 mt-6">
       <h3 className="text-xl font-bold text-text-primary mb-6 flex items-center">
@@ -233,7 +182,7 @@ export function PlatformInfluencers() {
           (Web3 影响力大V)
         </span>
         <span className="ml-auto text-sm text-text-tertiary">
-          点击卡片访问主页
+          点击卡片访问主页 · 共 {influencers.length} 位
         </span>
       </h3>
 
