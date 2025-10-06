@@ -322,3 +322,341 @@ async def test_ai_connection(request: AITestRequest) -> AITestResponse:
             error=f"API连接失败: {error_msg}"
         )
 
+
+# =====================================================
+# AI工作配置管理
+# =====================================================
+
+@router.get("/ai-work-config")
+async def get_ai_work_config(db: Session = Depends(get_db)) -> Dict[str, Any]:
+    """获取AI工作配置"""
+    from sqlalchemy import text
+    
+    try:
+        result = db.execute(text("""
+            SELECT 
+                primary_goal,
+                target_roi,
+                risk_tolerance,
+                min_ai_score,
+                required_cross_validation,
+                min_platforms,
+                search_lookback_hours,
+                project_age_limit_days,
+                max_projects_per_day,
+                max_kols_per_day,
+                rules
+            FROM ai_work_config
+            WHERE id = 1
+        """))
+        
+        row = result.fetchone()
+        if not row:
+            # 如果没有配置，返回默认值
+            return {
+                "success": True,
+                "config": {
+                    "primary_goal": "发现未发币的早期优质Web3项目",
+                    "target_roi": 50.0,
+                    "risk_tolerance": "aggressive",
+                    "min_ai_score": 70.0,
+                    "required_cross_validation": True,
+                    "min_platforms": 2,
+                    "search_lookback_hours": 24,
+                    "project_age_limit_days": 180,
+                    "max_projects_per_day": 50,
+                    "max_kols_per_day": 20,
+                    "rules": {}
+                }
+            }
+        
+        return {
+            "success": True,
+            "config": {
+                "primary_goal": row[0],
+                "target_roi": float(row[1]) if row[1] else 50.0,
+                "risk_tolerance": row[2],
+                "min_ai_score": float(row[3]) if row[3] else 70.0,
+                "required_cross_validation": row[4],
+                "min_platforms": row[5],
+                "search_lookback_hours": row[6],
+                "project_age_limit_days": row[7],
+                "max_projects_per_day": row[8],
+                "max_kols_per_day": row[9],
+                "rules": row[10] if row[10] else {}
+            }
+        }
+        
+    except Exception as e:
+        print(f"❌ 获取AI工作配置失败: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/ai-work-config")
+async def update_ai_work_config(
+    config: Dict[str, Any],
+    db: Session = Depends(get_db)
+) -> Dict[str, Any]:
+    """更新AI工作配置"""
+    from sqlalchemy import text
+    import json
+    
+    try:
+        # 提取配置字段
+        primary_goal = config.get("primary_goal", "发现未发币的早期优质Web3项目")
+        target_roi = config.get("target_roi", 50.0)
+        risk_tolerance = config.get("risk_tolerance", "aggressive")
+        min_ai_score = config.get("min_ai_score", 70.0)
+        required_cross_validation = config.get("required_cross_validation", True)
+        min_platforms = config.get("min_platforms", 2)
+        search_lookback_hours = config.get("search_lookback_hours", 24)
+        project_age_limit_days = config.get("project_age_limit_days", 180)
+        max_projects_per_day = config.get("max_projects_per_day", 50)
+        max_kols_per_day = config.get("max_kols_per_day", 20)
+        rules = config.get("rules", {})
+        
+        # 更新数据库
+        db.execute(text("""
+            UPDATE ai_work_config
+            SET 
+                primary_goal = :primary_goal,
+                target_roi = :target_roi,
+                risk_tolerance = :risk_tolerance,
+                min_ai_score = :min_ai_score,
+                required_cross_validation = :required_cross_validation,
+                min_platforms = :min_platforms,
+                search_lookback_hours = :search_lookback_hours,
+                project_age_limit_days = :project_age_limit_days,
+                max_projects_per_day = :max_projects_per_day,
+                max_kols_per_day = :max_kols_per_day,
+                rules = :rules::jsonb,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE id = 1
+        """), {
+            "primary_goal": primary_goal,
+            "target_roi": target_roi,
+            "risk_tolerance": risk_tolerance,
+            "min_ai_score": min_ai_score,
+            "required_cross_validation": required_cross_validation,
+            "min_platforms": min_platforms,
+            "search_lookback_hours": search_lookback_hours,
+            "project_age_limit_days": project_age_limit_days,
+            "max_projects_per_day": max_projects_per_day,
+            "max_kols_per_day": max_kols_per_day,
+            "rules": json.dumps(rules)
+        })
+        
+        db.commit()
+        
+        return {
+            "success": True,
+            "message": "AI工作配置已更新"
+        }
+        
+    except Exception as e:
+        db.rollback()
+        print(f"❌ 更新AI工作配置失败: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/pending-projects")
+async def get_pending_projects(
+    limit: int = 50,
+    db: Session = Depends(get_db)
+) -> Dict[str, Any]:
+    """获取待审核项目列表"""
+    from sqlalchemy import text
+    
+    try:
+        result = db.execute(text("""
+            SELECT 
+                id,
+                project_name,
+                symbol,
+                description,
+                discovered_from,
+                source_url,
+                ai_score,
+                ai_grade,
+                ai_recommendation_reason,
+                ai_confidence,
+                review_status,
+                created_at
+            FROM projects_pending
+            WHERE review_status = 'pending'
+            ORDER BY ai_score DESC, created_at DESC
+            LIMIT :limit
+        """), {"limit": limit})
+        
+        projects = []
+        for row in result:
+            projects.append({
+                "id": row[0],
+                "name": row[1],
+                "symbol": row[2],
+                "description": row[3],
+                "discovered_from": row[4],
+                "source_url": row[5],
+                "ai_score": float(row[6]) if row[6] else 0,
+                "ai_grade": row[7],
+                "ai_recommendation_reason": row[8] if row[8] else {},
+                "ai_confidence": float(row[9]) if row[9] else 0,
+                "review_status": row[10],
+                "created_at": row[11].isoformat() if row[11] else None
+            })
+        
+        # 统计数据
+        stats_result = db.execute(text("""
+            SELECT 
+                review_status,
+                COUNT(*) as count
+            FROM projects_pending
+            GROUP BY review_status
+        """))
+        
+        stats = {}
+        for row in stats_result:
+            stats[row[0]] = row[1]
+        
+        return {
+            "success": True,
+            "projects": projects,
+            "total": len(projects),
+            "stats": stats
+        }
+        
+    except Exception as e:
+        print(f"❌ 获取待审核项目失败: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/pending-projects/{project_id}/approve")
+async def approve_pending_project(
+    project_id: int,
+    db: Session = Depends(get_db)
+) -> Dict[str, Any]:
+    """批准待审核项目"""
+    from sqlalchemy import text
+    
+    try:
+        # 获取待审核项目
+        result = db.execute(text("""
+            SELECT 
+                project_name,
+                symbol,
+                description,
+                discovered_from,
+                ai_score,
+                ai_grade,
+                ai_extracted_info,
+                source_url
+            FROM projects_pending
+            WHERE id = :id AND review_status = 'pending'
+        """), {"id": project_id})
+        
+        row = result.fetchone()
+        if not row:
+            raise HTTPException(status_code=404, detail="项目不存在或已审核")
+        
+        # 创建正式项目
+        db.execute(text("""
+            INSERT INTO projects (
+                name, symbol, description, discovered_from,
+                overall_score, grade, status, website,
+                discovered_at, created_at, updated_at
+            ) VALUES (
+                :name, :symbol, :description, :discovered_from,
+                :overall_score, :grade, 'active', :website,
+                CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+            )
+        """), {
+            "name": row[0],
+            "symbol": row[1],
+            "description": row[2],
+            "discovered_from": row[3],
+            "overall_score": row[4],
+            "grade": row[5],
+            "website": (row[6] or {}).get("website") if row[6] else None
+        })
+        
+        # 更新待审核项目状态
+        db.execute(text("""
+            UPDATE projects_pending
+            SET 
+                review_status = 'approved',
+                reviewed_at = CURRENT_TIMESTAMP,
+                reviewed_by = 'admin'
+            WHERE id = :id
+        """), {"id": project_id})
+        
+        # 记录AI学习反馈
+        db.execute(text("""
+            INSERT INTO ai_learning_feedback (
+                feedback_type, related_project_id, user_decision, created_at
+            ) VALUES (
+                'project_review', :project_id, 'approved', CURRENT_TIMESTAMP
+            )
+        """), {"project_id": project_id})
+        
+        db.commit()
+        
+        return {
+            "success": True,
+            "message": "项目已批准并保存到数据库"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        print(f"❌ 批准项目失败: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/pending-projects/{project_id}/reject")
+async def reject_pending_project(
+    project_id: int,
+    reason: str = None,
+    db: Session = Depends(get_db)
+) -> Dict[str, Any]:
+    """拒绝待审核项目"""
+    from sqlalchemy import text
+    
+    try:
+        # 更新待审核项目状态
+        db.execute(text("""
+            UPDATE projects_pending
+            SET 
+                review_status = 'rejected',
+                reviewed_at = CURRENT_TIMESTAMP,
+                reviewed_by = 'admin',
+                reject_reason = :reason
+            WHERE id = :id AND review_status = 'pending'
+        """), {"id": project_id, "reason": reason})
+        
+        if db.execute(text("SELECT * FROM projects_pending WHERE id = :id"), {"id": project_id}).rowcount == 0:
+            raise HTTPException(status_code=404, detail="项目不存在或已审核")
+        
+        # 记录AI学习反馈
+        db.execute(text("""
+            INSERT INTO ai_learning_feedback (
+                feedback_type, related_project_id, user_decision, user_reason, created_at
+            ) VALUES (
+                'project_review', :project_id, 'rejected', :reason, CURRENT_TIMESTAMP
+            )
+        """), {"project_id": project_id, "reason": reason})
+        
+        db.commit()
+        
+        return {
+            "success": True,
+            "message": "项目已拒绝"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        print(f"❌ 拒绝项目失败: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
