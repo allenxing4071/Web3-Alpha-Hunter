@@ -98,16 +98,16 @@ export default function DatabasePage() {
   const tabs = [
     { id: 'projects', label: '📊 Projects', name: 'Projects - 项目主表', desc: '存储Web3项目的完整数据库，评分集结仓' },
     { id: 'projects_pending', label: '⏳ Projects Pending', name: 'Projects Pending (待审核)', desc: 'AI推荐的待审核项目' },
-    { id: 'social', label: '📱 Social Metrics', name: 'Social Metrics (社交指标)', desc: '社交媒体数据指标' },
-    { id: 'onchain', label: '⛓️ Onchain Metrics', name: 'Onchain Metrics (链上数据)', desc: '区块链上的实际数据' },
-    { id: 'ai', label: '🤖 AI Analysis', name: 'AI Analysis (AI分析)', desc: 'AI智能分析结果' },
-    { id: 'aiconfig', label: '🔑 AI Configs', name: 'AI Configs (AI配置)', desc: 'AI模型配置' },
+    { id: 'social_metrics', label: '📱 Social Metrics', name: 'Social Metrics (社交指标)', desc: '社交媒体数据指标' },
+    { id: 'onchain_metrics', label: '⛓️ Onchain Metrics', name: 'Onchain Metrics (链上数据)', desc: '区块链上的实际数据' },
+    { id: 'ai_analysis', label: '🤖 AI Analysis', name: 'AI Analysis (AI分析)', desc: 'AI智能分析结果' },
+    { id: 'ai_configs', label: '🔑 AI Configs', name: 'AI Configs (AI配置)', desc: 'AI模型配置' },
     { id: 'ai_work_config', label: '🧠 AI Work Config', name: 'AI Work Config (AI工作配置)', desc: 'AI智能助理工作参数' },
     { id: 'ai_learning_feedback', label: '📚 AI Learning', name: 'AI Learning Feedback (AI学习)', desc: 'AI学习反馈记录' },
-    { id: 'tokenlaunch', label: '🚀 Token Launch', name: 'Token Launch Predictions (发币预测)', desc: '代币发行预测' },
-    { id: 'airdrop', label: '💰 Airdrop', name: 'Airdrop Value Estimates (空投估算)', desc: '空投价值估算' },
-    { id: 'investment', label: '📋 Investment', name: 'Investment Action Plans (行动计划)', desc: '投资行动计划' },
-    { id: 'discovery', label: '🔍 Discovery', name: 'Project Discoveries (项目发现)', desc: '多平台项目热度追踪' },
+    { id: 'token_launch_predictions', label: '🚀 Token Launch', name: 'Token Launch Predictions (发币预测)', desc: '代币发行预测' },
+    { id: 'airdrop_value_estimates', label: '💰 Airdrop', name: 'Airdrop Value Estimates (空投估算)', desc: '空投价值估算' },
+    { id: 'investment_action_plans', label: '📋 Investment', name: 'Investment Action Plans (行动计划)', desc: '投资行动计划' },
+    { id: 'project_discoveries', label: '🔍 Discovery', name: 'Project Discoveries (项目发现)', desc: '多平台项目热度追踪' },
     { id: 'kols', label: '👤 KOLs', name: 'KOLs (关键意见领袖)', desc: 'KOL数据和表现追踪' },
     { id: 'kols_pending', label: '👥 KOLs Pending', name: 'KOLs Pending (待审核KOL)', desc: 'AI推荐的待审核KOL' },
     { id: 'kol_performances', label: '📈 KOL Performance', name: 'KOL Performances (KOL表现)', desc: 'KOL历史表现追踪' },
@@ -132,7 +132,7 @@ export default function DatabasePage() {
       { field: 'first_discovered_at', type: 'TIMESTAMP', nullable: 'NULL', description: '首次发现时间' },
       { field: 'discovered_from', type: 'VARCHAR(100)', nullable: 'NULL', description: '发现来源' },
     ],
-    social: [
+    social_metrics: [
       { field: 'id', type: 'INTEGER', nullable: 'NOT NULL', description: '主键' },
       { field: 'project_id', type: 'INTEGER', nullable: 'NOT NULL', description: '项目ID' },
       { field: 'twitter_followers', type: 'INTEGER', nullable: 'NULL', description: 'Twitter粉丝数' },
@@ -141,7 +141,7 @@ export default function DatabasePage() {
       { field: 'github_stars', type: 'INTEGER', nullable: 'NULL', description: 'GitHub Star数' },
       { field: 'social_score', type: 'DECIMAL(5,2)', nullable: 'NULL', description: '社交分值' },
     ],
-    onchain: [
+    onchain_metrics: [
       { field: 'id', type: 'INTEGER', nullable: 'NOT NULL', description: '主键' },
       { field: 'project_id', type: 'INTEGER', nullable: 'NOT NULL', description: '项目ID' },
       { field: 'market_cap_usd', type: 'DECIMAL(20,2)', nullable: 'NULL', description: '市值(美元)' },
@@ -150,7 +150,7 @@ export default function DatabasePage() {
       { field: 'active_users_24h', type: 'INTEGER', nullable: 'NULL', description: '24小时活跃用户' },
       { field: 'onchain_score', type: 'DECIMAL(5,2)', nullable: 'NULL', description: '链上分值' },
     ],
-    ai: [
+    ai_analysis: [
       { field: 'id', type: 'INTEGER', nullable: 'NOT NULL', description: '主键' },
       { field: 'project_id', type: 'INTEGER', nullable: 'NOT NULL', description: '项目ID' },
       { field: 'sentiment_score', type: 'DECIMAL(5,2)', nullable: 'NULL', description: '情感分值' },
@@ -159,15 +159,16 @@ export default function DatabasePage() {
       { field: 'team_score', type: 'DECIMAL(5,2)', nullable: 'NULL', description: '团队分值' },
       { field: 'summary', type: 'TEXT', nullable: 'NULL', description: 'AI总结' },
     ],
-    aiconfig: [
-      { field: 'id', type: 'INTEGER', nullable: 'NOT NULL', description: '主键' },
-      { field: 'provider', type: 'VARCHAR(50)', nullable: 'NOT NULL', description: '提供商(openai/claude)' },
-      { field: 'api_key', type: 'VARCHAR(255)', nullable: 'NOT NULL', description: 'API密钥' },
-      { field: 'model_name', type: 'VARCHAR(100)', nullable: 'NULL', description: '模型名称' },
-      { field: 'base_url', type: 'VARCHAR(255)', nullable: 'NULL', description: 'API基础URL' },
-      { field: 'is_active', type: 'BOOLEAN', nullable: 'NULL', description: '是否激活' },
+    ai_configs: [
+      { field: 'id', type: 'UUID', nullable: 'NOT NULL', description: '主键' },
+      { field: 'name', type: 'VARCHAR(50)', nullable: 'NOT NULL', description: 'AI名称' },
+      { field: 'api_key', type: 'TEXT', nullable: 'NULL', description: 'API密钥(加密)' },
+      { field: 'enabled', type: 'BOOLEAN', nullable: 'NULL', description: '是否启用' },
+      { field: 'model', type: 'VARCHAR(100)', nullable: 'NULL', description: '模型名称' },
+      { field: 'created_at', type: 'TIMESTAMP', nullable: 'NULL', description: '创建时间' },
+      { field: 'updated_at', type: 'TIMESTAMP', nullable: 'NULL', description: '更新时间' },
     ],
-    tokenlaunch: [
+    token_launch_predictions: [
       { field: 'id', type: 'INTEGER', nullable: 'NOT NULL', description: '主键' },
       { field: 'project_id', type: 'INTEGER', nullable: 'NOT NULL', description: '项目ID' },
       { field: 'launch_probability', type: 'INTEGER', nullable: 'NULL', description: '发币概率(%)' },
@@ -175,7 +176,7 @@ export default function DatabasePage() {
       { field: 'confidence', type: 'VARCHAR(20)', nullable: 'NULL', description: '置信度' },
       { field: 'signal_count', type: 'INTEGER', nullable: 'NULL', description: '信号数量' },
     ],
-    airdrop: [
+    airdrop_value_estimates: [
       { field: 'id', type: 'INTEGER', nullable: 'NOT NULL', description: '主键' },
       { field: 'project_id', type: 'INTEGER', nullable: 'NOT NULL', description: '项目ID' },
       { field: 'estimated_value_usd', type: 'DECIMAL(10,2)', nullable: 'NULL', description: '估值(美元)' },
@@ -184,7 +185,7 @@ export default function DatabasePage() {
       { field: 'max_value_usd', type: 'DECIMAL(10,2)', nullable: 'NULL', description: '最大值(美元)' },
       { field: 'confidence', type: 'VARCHAR(20)', nullable: 'NULL', description: '置信度' },
     ],
-    investment: [
+    investment_action_plans: [
       { field: 'id', type: 'INTEGER', nullable: 'NOT NULL', description: '主键' },
       { field: 'project_id', type: 'INTEGER', nullable: 'NOT NULL', description: '项目ID' },
       { field: 'project_tier', type: 'VARCHAR(1)', nullable: 'NULL', description: '项目等级' },
@@ -193,7 +194,7 @@ export default function DatabasePage() {
       { field: 'expected_roi', type: 'VARCHAR(50)', nullable: 'NULL', description: '预期回报率' },
       { field: 'total_steps', type: 'INTEGER', nullable: 'NULL', description: '总步骤数' },
     ],
-    discovery: [
+    project_discoveries: [
       { field: 'id', type: 'INTEGER', nullable: 'NOT NULL', description: '主键' },
       { field: 'project_name', type: 'VARCHAR(255)', nullable: 'NOT NULL', description: '项目名称' },
       { field: 'total_mentions', type: 'INTEGER', nullable: 'NULL', description: '总提及数' },
