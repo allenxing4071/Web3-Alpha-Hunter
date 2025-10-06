@@ -269,7 +269,7 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
               <div className="flex items-start gap-4 flex-1">
                 {/* Logo */}
                 <div className="w-20 h-20 rounded-xl bg-gradient-to-br from-accent-primary to-accent-purple flex items-center justify-center text-white text-3xl font-bold">
-                  {project.name[0]}
+                  {project.name?.[0] || '?'}
                 </div>
                 
                 {/* 基本信息 */}
