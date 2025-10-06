@@ -99,7 +99,7 @@ function ActivityItem({ activity }: { activity: Activity }) {
 export function ActivityTimeline({ activities }: ActivityTimelineProps) {
   if (!activities || activities.length === 0) {
     return (
-      <div className="bg-bg-secondary rounded-xl border border-gray-700 p-6 h-full">
+      <div className="bg-bg-secondary rounded-xl border border-gray-700 p-6">
         <h3 className="text-xl font-bold text-text-primary mb-4 flex items-center">
           <Clock className="w-5 h-5 mr-2 text-accent-primary" />
           实时活动流
@@ -114,13 +114,13 @@ export function ActivityTimeline({ activities }: ActivityTimelineProps) {
   }
 
   return (
-    <div className="bg-bg-secondary rounded-xl border border-gray-700 p-6 h-full flex flex-col">
+    <div className="bg-bg-secondary rounded-xl border border-gray-700 p-6 flex flex-col">
       <h3 className="text-xl font-bold text-text-primary mb-4 flex items-center">
         <Clock className="w-5 h-5 mr-2 text-accent-primary" />
         实时活动流
       </h3>
       
-      <div className="flex-1 space-y-3 overflow-y-auto pr-2 scrollbar-thin max-h-[600px]">
+      <div className="space-y-3 overflow-y-auto pr-2 scrollbar-thin">
         {activities.map((activity, index) => (
           <ActivityItem key={index} activity={activity} />
         ))}

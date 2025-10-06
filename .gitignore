@@ -103,8 +103,35 @@ coverage.xml
 
 # Celery
 celerybeat-schedule
+celerybeat-schedule-shm
+celerybeat-schedule-wal
 celerybeat.pid
 
 # Jupyter
 .ipynb_checkpoints
+
+# 临时测试文件
+test_*.py
+*_test.py
+
+# 临时工具脚本
+open_browser_login.py
+reset_admin_password.py
+
+# JSON缓存文件
+analyzed_projects.json
+extended_projects.json
+real_web3_data.json
+
+# 临时HTML工具
+clear_storage.html
+public/api-docs.html
+public/dashboard.html
+public/database.html
+public/docs.html
+public/fix-admin-role.html
+public/reset-login.html
+
+# 临时部署脚本
+deploy_fix*.sh
 
