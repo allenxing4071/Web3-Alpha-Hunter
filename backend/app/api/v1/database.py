@@ -133,6 +133,11 @@ FIELD_DESCRIPTIONS = {
     "basis": "估算依据",
     "comparable_projects": "可比项目(JSON)",
     "estimated_at": "估算时间",
+    "reference_category": "参考类别",
+    "historical_avg": "历史平均值",
+    "tvl_adjustment": "TVL调整系数",
+    "funding_adjustment": "融资调整系数",
+    "final_adjustment": "最终调整系数",
     
     # investment_action_plans 表
     "project_tier": "项目等级",
@@ -145,6 +150,17 @@ FIELD_DESCRIPTIONS = {
     "risk_mitigation": "风险缓解措施(JSON)",
     "success_criteria": "成功标准(JSON)",
     "plan_created_at": "计划创建时间",
+    "composite_score": "综合评分",
+    "budget_breakdown": "预算明细(JSON)",
+    "start_date": "开始日期",
+    "target_duration": "目标持续时间(天)",
+    "airdrop_estimate": "空投估值",
+    "action_steps": "执行步骤(JSON)",
+    "monitoring_metrics": "监控指标(JSON)",
+    "alert_conditions": "告警条件(JSON)",
+    "risks": "风险列表(JSON)",
+    "stop_loss_conditions": "止损条件(JSON)",
+    "completion_percentage": "完成百分比",
     
     # project_discoveries 表
     "total_mentions": "总提及次数",
@@ -157,6 +173,15 @@ FIELD_DESCRIPTIONS = {
     "first_seen_at": "首次发现时间",
     "last_seen_at": "最后发现时间",
     "platforms": "平台列表(JSON)",
+    "platform_mentions": "各平台提及详情(JSON)",
+    "signal_strength": "信号强度",
+    "last_mentioned_at": "最后提及时间",
+    "mentions_7d": "7天提及次数",
+    "surge_ratio": "暴涨比率",
+    "has_token": "是否已发币",
+    "mention_samples": "提及样本(JSON)",
+    "discovery_status": "发现状态",
+    "discovered_at": "发现时间",
     
     # projects_pending 表
     "ai_score": "AI评分",
@@ -166,6 +191,18 @@ FIELD_DESCRIPTIONS = {
     "reviewed_by": "审核人",
     "reviewed_at": "审核时间",
     "submitted_at": "提交时间",
+    "source_url": "来源URL",
+    "source_content": "来源内容",
+    "ai_recommendation_reason": "AI推荐理由",
+    "ai_extracted_info": "AI提取信息(JSON)",
+    "ai_confidence": "AI置信度",
+    "ai_team_score": "AI团队评分",
+    "ai_tech_score": "AI技术评分",
+    "ai_community_score": "AI社区评分",
+    "ai_tokenomics_score": "AI代币经济评分",
+    "ai_market_score": "AI市场评分",
+    "ai_risk_score": "AI风险评分",
+    "reject_reason": "拒绝理由",
     
     # ai_work_config 表
     "primary_goal": "主要目标",
@@ -177,6 +214,12 @@ FIELD_DESCRIPTIONS = {
     "excluded_categories": "排除类别(JSON)",
     "min_market_cap": "最小市值要求",
     "max_market_cap": "最大市值要求",
+    "required_cross_validation": "需要交叉验证",
+    "min_platforms": "最少平台数",
+    "search_lookback_hours": "搜索回溯小时数",
+    "project_age_limit_days": "项目年龄限制(天)",
+    "max_kols_per_day": "每日KOL上限",
+    "rules": "规则配置(JSON)",
     
     # ai_learning_feedback 表
     "feedback_type": "反馈类型",
@@ -184,6 +227,10 @@ FIELD_DESCRIPTIONS = {
     "reason": "原因说明",
     "related_project_id": "关联项目ID",
     "feedback_value": "反馈值",
+    "related_kol_id": "关联KOL ID",
+    "user_reason": "用户原因",
+    "ai_should_adjust": "AI是否应调整",
+    "adjustment_applied": "已应用调整",
     
     # kols 表
     "twitter_handle": "Twitter用户名",
@@ -197,9 +244,34 @@ FIELD_DESCRIPTIONS = {
     "focus_areas": "关注领域(JSON)",
     "influence_score": "影响力评分",
     "added_at": "添加时间",
+    "platform": "平台",
+    "display_name": "显示名称",
+    "followers": "粉丝数",
+    "following": "关注数",
+    "tweets_count": "推文数",
+    "account_created_at": "账号创建时间",
+    "tags": "标签(JSON)",
+    "this_week_mentions": "本周提及数",
+    "discovery_method": "发现方式",
+    "discovered_at": "发现时间",
+    "discovered_by": "发现者",
+    "quality_score": "质量评分",
+    "is_verified": "是否已验证",
+    "last_checked_at": "最后检查时间",
     
     # kols_pending 表
     "recommendation_reason": "推荐理由",
+    "display_name": "显示名称",
+    "followers": "粉丝数",
+    "following": "关注数",
+    "tweets_count": "推文数",
+    "account_created_at": "账号创建时间",
+    "ai_recommendation_score": "AI推荐分数",
+    "ai_recommendation_reason": "AI推荐理由",
+    "ai_discovery_method": "AI发现方式",
+    "source_tweet_id": "来源推文ID",
+    "source_context": "来源上下文",
+    "reject_reason": "拒绝理由",
     
     # kol_performances 表
     "kol_id": "KOL ID",
@@ -211,6 +283,13 @@ FIELD_DESCRIPTIONS = {
     "worst_call": "最差推荐(JSON)",
     "evaluation_period_start": "评估开始时间",
     "evaluation_period_end": "评估结束时间",
+    "predicted_project": "预测项目",
+    "prediction_date": "预测日期",
+    "did_succeed": "是否成功",
+    "tweet_id": "推文ID",
+    "likes": "点赞数",
+    "retweets": "转发数",
+    "replies": "回复数",
     
     # platform_search_rules 表
     "platform_name": "平台名称",
@@ -219,6 +298,13 @@ FIELD_DESCRIPTIONS = {
     "filters": "过滤条件(JSON)",
     "priority": "优先级",
     "last_search_at": "最后搜索时间",
+    "platform": "平台",
+    "frequency_minutes": "频率(分钟)",
+    "monitor_kols": "监控KOL",
+    "monitor_channels": "监控频道",
+    "min_engagement": "最小互动数",
+    "min_author_followers": "作者最小粉丝数",
+    "max_results_per_run": "每次最大结果数",
     
     # twitter_keywords 表
     "keyword": "关键词",
@@ -226,6 +312,9 @@ FIELD_DESCRIPTIONS = {
     "search_count": "搜索次数",
     "hit_count": "命中次数",
     "last_used_at": "最后使用时间",
+    "weight": "权重",
+    "match_count": "匹配次数",
+    "last_matched_at": "最后匹配时间",
     
     # telegram_channels 表
     "channel_id": "频道ID",
@@ -234,6 +323,11 @@ FIELD_DESCRIPTIONS = {
     "member_count": "成员数",
     "description": "频道描述",
     "last_monitored_at": "最后监控时间",
+    "channel_title": "频道标题",
+    "channel_type": "频道类型",
+    "is_official": "是否官方",
+    "quality_score": "质量评分",
+    "last_checked_at": "最后检查时间",
     
     # discord_servers 表
     "server_id": "服务器ID",
@@ -242,6 +336,11 @@ FIELD_DESCRIPTIONS = {
     "member_count": "成员数",
     "online_count": "在线人数",
     "last_monitored_at": "最后监控时间",
+    "related_project": "关联项目",
+    "is_official": "是否官方",
+    "activity_score": "活跃度评分",
+    "joined_at": "加入时间",
+    "last_checked_at": "最后检查时间",
     
     # platform_daily_stats 表
     "platform_name": "平台名称",
@@ -250,6 +349,13 @@ FIELD_DESCRIPTIONS = {
     "projects_discovered": "发现项目数",
     "new_keywords_added": "新增关键词数",
     "errors_count": "错误次数",
+    "platform": "平台",
+    "stat_date": "统计日期",
+    "data_collected": "采集数据量",
+    "kols_discovered": "发现KOL数",
+    "projects_recommended": "推荐项目数",
+    "projects_approved": "审核通过数",
+    "projects_rejected": "审核拒绝数",
     
     # users 表
     "username": "用户名",
