@@ -118,15 +118,30 @@ export function PlatformInfluencers() {
   // 初始化时触发一次滚动位置计算，确保3D效果正确显示
   useEffect(() => {
     if (!loading && influencers.length > 0 && scrollContainerRef.current) {
-      // 立即执行一次，然后延迟再执行确保万无一失
+      // 多次触发确保效果生效
       handleScroll()
-      const timer = setTimeout(() => {
-        handleScroll()
-      }, 100)
       
-      return () => clearTimeout(timer)
+      const timer1 = setTimeout(() => handleScroll(), 50)
+      const timer2 = setTimeout(() => handleScroll(), 150)
+      const timer3 = setTimeout(() => handleScroll(), 300)
+      
+      return () => {
+        clearTimeout(timer1)
+        clearTimeout(timer2)
+        clearTimeout(timer3)
+      }
     }
   }, [loading, influencers, handleScroll])
+
+  // 监听窗口大小变化，重新计算
+  useEffect(() => {
+    const handleResize = () => {
+      handleScroll()
+    }
+    
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [handleScroll])
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
