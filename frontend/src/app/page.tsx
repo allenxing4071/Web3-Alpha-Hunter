@@ -97,9 +97,9 @@ export default function Dashboard() {
       <StatsCards stats={data?.stats} />
 
       {/* 主内容区: 3列布局 */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6 lg:items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6 lg:grid-rows-1">
         {/* 左列: 热门项目 Top10 */}
-        <div className="lg:col-span-4 flex flex-col">
+        <div className="lg:col-span-4 flex">
           <TopProjects projects={data?.top_projects?.items} />
         </div>
 
@@ -110,7 +110,7 @@ export default function Dashboard() {
         </div>
 
         {/* 右列: 实时活动流 */}
-        <div className="lg:col-span-3 flex flex-col">
+        <div className="lg:col-span-3 flex">
           <ActivityTimeline activities={data?.timeline?.activities} />
         </div>
       </div>
