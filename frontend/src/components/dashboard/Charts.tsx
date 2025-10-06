@@ -84,8 +84,15 @@ export function GradeDistributionChart({ data }: GradeDistributionProps) {
             contentStyle={{ 
               backgroundColor: 'rgba(30, 58, 138, 0.95)', // 深蓝色背景
               border: '1px solid rgba(59, 130, 246, 0.5)', // 蓝色边框
-              borderRadius: '8px',
-              color: '#fff'
+              borderRadius: '8px'
+            }}
+            labelStyle={{
+              color: '#fff',
+              fontWeight: 'bold',
+              marginBottom: '8px'
+            }}
+            itemStyle={{
+              color: '#e5e7eb'
             }}
           />
         </PieChart>
@@ -149,8 +156,15 @@ export function CategoryStatsChart({ data }: CategoryStatsProps) {
             contentStyle={{ 
               backgroundColor: 'rgba(30, 58, 138, 0.95)', // 深蓝色背景
               border: '1px solid rgba(59, 130, 246, 0.5)', // 蓝色边框
-              borderRadius: '8px',
-              color: '#fff'
+              borderRadius: '8px'
+            }}
+            labelStyle={{
+              color: '#fff',
+              fontWeight: 'bold',
+              marginBottom: '8px'
+            }}
+            itemStyle={{
+              color: '#e5e7eb'
             }}
             formatter={(value: any, name: string) => {
               if (name === '高分项目') return [value, 'S/A级项目']
