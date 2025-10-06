@@ -129,18 +129,18 @@ export function PlatformInfluencers() {
     if (!loading && influencers.length > 0 && scrollContainerRef.current) {
       const container = scrollContainerRef.current
       
-      // 立即触发一次计算
-      handleScroll()
+      console.log('🎬 开始初始化3D效果')
       
-      // 使用双重RAF确保DOM完全渲染后再次计算
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          handleScroll()
-          console.log('✅ 3D效果已初始化，scrollLeft:', container.scrollLeft)
-        })
-      })
+      // 强制更新scrollPosition
+      const currentScroll = container.scrollLeft
+      setScrollPosition(currentScroll)
+      
+      // 使用setTimeout(0)确保状态更新后再渲染
+      setTimeout(() => {
+        console.log('✅ 3D效果已初始化，scrollLeft:', currentScroll)
+      }, 0)
     }
-  }, [loading, influencers, handleScroll])
+  }, [loading, influencers.length])
 
   // 监听窗口大小变化，重新计算
   useEffect(() => {
@@ -200,7 +200,7 @@ export function PlatformInfluencers() {
     return {
       transform: `scale(${scale})`,
       opacity: opacity,
-      transition: 'all 0.2s ease-out' // 加快动画速度 0.3s -> 0.2s
+      transition: 'transform 0.2s ease-out, opacity 0.2s ease-out'
     }
   }, [scrollPosition])
 
