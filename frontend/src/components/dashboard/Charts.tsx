@@ -82,9 +82,10 @@ export function GradeDistributionChart({ data }: GradeDistributionProps) {
           </Pie>
           <Tooltip 
             contentStyle={{ 
-              backgroundColor: '#1f2937', 
-              border: '1px solid #374151',
-              borderRadius: '8px'
+              backgroundColor: 'rgba(30, 58, 138, 0.95)', // 深蓝色背景
+              border: '1px solid rgba(59, 130, 246, 0.5)', // 蓝色边框
+              borderRadius: '8px',
+              color: '#fff'
             }}
           />
         </PieChart>
@@ -146,9 +147,10 @@ export function CategoryStatsChart({ data }: CategoryStatsProps) {
           <YAxis stroke="#9CA3AF" style={{ fontSize: '12px' }} />
           <Tooltip 
             contentStyle={{ 
-              backgroundColor: '#1f2937', 
-              border: '1px solid #374151',
-              borderRadius: '8px'
+              backgroundColor: 'rgba(30, 58, 138, 0.95)', // 深蓝色背景
+              border: '1px solid rgba(59, 130, 246, 0.5)', // 蓝色边框
+              borderRadius: '8px',
+              color: '#fff'
             }}
             formatter={(value: any, name: string) => {
               if (name === '高分项目') return [value, 'S/A级项目']
