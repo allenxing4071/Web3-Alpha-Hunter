@@ -18,7 +18,7 @@ import { StatsCards } from '@/components/dashboard/StatsCards'
 import { TopProjects } from '@/components/dashboard/TopProjects'
 import { GradeDistributionChart, CategoryStatsChart } from '@/components/dashboard/Charts'
 import { ActivityTimeline } from '@/components/dashboard/ActivityTimeline'
-import { RecentDiscoveries } from '@/components/dashboard/RecentDiscoveries'
+import { PlatformInfluencers } from '@/components/dashboard/PlatformInfluencers'
 import { NewProjectAlert } from '@/components/dashboard/NewProjectAlert'
 import { RefreshIndicator } from '@/components/dashboard/RefreshIndicator'
 
@@ -115,8 +115,8 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* 底部: 最新发现项目 */}
-      <RecentDiscoveries projects={data?.recent?.items} />
+      {/* 底部: 推荐关注的Web3大V */}
+      <PlatformInfluencers />
 
       {/* 新项目提醒 (不可见组件，只触发通知) */}
       <NewProjectAlert projects={newProjects} />
