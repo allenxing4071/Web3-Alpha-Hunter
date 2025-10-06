@@ -88,9 +88,16 @@ export function PlatformInfluencers() {
   // 使用useCallback确保handleScroll函数稳定
   const handleScroll = useCallback(() => {
     if (scrollContainerRef.current) {
-      setScrollPosition(scrollContainerRef.current.scrollLeft)
+      const newPosition = scrollContainerRef.current.scrollLeft
+      console.log('🔄 handleScroll called, scrollLeft:', newPosition)
+      setScrollPosition(newPosition)
     }
   }, [])
+
+  // 监控scrollPosition变化
+  useEffect(() => {
+    console.log('📊 scrollPosition updated:', scrollPosition)
+  }, [scrollPosition])
 
   // 从API加载KOL数据
   useEffect(() => {
@@ -156,7 +163,10 @@ export function PlatformInfluencers() {
 
   // 计算卡片的样式（缩放和透明度）
   const getCardStyle = (index: number) => {
-    if (!scrollContainerRef.current) return {}
+    if (!scrollContainerRef.current) {
+      console.log('⚠️ scrollContainerRef not ready for index:', index)
+      return {}
+    }
     
     const container = scrollContainerRef.current
     const cardWidth = 320 + 16 // 卡片宽度 + gap
@@ -174,6 +184,19 @@ export function PlatformInfluencers() {
     
     // 计算透明度（中间1，两边0.5）
     const opacity = Math.max(0.5, 1 - (distanceFromCenter / maxDistance) * 0.5)
+    
+    if (index === 0) {
+      console.log('🎨 Card style calc:', { 
+        index, 
+        scrollLeft, 
+        containerWidth, 
+        cardCenter, 
+        viewportCenter, 
+        distanceFromCenter, 
+        scale, 
+        opacity 
+      })
+    }
     
     return {
       transform: `scale(${scale})`,
