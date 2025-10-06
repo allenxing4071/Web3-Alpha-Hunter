@@ -32,7 +32,7 @@ function InfluencerCard({ influencer }: { influencer: Influencer }) {
   return (
     <div 
       onClick={handleClick}
-      className="flex-shrink-0 w-80 p-6 rounded-xl border-2 border-gray-700 bg-bg-tertiary
+      className="w-80 p-6 rounded-xl border-2 border-gray-700 bg-bg-tertiary
                  hover:border-accent-primary transition-colors cursor-pointer group my-2"
     >
       {/* 头部：平台和验证标识 */}
@@ -267,17 +267,15 @@ export function PlatformInfluencers() {
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           <div className="flex gap-4 py-2">
-            {influencers.map((influencer, index) => {
-              const cardStyle = getCardStyle(index)
-              if (index === 0) {
-                console.log('🎯 Applying style to card 0:', cardStyle)
-              }
-              return (
-                <div key={influencer.id} style={cardStyle}>
-                  <InfluencerCard influencer={influencer} />
-                </div>
-              )
-            })}
+            {influencers.map((influencer, index) => (
+              <div 
+                key={influencer.id} 
+                style={getCardStyle(index)}
+                className="flex-shrink-0"
+              >
+                <InfluencerCard influencer={influencer} />
+              </div>
+            ))}
           </div>
         </div>
       </div>
