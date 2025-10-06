@@ -332,7 +332,7 @@ export default function DatabasePage() {
 
           {/* Tabs */}
           <div className="bg-bg-tertiary rounded-xl border border-gray-800 overflow-hidden">
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-2 p-4 border-b border-gray-800">
+            <div className="grid grid-cols-5 gap-2 p-4 border-b border-gray-800">
               {tabs.map(tab => (
                 <button
                   key={tab.id}
