@@ -123,19 +123,19 @@ export function PlatformInfluencers() {
       // 使用双重requestAnimationFrame确保DOM完全渲染
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          // 计算应该滚动到第2张卡片居中的位置
+          // 计算应该滚动到第3张卡片居中的位置（容器宽度较大时第2张会导致负值）
           const cardWidth = 336 // 320px + 16px gap
           const padding = 64
           const containerWidth = container.clientWidth
           
           console.log('📐 容器宽度:', containerWidth)
           
-          // 第2张卡片的左边距 = padding + 1 * cardWidth
-          const secondCardLeft = padding + cardWidth
-          // 第2张卡片中心位置 = secondCardLeft + cardWidth/2
-          const secondCardCenter = secondCardLeft + cardWidth / 2
+          // 第3张卡片的左边距 = padding + 2 * cardWidth
+          const targetCardLeft = padding + 2 * cardWidth
+          // 第3张卡片中心位置 = targetCardLeft + cardWidth/2
+          const targetCardCenter = targetCardLeft + cardWidth / 2
           // 需要滚动的距离 = 卡片中心 - 视口中心
-          const scrollTo = secondCardCenter - containerWidth / 2
+          const scrollTo = targetCardCenter - containerWidth / 2
           
           console.log('🎯 计算滚动位置:', scrollTo)
           
