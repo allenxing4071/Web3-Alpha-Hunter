@@ -20,13 +20,17 @@ def collect_twitter_data():
     logger.info("🚀 Starting Twitter data collection task...")
     
     try:
-        # 先尝试真实采集
+        # 真实采集 - 不使用mock数据
         projects = twitter_collector.collect_and_extract(hours=1)
         
-        # 如果没有数据,使用mock数据
         if not projects or len(projects) == 0:
-            logger.warning("⚠️ No data from real Twitter API, using mock data")
-            projects = mock_twitter_collector.collect_and_extract(hours=1)
+            logger.warning("⚠️ No data from Twitter API - check API configuration")
+            return {
+                "success": False,
+                "error": "No data collected - API may not be configured",
+                "projects_found": 0,
+                "projects_saved": 0
+            }
         
         logger.info(f"✅ Twitter collection completed: {len(projects)} projects found")
         
@@ -57,13 +61,17 @@ def collect_twitter_data():
                 db.commit()
                 logger.info(f"💾 Saved {saved_count} new projects to database")
                 
+                # 触发AI分析
+                if saved_count > 0:
+                    from app.tasks.analyzers import analyze_new_projects
+                    analyze_new_projects.delay()
+                    logger.info(f"🤖 Triggered AI analysis for {saved_count} new Twitter projects")
+                
             except Exception as db_error:
                 logger.error(f"❌ Database save failed: {db_error}")
                 db.rollback()
             finally:
                 db.close()
-        
-        # TODO: 触发AI分析 (需要API密钥)
         
         return {
             "success": True,
@@ -87,15 +95,19 @@ def collect_telegram_data():
     logger.info("🚀 Starting Telegram data collection task...")
     
     try:
-        # 先尝试真实采集
+        # 真实采集 - 不使用mock数据
         projects = asyncio.run(
             telegram_collector.collect_and_extract(hours=1)
         )
         
-        # 如果没有数据,使用mock数据
         if not projects or len(projects) == 0:
-            logger.warning("⚠️ No data from real Telegram API, using mock data")
-            projects = asyncio.run(mock_telegram_collector.collect_and_extract(hours=1))
+            logger.warning("⚠️ No data from Telegram API - check API configuration")
+            return {
+                "success": False,
+                "error": "No data collected - API may not be configured",
+                "projects_found": 0,
+                "projects_saved": 0
+            }
         
         logger.info(f"✅ Telegram collection completed: {len(projects)} projects found")
         
@@ -126,13 +138,17 @@ def collect_telegram_data():
                 db.commit()
                 logger.info(f"💾 Saved {saved_count} new projects to database")
                 
+                # 触发AI分析
+                if saved_count > 0:
+                    from app.tasks.analyzers import analyze_new_projects
+                    analyze_new_projects.delay()
+                    logger.info(f"🤖 Triggered AI analysis for {saved_count} new Telegram projects")
+                
             except Exception as db_error:
                 logger.error(f"❌ Database save failed: {db_error}")
                 db.rollback()
             finally:
                 db.close()
-        
-        # TODO: 触发AI分析 (需要API密钥)
         
         return {
             "success": True,

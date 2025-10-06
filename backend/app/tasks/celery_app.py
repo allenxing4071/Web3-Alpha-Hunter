@@ -9,7 +9,7 @@ celery_app = Celery(
     "web3_alpha_hunter",
     broker=settings.CELERY_BROKER_URL,
     backend=settings.CELERY_RESULT_BACKEND,
-    include=["app.tasks.collectors"]
+    include=["app.tasks.collectors", "app.tasks.analyzers"]
 )
 
 # Celery配置
