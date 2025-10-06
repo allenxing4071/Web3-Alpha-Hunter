@@ -118,18 +118,11 @@ export function PlatformInfluencers() {
   // 初始化时触发一次滚动位置计算，确保3D效果正确显示
   useEffect(() => {
     if (!loading && influencers.length > 0 && scrollContainerRef.current) {
-      // 多次触发确保效果生效
+      // 立即触发一次，然后稍微延迟再触发确保DOM完全渲染
       handleScroll()
+      const timer = setTimeout(() => handleScroll(), 100)
       
-      const timer1 = setTimeout(() => handleScroll(), 50)
-      const timer2 = setTimeout(() => handleScroll(), 150)
-      const timer3 = setTimeout(() => handleScroll(), 300)
-      
-      return () => {
-        clearTimeout(timer1)
-        clearTimeout(timer2)
-        clearTimeout(timer3)
-      }
+      return () => clearTimeout(timer)
     }
   }, [loading, influencers, handleScroll])
 
@@ -161,7 +154,7 @@ export function PlatformInfluencers() {
       return {
         transform: 'scale(1)',
         opacity: 1,
-        transition: 'all 0.3s ease-out'
+        transition: 'all 0.2s ease-out' // 加快动画速度
       }
     }
     
@@ -191,7 +184,7 @@ export function PlatformInfluencers() {
     return {
       transform: `scale(${scale})`,
       opacity: opacity,
-      transition: 'all 0.3s ease-out'
+      transition: 'all 0.2s ease-out' // 加快动画速度 0.3s -> 0.2s
     }
   }, [scrollPosition])
 
