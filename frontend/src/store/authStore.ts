@@ -1,19 +1,16 @@
 /**
- * 用户认证状态管理 - 简化版本 (移除 persist)
+ * 用户认证状态管理 - 连接真实数据库API
  */
 
 import { create } from 'zustand'
+import { usersApi } from '@/lib/api'
 
 export interface User {
   id: string
   username: string
   email: string
   role: 'admin' | 'user'
-  createdAt: string
-}
-
-export interface UserWithPassword extends User {
-  password: string
+  created_at: string
 }
 
 interface AuthState {
@@ -25,78 +22,33 @@ interface AuthState {
   isAdmin: () => boolean
 }
 
-// 默认用户数据
-const DEFAULT_USERS: UserWithPassword[] = [
-  {
-    id: '1',
-    username: 'admin',
-    password: 'admin123',
-    email: 'admin@web3hunter.com',
-    role: 'admin',
-    createdAt: new Date().toISOString()
-  },
-  {
-    id: '2',
-    username: 'user',
-    password: 'user123',
-    email: 'user@web3hunter.com',
-    role: 'user',
-    createdAt: new Date().toISOString()
-  }
-]
-
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   isAuthenticated: false,
 
   login: async (username: string, password: string) => {
     try {
-      // 模拟API调用延迟
-      await new Promise(resolve => setTimeout(resolve, 300))
-
-      // 只在客户端执行
-      if (typeof window === 'undefined') {
-        return false
-      }
-
-      // 从默认用户或 sessionStorage 获取用户列表
-      let users: UserWithPassword[] = DEFAULT_USERS
+      console.log('🔐 调用API登录...')
+      const response = await usersApi.login(username, password)
+      console.log('📊 API响应:', response)
       
-      try {
-        const storedUsers = sessionStorage.getItem('app_users')
-        if (storedUsers) {
-          users = JSON.parse(storedUsers)
-        } else {
-          // 首次访问,保存默认用户
-          sessionStorage.setItem('app_users', JSON.stringify(DEFAULT_USERS))
-        }
-      } catch (error) {
-        console.error('读取用户数据失败:', error)
-        // 使用默认用户
-      }
-
-      // 验证用户
-      const user = users.find(
-        u => u.username === username && u.password === password
-      )
-
-      if (user) {
-        const { password: _, ...userWithoutPassword } = user
-        
+      if (response.success && response.user) {
         // 保存到 sessionStorage
-        try {
-          sessionStorage.setItem('auth_user', JSON.stringify(userWithoutPassword))
-          sessionStorage.setItem('auth_token', 'authenticated')
-        } catch (error) {
-          console.error('保存认证信息失败:', error)
+        if (typeof window !== 'undefined') {
+          try {
+            sessionStorage.setItem('auth_user', JSON.stringify(response.user))
+            sessionStorage.setItem('auth_token', response.token || 'authenticated')
+          } catch (error) {
+            console.error('保存认证信息失败:', error)
+          }
         }
         
-        set({ user: userWithoutPassword, isAuthenticated: true })
+        set({ user: response.user, isAuthenticated: true })
         return true
       }
 
       return false
-    } catch (error) {
+    } catch (error: any) {
       console.error('登录错误:', error)
       return false
     }
@@ -128,7 +80,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         const token = sessionStorage.getItem('auth_token')
         const userStr = sessionStorage.getItem('auth_user')
         
-        if (token === 'authenticated' && userStr) {
+        if (token && userStr) {
           const user = JSON.parse(userStr)
           set({ user, isAuthenticated: true })
           return true

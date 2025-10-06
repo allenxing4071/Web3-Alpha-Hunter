@@ -38,9 +38,9 @@ export default function LoginPage() {
       console.log('📊 登录结果:', success)
       
       if (success) {
-        console.log('✅ 登录成功,立即跳转...')
-        // 立即强制跳转
-        window.location.replace('/projects')
+        console.log('✅ 登录成功,跳转到首页...')
+        // 登录成功后跳转到首页
+        window.location.replace('/')
       } else {
         console.error('❌ 登录失败')
         setError('用户名或密码错误')

@@ -14,6 +14,8 @@ from app.models.prediction import (
     ProjectDiscovery,
 )
 
+from app.models.user import User
+
 __all__ = [
     "Project",
     "SocialMetrics", 
@@ -23,5 +25,6 @@ __all__ = [
     "AirdropValueEstimate",
     "InvestmentActionPlan",
     "ProjectDiscovery",
+    "User",
 ]
 

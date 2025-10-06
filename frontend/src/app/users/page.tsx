@@ -1,5 +1,5 @@
 /**
- * 用户管理页面 - 完整的CRUD功能 (支持角色管理)
+ * 用户管理页面 - 连接真实数据库API
  */
 
 "use client"
@@ -7,16 +7,28 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { useUserStore, UserWithPassword } from '@/store/userStore'
 import { useAuthStore } from '@/store/authStore'
+import { usersApi } from '@/lib/api'
+
+interface User {
+  id: string
+  username: string
+  email: string
+  role: 'admin' | 'user'
+  is_active: boolean
+  created_at: string
+  updated_at: string
+  last_login_at?: string
+}
 
 export default function UsersPage() {
   const router = useRouter()
   const { isAuthenticated, isAdmin } = useAuthStore()
-  const { users, addUser, updateUser, deleteUser, initializeDefaultUsers } = useUserStore()
-
+  
+  const [users, setUsers] = useState<User[]>([])
+  const [loading, setLoading] = useState(true)
   const [showAddForm, setShowAddForm] = useState(false)
-  const [editingUser, setEditingUser] = useState<UserWithPassword | null>(null)
+  const [editingUser, setEditingUser] = useState<User | null>(null)
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -38,8 +50,22 @@ export default function UsersPage() {
       return
     }
 
-    initializeDefaultUsers()
-  }, [isAuthenticated, isAdmin, router, initializeDefaultUsers])
+    loadUsers()
+  }, [isAuthenticated, isAdmin, router])
+
+  // 加载用户列表
+  const loadUsers = async () => {
+    try {
+      setLoading(true)
+      const response = await usersApi.list()
+      setUsers(response)
+    } catch (error) {
+      console.error('加载用户失败:', error)
+      setError('加载用户列表失败')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const resetForm = () => {
     setFormData({ username: '', email: '', password: '', role: 'user' })
@@ -49,7 +75,7 @@ export default function UsersPage() {
     setEditingUser(null)
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
     setSuccess('')
@@ -66,48 +92,43 @@ export default function UsersPage() {
       return
     }
 
-    let result = false
+    try {
+      if (editingUser) {
+        // 更新用户
+        const updates: any = {
+          username: formData.username,
+          email: formData.email,
+          role: formData.role,
+        }
+        
+        // 如果提供了新密码,则更新密码
+        if (formData.password) {
+          updates.password = formData.password
+        }
 
-    if (editingUser) {
-      // 更新用户
-      const updates: Partial<UserWithPassword> = {
-        username: formData.username,
-        email: formData.email,
-        role: formData.role,
-      }
-      
-      // 如果提供了新密码,则更新密码
-      if (formData.password) {
-        updates.password = formData.password
-      }
-
-      result = updateUser(editingUser.id, updates)
-      if (result) {
+        await usersApi.update(editingUser.id, updates)
         setSuccess('用户更新成功')
       } else {
-        setError('用户名已存在或更新失败')
-      }
-    } else {
-      // 添加新用户
-      result = addUser({
-        username: formData.username,
-        email: formData.email,
-        password: formData.password,
-        role: formData.role,
-      })
-      if (result) {
+        // 添加新用户
+        await usersApi.create({
+          username: formData.username,
+          email: formData.email,
+          password: formData.password,
+          role: formData.role,
+        })
         setSuccess('用户添加成功')
-      } else {
-        setError('用户名已存在')
       }
-    }
 
-    if (result) {
+      // 重新加载用户列表
+      await loadUsers()
       setTimeout(resetForm, 1500)
+    } catch (error: any) {
+      console.error('操作失败:', error)
+      setError(error.response?.data?.detail || '操作失败')
     }
   }
 
-  const handleEdit = (user: UserWithPassword) => {
+  const handleEdit = (user: User) => {
     setEditingUser(user)
     setFormData({
       username: user.username,
@@ -120,7 +141,7 @@ export default function UsersPage() {
     setSuccess('')
   }
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     const user = users.find(u => u.id === id)
     
     // 防止删除管理员
@@ -131,12 +152,14 @@ export default function UsersPage() {
     }
 
     if (confirm('确定要删除此用户吗?')) {
-      const result = deleteUser(id)
-      if (result) {
+      try {
+        await usersApi.delete(id)
         setSuccess('用户删除成功')
         setTimeout(() => setSuccess(''), 3000)
-      } else {
-        setError('无法删除唯一用户或管理员')
+        await loadUsers()
+      } catch (error: any) {
+        console.error('删除失败:', error)
+        setError(error.response?.data?.detail || '删除失败')
         setTimeout(() => setError(''), 3000)
       }
     }
@@ -148,6 +171,17 @@ export default function UsersPage() {
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto mb-4"></div>
           <p className="text-gray-400">验证权限中...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-900">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto mb-4"></div>
+          <p className="text-gray-400">加载用户数据...</p>
         </div>
       </div>
     )
@@ -320,7 +354,7 @@ export default function UsersPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-400">
-                          {new Date(user.createdAt).toLocaleString('zh-CN')}
+                          {new Date(user.created_at).toLocaleString('zh-CN')}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
