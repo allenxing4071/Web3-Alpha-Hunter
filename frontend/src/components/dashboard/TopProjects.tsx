@@ -3,6 +3,8 @@
  * 显示排名前10的高分项目
  */
 
+'use client'
+
 import { Trophy, Star, TrendingUp } from 'lucide-react'
 import { ProjectItem } from '@/hooks/useDashboardData'
 

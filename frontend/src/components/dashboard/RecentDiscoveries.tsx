@@ -3,6 +3,8 @@
  * 横向滚动展示最近24小时发现的项目
  */
 
+'use client'
+
 import { Sparkles, TrendingUp } from 'lucide-react'
 import { ProjectItem } from '@/hooks/useDashboardData'
 

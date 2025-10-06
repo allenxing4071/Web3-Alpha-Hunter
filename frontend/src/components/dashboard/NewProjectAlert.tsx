@@ -3,6 +3,8 @@
  * 当发现S/A级新项目时弹窗通知
  */
 
+'use client'
+
 import { useEffect } from 'react'
 import toast from 'react-hot-toast'
 import { Trophy, Star, ExternalLink } from 'lucide-react'

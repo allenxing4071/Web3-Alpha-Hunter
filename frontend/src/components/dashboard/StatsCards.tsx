@@ -3,6 +3,8 @@
  * 显示6个核心指标
  */
 
+'use client'
+
 import { TrendingUp, Trophy, Star, Clock, AlertCircle, DollarSign } from 'lucide-react'
 import { DashboardStats } from '@/hooks/useDashboardData'
 

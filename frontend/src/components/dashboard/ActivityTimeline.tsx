@@ -3,6 +3,8 @@
  * 显示最近1小时的项目活动
  */
 
+'use client'
+
 import { Activity as ActivityIcon, Clock, CheckCircle, AlertCircle } from 'lucide-react'
 import { Activity } from '@/hooks/useDashboardData'
 import { formatDistanceToNow } from 'date-fns'

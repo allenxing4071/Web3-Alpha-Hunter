@@ -3,6 +3,8 @@
  * 显示最后更新时间和手动刷新按钮
  */
 
+'use client'
+
 import { RefreshCw, WifiOff } from 'lucide-react'
 import { useState, useEffect } from 'react'
 

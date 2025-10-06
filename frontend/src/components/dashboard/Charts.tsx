@@ -3,6 +3,8 @@
  * 使用Recharts实现数据可视化
  */
 
+'use client'
+
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { GradeDistribution, CategoryStats } from '@/hooks/useDashboardData'
 import { TrendingUp, BarChart3 } from 'lucide-react'
