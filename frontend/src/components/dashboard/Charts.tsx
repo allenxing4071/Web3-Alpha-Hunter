@@ -66,7 +66,7 @@ export function GradeDistributionChart({ data }: GradeDistributionProps) {
             cy="50%"
             labelLine={false}
             label={({ name, percent }) => `${name}: ${percent}%`}
-            outerRadius={120}
+            outerRadius={132}
             fill="#8884d8"
             dataKey="value"
           >
