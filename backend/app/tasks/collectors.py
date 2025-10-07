@@ -2,6 +2,7 @@
 
 import asyncio
 from loguru import logger
+from sqlalchemy import text
 from app.tasks.celery_app import celery_app
 from app.services.collectors.twitter import twitter_collector
 from app.services.collectors.telegram import telegram_collector
@@ -12,6 +13,23 @@ from app.services.collectors.test_collector import (
 )
 from app.db import SessionLocal
 from app.models import Project
+
+
+def update_platform_stats(db, platform: str, collected: int, discovered: int):
+    """更新平台每日统计"""
+    try:
+        db.execute(text("""
+            INSERT INTO platform_daily_stats (platform, stat_date, data_collected, projects_discovered)
+            VALUES (:platform, CURRENT_DATE, :collected, :discovered)
+            ON CONFLICT (platform, stat_date) 
+            DO UPDATE SET 
+                data_collected = platform_daily_stats.data_collected + :collected,
+                projects_discovered = platform_daily_stats.projects_discovered + :discovered
+        """), {"platform": platform, "collected": collected, "discovered": discovered})
+        db.commit()
+        logger.info(f"📊 [{platform}] Stats updated: {collected} collected, {discovered} discovered")
+    except Exception as e:
+        logger.warning(f"⚠️ [{platform}] Failed to update stats: {e}")
 
 
 @celery_app.task(name="app.tasks.collectors.collect_twitter_data")
@@ -60,6 +78,9 @@ def collect_twitter_data():
                 
                 db.commit()
                 logger.info(f"💾 Saved {saved_count} new projects to database")
+                
+                # 更新平台统计
+                update_platform_stats(db, 'twitter', len(projects), saved_count)
                 
                 # 触发AI分析
                 if saved_count > 0:
@@ -138,6 +159,9 @@ def collect_telegram_data():
                 db.commit()
                 logger.info(f"💾 Saved {saved_count} new projects to database")
                 
+                # 更新平台统计
+                update_platform_stats(db, 'telegram', len(projects), saved_count)
+                
                 # 触发AI分析
                 if saved_count > 0:
                     from app.tasks.analyzers import analyze_new_projects
@@ -203,6 +227,9 @@ def collect_coingecko_data():
                 
                 db.commit()
                 logger.info(f"💾 Saved {saved_count} new projects to database")
+                
+                # 更新平台统计
+                update_platform_stats(db, 'coingecko', len(projects), saved_count)
                 
                 # 触发AI分析
                 if saved_count > 0:
