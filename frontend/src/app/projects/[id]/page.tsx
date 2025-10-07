@@ -139,12 +139,13 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
         throw new Error('Failed to fetch project')
       }
       
-      const data = await response.json()
+      const responseData = await response.json()
+      const data = responseData.data // API返回格式: {success: true, data: {...}}
       
       // 转换后端数据格式
       const projectDetail: ProjectDetail = {
         project_id: data.project_id || String(data.id),
-        name: data.project_name,
+        name: data.name,
         symbol: data.symbol,
         grade: data.grade || '?',
         overall_score: data.overall_score || 0,
@@ -156,48 +157,32 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
         contract_address: data.contract_address,
         whitepaper_url: data.whitepaper_url,
         github_repo: data.github_repo,
-        social_links: {
-          twitter: data.twitter_handle,
-          telegram: data.telegram_channel,
-          discord: data.discord_link,
-          github: data.github_repo,
+        social_links: data.social_links || {
+          twitter: null,
+          telegram: null,
+          discord: null,
+          github: null,
         },
-        key_highlights: [],
-        risk_flags: [],
-        metrics: {},
-        scores: {
+        key_highlights: data.key_highlights || [],
+        risk_flags: data.risk_flags || [],
+        metrics: data.metrics || {},
+        scores: data.scores || {
           overall: data.overall_score || 0,
-          team: data.team_score || 0,
-          technology: data.tech_score || 0,
-          community: data.community_score || 0,
-          tokenomics: data.tokenomics_score || 0,
-          market_timing: data.market_timing_score || 0,
-          risk: data.risk_score || 0,
+          team: 0,
+          technology: 0,
+          community: 0,
+          tokenomics: 0,
+          market_timing: 0,
+          risk: 0,
         },
-        ai_analysis: {
-          summary: '正在加载AI分析...',
-          key_features: [],
-          similar_projects: [],
-          sentiment: { score: 0.5, label: 'neutral' },
-          risk_assessment: {
-            scam_probability: data.risk_score || 50,
-            risk_level: 'medium'
-          },
-          investment_suggestion: {
-            recommendation: '数据加载中',
-            position_size: '-',
-            entry_timing: '-',
-            stop_loss: 30
-          }
+        ai_analysis: data.ai_analysis || null,
+        discovery: data.discovery || {
+          source: 'unknown',
+          discovered_at: data.first_discovered_at,
         },
-        discovery: {
-          source: data.discovered_from || 'unknown',
-          discovered_at: data.first_discovered_at || data.created_at,
-          discovered_from: data.discovered_from || '未知来源'
-        },
-        first_discovered_at: data.first_discovered_at || data.created_at,
-        last_updated_at: data.last_updated_at || data.updated_at,
-        source: data.discovered_from
+        first_discovered_at: data.first_discovered_at,
+        last_updated_at: data.last_updated_at,
+        source: data.discovery?.source || 'unknown'
       }
       
       setProject(projectDetail)
