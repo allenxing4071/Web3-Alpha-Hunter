@@ -159,6 +159,8 @@ def update_project_real_data(db: Session, project: Project):
         social_metrics = SocialMetrics(**social_data_clean)
         db.add(social_metrics)
         db.flush()
+        # 关联到project
+        project.social_metrics_id = social_metrics.id
         print(f"  ✅ 社交数据: Twitter {social_data['twitter_followers'] or 0}, Telegram {social_data['telegram_members'] or 0}")
     
     # 提取并保存链上指标
@@ -178,6 +180,8 @@ def update_project_real_data(db: Session, project: Project):
         onchain_metrics = OnchainMetrics(**onchain_data_clean)
         db.add(onchain_metrics)
         db.flush()
+        # 关联到project
+        project.onchain_metrics_id = onchain_metrics.id
         
         mc = onchain_data_clean.get('market_cap')
         price = onchain_data_clean.get('price_usd')

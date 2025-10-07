@@ -4,8 +4,9 @@ from datetime import datetime
 from typing import Optional
 from sqlalchemy import (
     Column, String, Integer, Text, DECIMAL, 
-    TIMESTAMP, Index, JSON
+    TIMESTAMP, Index, JSON, ForeignKey
 )
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.db.session import Base
 
@@ -45,6 +46,10 @@ class Project(Base):
     
     grade = Column(String(1), index=True)  # S, A, B, C
     
+    # 关联外键
+    social_metrics_id = Column(Integer, ForeignKey('social_metrics.id', ondelete='SET NULL'), nullable=True, index=True)
+    onchain_metrics_id = Column(Integer, ForeignKey('onchain_metrics.id', ondelete='SET NULL'), nullable=True, index=True)
+    
     # 状态
     status = Column(String(50), default="discovered")  # discovered, analyzing, published, archived
     first_discovered_at = Column(TIMESTAMP, server_default=func.now(), index=True)
@@ -60,6 +65,10 @@ class Project(Base):
     # 时间戳
     created_at = Column(TIMESTAMP, server_default=func.now())
     updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())
+    
+    # Relationships
+    social_metrics = relationship("SocialMetrics", foreign_keys=[social_metrics_id], lazy="joined")
+    onchain_metrics = relationship("OnchainMetrics", foreign_keys=[onchain_metrics_id], lazy="joined")
     
     # 索引
     __table_args__ = (
