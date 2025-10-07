@@ -2,15 +2,21 @@
 平台管理API
 管理Twitter/Telegram/Discord三个平台的配置和数据采集
 """
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Body
 from sqlalchemy.orm import Session
 from sqlalchemy import text, func
 from typing import Dict, Any, List, Optional
 from datetime import date, datetime, timedelta
+from pydantic import BaseModel
 
 from app.db.session import get_db
 
 router = APIRouter()
+
+
+# Request models
+class TogglePlatformRequest(BaseModel):
+    enabled: bool
 
 
 @router.get("/")
@@ -93,7 +99,7 @@ async def get_all_platforms(db: Session = Depends(get_db)) -> Dict[str, Any]:
 @router.post("/{platform_id}/toggle")
 async def toggle_platform(
     platform_id: str,
-    enabled: bool,
+    request: TogglePlatformRequest,
     db: Session = Depends(get_db)
 ) -> Dict[str, Any]:
     """
@@ -105,13 +111,13 @@ async def toggle_platform(
             SET enabled = :enabled,
                 updated_at = CURRENT_TIMESTAMP
             WHERE platform = :platform
-        """), {"enabled": enabled, "platform": platform_id})
+        """), {"enabled": request.enabled, "platform": platform_id})
         
         db.commit()
         
         return {
             "success": True,
-            "message": f"平台 {platform_id} {'已启用' if enabled else '已停用'}"
+            "message": f"平台 {platform_id} {'已启用' if request.enabled else '已停用'}"
         }
         
     except Exception as e:
