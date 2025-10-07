@@ -8,6 +8,7 @@ from app.services.collectors.twitter import twitter_collector
 from app.services.collectors.twitter_apify import twitter_apify_collector
 from app.services.collectors.telegram import telegram_collector
 from app.services.collectors.coingecko import coingecko_collector
+from app.services.enhancers.data_enricher import data_enricher
 from app.db import SessionLocal
 from app.models import Project
 from app.core.config import settings
@@ -72,18 +73,27 @@ def collect_twitter_data():
             db = SessionLocal()
             try:
                 for project_data in projects:
+                    # AI补全缺失字段
+                    enriched_data = data_enricher.enrich_project(project_data)
+                    
                     # 检查项目是否已存在
                     existing = db.query(Project).filter(
-                        Project.project_name == project_data.get('name')
+                        Project.project_name == enriched_data.get('name')
                     ).first()
                     
                     if not existing:
-                        # 创建新项目
+                        # 创建新项目（包含补全后的完整字段）
                         new_project = Project(
-                            project_name=project_data.get('name', 'Unknown'),
-                            symbol=project_data.get('symbol'),
-                            description=project_data.get('description'),
-                            twitter_handle=project_data.get('twitter'),
+                            project_name=enriched_data.get('name', 'Unknown'),
+                            symbol=enriched_data.get('symbol'),
+                            description=enriched_data.get('description'),
+                            blockchain=enriched_data.get('blockchain'),
+                            category=enriched_data.get('category'),
+                            website=enriched_data.get('website'),
+                            twitter_handle=enriched_data.get('twitter'),
+                            telegram_channel=enriched_data.get('telegram'),
+                            discord_link=enriched_data.get('discord'),
+                            github_repo=enriched_data.get('github'),
                             discovered_from='twitter',
                             status='discovered'
                         )
@@ -152,18 +162,27 @@ def collect_telegram_data():
             db = SessionLocal()
             try:
                 for project_data in projects:
+                    # AI补全缺失字段
+                    enriched_data = data_enricher.enrich_project(project_data)
+                    
                     # 检查项目是否已存在
                     existing = db.query(Project).filter(
-                        Project.project_name == project_data.get('name')
+                        Project.project_name == enriched_data.get('name')
                     ).first()
                     
                     if not existing:
-                        # 创建新项目
+                        # 创建新项目（包含补全后的完整字段）
                         new_project = Project(
-                            project_name=project_data.get('name', 'Unknown'),
-                            symbol=project_data.get('symbol'),
-                            description=project_data.get('description'),
-                            telegram_channel=project_data.get('telegram'),
+                            project_name=enriched_data.get('name', 'Unknown'),
+                            symbol=enriched_data.get('symbol'),
+                            description=enriched_data.get('description'),
+                            blockchain=enriched_data.get('blockchain'),
+                            category=enriched_data.get('category'),
+                            website=enriched_data.get('website'),
+                            twitter_handle=enriched_data.get('twitter'),
+                            telegram_channel=enriched_data.get('telegram'),
+                            discord_link=enriched_data.get('discord'),
+                            github_repo=enriched_data.get('github'),
                             discovered_from='telegram',
                             status='discovered'
                         )
@@ -227,12 +246,19 @@ def collect_coingecko_data():
                     ).first()
                     
                     if not existing:
-                        # 创建新项目
+                        # 创建新项目（包含完整字段）
                         new_project = Project(
                             project_name=project_data.get('name', 'Unknown'),
                             symbol=project_data.get('symbol'),
                             description=project_data.get('description'),
+                            blockchain=project_data.get('blockchain'),
+                            category=project_data.get('category'),
                             website=project_data.get('website'),
+                            twitter_handle=project_data.get('twitter'),
+                            telegram_channel=project_data.get('telegram'),
+                            discord_link=project_data.get('discord'),
+                            github_repo=project_data.get('github'),
+                            logo_url=project_data.get('logo_url'),
                             discovered_from='coingecko',
                             status='discovered'
                         )

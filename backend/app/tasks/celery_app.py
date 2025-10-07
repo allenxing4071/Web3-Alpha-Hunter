@@ -9,7 +9,7 @@ celery_app = Celery(
     "web3_alpha_hunter",
     broker=settings.CELERY_BROKER_URL,
     backend=settings.CELERY_RESULT_BACKEND,
-    include=["app.tasks.collectors", "app.tasks.analyzers"]
+    include=["app.tasks.collectors", "app.tasks.analyzers", "app.tasks.backfill"]
 )
 
 # Celery配置
@@ -54,6 +54,12 @@ celery_app.conf.beat_schedule = {
     "generate-daily-report": {
         "task": "app.tasks.reporters.generate_daily_report",
         "schedule": crontab(hour=9, minute=0),  # 每天9:00
+    },
+    
+    # 每6小时自动补全不完整项目
+    "enrich-incomplete-projects": {
+        "task": "app.tasks.backfill.enrich_incomplete_projects",
+        "schedule": crontab(hour="*/6"),  # 每6小时
     },
 }
 
