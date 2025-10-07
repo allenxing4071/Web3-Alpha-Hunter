@@ -68,7 +68,7 @@ class Settings(BaseSettings):
     
     # Apify (Twitter第三方采集)
     APIFY_API_KEY: Optional[str] = None
-    APIFY_TWITTER_ACTOR_ID: str = "apify/twitter-scraper"
+    APIFY_TWITTER_ACTOR_ID: str = "apidojo/tweet-scraper"  # 推荐使用的Twitter采集器
     
     # Telegram API
     TELEGRAM_API_ID: Optional[str] = None
