@@ -166,8 +166,8 @@ export default function ProjectsPage() {
         
         // 转换后端数据格式为前端Project类型
         const projects: Project[] = projectsData.map((p: any) => ({
-          project_id: p.project_id || String(p.id),
-          name: p.name,  // ✅ 修复: API返回的是 name 而不是 project_name
+          project_id: String(p.id),  // ✅ 使用数字ID，确保跳转正确
+          name: p.name,
           symbol: p.symbol,
           grade: p.grade || '?',
           overall_score: p.overall_score || 0,
@@ -176,7 +176,7 @@ export default function ProjectsPage() {
           description: p.description || '',
           logo_url: p.logo_url,
           website: p.website,
-          social_links: p.social_links || {  // ✅ 修复: 直接使用 social_links 对象
+          social_links: p.social_links || {
             twitter: null,
             telegram: null,
             github: null,

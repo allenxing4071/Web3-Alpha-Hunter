@@ -85,7 +85,7 @@ async def list_projects(
         data={
             "projects": [
                 {
-                    "project_id": f"proj_{p.id}",
+                    "id": p.id,  # ✅ 使用纯数字ID
                     "name": p.project_name,
                     "symbol": p.symbol,
                     "grade": p.grade,
@@ -132,12 +132,15 @@ async def get_project(
     """
     获取项目详情
     
-    - **project_id**: 项目ID (格式: proj_123)
+    - **project_id**: 项目ID (格式: proj_123 或 纯数字)
     """
     
-    # 解析ID
+    # 解析ID - 支持 "proj_123" 或 "123"
     try:
-        pid = int(project_id.replace("proj_", ""))
+        if isinstance(project_id, str) and project_id.startswith("proj_"):
+            pid = int(project_id.replace("proj_", ""))
+        else:
+            pid = int(project_id)
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid project ID format")
     
@@ -147,7 +150,63 @@ async def get_project(
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
     
-    # TODO: 获取AI分析、社交指标、链上数据
+    # 获取最新的社交指标
+    from app.models.project import SocialMetrics, OnchainMetrics, AIAnalysis
+    social_metrics = db.query(SocialMetrics).filter(
+        SocialMetrics.project_id == pid
+    ).order_by(SocialMetrics.snapshot_time.desc()).first()
+    
+    # 获取最新的链上数据
+    onchain_metrics = db.query(OnchainMetrics).filter(
+        OnchainMetrics.project_id == pid
+    ).order_by(OnchainMetrics.snapshot_time.desc()).first()
+    
+    # 获取AI分析
+    ai_analysis = db.query(AIAnalysis).filter(
+        AIAnalysis.project_id == pid
+    ).order_by(AIAnalysis.analyzed_at.desc()).first()
+    
+    # 构建metrics对象
+    metrics_data = {}
+    if social_metrics:
+        metrics_data.update({
+            "twitter_followers": social_metrics.twitter_followers,
+            "twitter_engagement_rate": float(social_metrics.twitter_engagement_rate) if social_metrics.twitter_engagement_rate else None,
+            "telegram_members": social_metrics.telegram_members,
+            "telegram_online_members": social_metrics.telegram_online_members,
+            "discord_members": social_metrics.discord_members,
+            "discord_online_members": social_metrics.discord_online_members,
+            "github_stars": social_metrics.github_stars,
+            "github_forks": social_metrics.github_forks,
+            "github_commits_last_week": social_metrics.github_commits_last_week,
+        })
+    
+    if onchain_metrics:
+        metrics_data.update({
+            "market_cap": float(onchain_metrics.market_cap) if onchain_metrics.market_cap else None,
+            "price_usd": float(onchain_metrics.price_usd) if onchain_metrics.price_usd else None,
+            "volume_24h": float(onchain_metrics.volume_24h) if onchain_metrics.volume_24h else None,
+            "tvl_usd": float(onchain_metrics.tvl_usd) if onchain_metrics.tvl_usd else None,
+            "holder_count": onchain_metrics.holder_count,
+            "transaction_count_24h": onchain_metrics.transaction_count_24h,
+        })
+    
+    # 构建AI分析数据
+    ai_analysis_data = None
+    if ai_analysis:
+        ai_analysis_data = {
+            "whitepaper_summary": ai_analysis.whitepaper_summary,
+            "key_features": ai_analysis.key_features,
+            "sentiment_score": float(ai_analysis.sentiment_score) if ai_analysis.sentiment_score else None,
+            "sentiment_label": ai_analysis.sentiment_label,
+            "investment_suggestion": ai_analysis.investment_suggestion,
+            "position_size": ai_analysis.position_size,
+            "entry_timing": ai_analysis.entry_timing,
+        }
+    
+    # 从AI分析中获取highlights和风险
+    key_highlights = ai_analysis.key_features if (ai_analysis and ai_analysis.key_features) else []
+    risk_flags = ai_analysis.risk_flags if (ai_analysis and ai_analysis.risk_flags) else []
     
     return ProjectDetailResponse(
         success=True,
@@ -180,10 +239,10 @@ async def get_project(
                 "market_timing": float(project.market_timing_score or 0),
                 "risk": float(project.risk_score or 0),
             },
-            "key_highlights": [],
-            "risk_flags": [],
-            "metrics": {},
-            "ai_analysis": None,  # TODO
+            "key_highlights": key_highlights,
+            "risk_flags": risk_flags,
+            "metrics": metrics_data,
+            "ai_analysis": ai_analysis_data,
             "discovery": {
                 "source": project.discovered_from,
                 "discovered_at": project.first_discovered_at,

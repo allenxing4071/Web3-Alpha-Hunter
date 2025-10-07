@@ -129,10 +129,8 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
   const loadProjectData = async () => {
     try {
       setLoading(true)
-      // 处理project_id: 如果是"proj_123"格式，提取数字；否则直接使用
-      const projectId = params.id.startsWith('proj_') 
-        ? params.id.replace('proj_', '') 
-        : params.id
+      // 直接使用数字ID
+      const projectId = params.id
       const response = await fetch(`${API_BASE_URL}/projects/${projectId}`)
       
       if (!response.ok) {
