@@ -3,10 +3,10 @@
 
 cd "$(dirname "$0")/backend"
 
-echo "🚀 启动 Celery Worker..."
-python3 -m celery -A app.tasks.celery_app worker --loglevel=info > /tmp/celery-worker.log 2>&1 &
+echo "🚀 启动 Celery Worker (线程池模式)..."
+python3 -m celery -A app.tasks.celery_app worker --pool=threads --concurrency=4 --loglevel=info > /tmp/celery-worker.log 2>&1 &
 WORKER_PID=$!
-echo "✅ Celery Worker 已启动 (PID: $WORKER_PID)"
+echo "✅ Celery Worker 已启动 (PID: $WORKER_PID, 线程池x4)"
 
 sleep 2
 
