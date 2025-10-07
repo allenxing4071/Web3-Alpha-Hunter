@@ -16,13 +16,13 @@ def analyze_new_projects():
     try:
         db = SessionLocal()
         
-        # 查找未分析的项目
+        # 查找未分析的项目（每次处理50个）
         projects = db.query(Project).filter(
             and_(
                 Project.status == 'discovered',
                 Project.overall_score == None
             )
-        ).limit(10).all()
+        ).limit(50).all()
         
         if not projects:
             logger.info("ℹ️ No new projects to analyze")
