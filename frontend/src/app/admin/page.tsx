@@ -155,6 +155,54 @@ export default function AdminPage() {
     }
   }
 
+  // 控制Celery Worker
+  const controlWorker = async (action: 'start' | 'stop') => {
+    try {
+      addLog(`[Celery] 正在${action === 'start' ? '启动' : '停止'} Worker...`)
+      const response = await fetch(`${API_BASE_URL}/admin/celery/worker/${action}`, {
+        method: 'POST'
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        addLog(`[成功] ${data.message}`)
+        // 等待2秒后刷新状态
+        setTimeout(() => {
+          checkCeleryStatus()
+        }, 2000)
+      } else {
+        const error = await response.json()
+        addLog(`[错误] ${error.detail || 'Worker控制失败'}`)
+      }
+    } catch (error) {
+      addLog(`[错误] Worker控制请求失败`)
+    }
+  }
+
+  // 控制Celery Beat
+  const controlBeat = async (action: 'start' | 'stop') => {
+    try {
+      addLog(`[Celery] 正在${action === 'start' ? '启动' : '停止'} Beat...`)
+      const response = await fetch(`${API_BASE_URL}/admin/celery/beat/${action}`, {
+        method: 'POST'
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        addLog(`[成功] ${data.message}`)
+        // 等待2秒后刷新状态
+        setTimeout(() => {
+          checkCeleryStatus()
+        }, 2000)
+      } else {
+        const error = await response.json()
+        addLog(`[错误] ${error.detail || 'Beat控制失败'}`)
+      }
+    } catch (error) {
+      addLog(`[错误] Beat控制请求失败`)
+    }
+  }
+
   // 加载AI配置
   const loadAiConfigs = async () => {
     try {
@@ -446,7 +494,7 @@ export default function AdminPage() {
                   <span className="text-2xl">{celeryRunning ? '✅' : '⏸️'}</span>
                 </div>
                 <button
-                  onClick={() => addLog('[操作] Celery Worker启停需要在服务器端执行')}
+                  onClick={() => controlWorker(celeryRunning ? 'stop' : 'start')}
                   className="w-full px-3 py-2 bg-gray-700 hover:bg-gray-600 text-white text-sm rounded-lg transition-colors"
                 >
                   {celeryRunning ? '停止 Worker' : '启动 Worker'}
@@ -469,7 +517,7 @@ export default function AdminPage() {
                   <span className="text-2xl">{beatRunning ? '⏰' : '⏸️'}</span>
                 </div>
                 <button
-                  onClick={() => addLog('[操作] Celery Beat启停需要在服务器端执行')}
+                  onClick={() => controlBeat(beatRunning ? 'stop' : 'start')}
                   className="w-full px-3 py-2 bg-gray-700 hover:bg-gray-600 text-white text-sm rounded-lg transition-colors"
                 >
                   {beatRunning ? '停止 Beat' : '启动 Beat'}

@@ -65,6 +65,133 @@ async def get_celery_status() -> Dict[str, Any]:
     }
 
 
+@router.post("/celery/worker/{action}")
+async def control_celery_worker(action: str) -> Dict[str, Any]:
+    """控制Celery Worker启动/停止"""
+    import subprocess
+    import os
+    
+    if action not in ["start", "stop"]:
+        raise HTTPException(status_code=400, detail="Invalid action. Use 'start' or 'stop'")
+    
+    try:
+        if action == "stop":
+            # 停止Celery Worker
+            for proc in psutil.process_iter(['pid', 'name', 'cmdline']):
+                try:
+                    cmdline = ' '.join(proc.info['cmdline'] or [])
+                    if 'celery' in cmdline.lower() and 'worker' in cmdline.lower():
+                        proc.terminate()
+                        proc.wait(timeout=5)
+                        return {
+                            "success": True,
+                            "message": "Celery Worker已停止",
+                            "action": "stop"
+                        }
+                except (psutil.NoSuchProcess, psutil.AccessDenied):
+                    continue
+            
+            return {
+                "success": False,
+                "message": "未找到运行中的Celery Worker",
+                "action": "stop"
+            }
+        
+        else:  # start
+            # 启动Celery Worker
+            # 获取项目根目录
+            current_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+            
+            # 启动命令
+            cmd = [
+                "celery", "-A", "app.tasks.celery_app", "worker",
+                "--loglevel=info",
+                "--logfile=/tmp/celery_worker.log"
+            ]
+            
+            # 后台启动
+            subprocess.Popen(
+                cmd,
+                cwd=current_dir,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                start_new_session=True
+            )
+            
+            return {
+                "success": True,
+                "message": "Celery Worker启动命令已发送",
+                "action": "start",
+                "note": "请等待几秒后刷新状态"
+            }
+            
+    except Exception as e:
+        print(f"❌ 控制Celery Worker失败: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/celery/beat/{action}")
+async def control_celery_beat(action: str) -> Dict[str, Any]:
+    """控制Celery Beat启动/停止"""
+    import subprocess
+    import os
+    
+    if action not in ["start", "stop"]:
+        raise HTTPException(status_code=400, detail="Invalid action. Use 'start' or 'stop'")
+    
+    try:
+        if action == "stop":
+            # 停止Celery Beat
+            for proc in psutil.process_iter(['pid', 'name', 'cmdline']):
+                try:
+                    cmdline = ' '.join(proc.info['cmdline'] or [])
+                    if 'celery' in cmdline.lower() and 'beat' in cmdline.lower():
+                        proc.terminate()
+                        proc.wait(timeout=5)
+                        return {
+                            "success": True,
+                            "message": "Celery Beat已停止",
+                            "action": "stop"
+                        }
+                except (psutil.NoSuchProcess, psutil.AccessDenied):
+                    continue
+            
+            return {
+                "success": False,
+                "message": "未找到运行中的Celery Beat",
+                "action": "stop"
+            }
+        
+        else:  # start
+            # 启动Celery Beat
+            current_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+            
+            cmd = [
+                "celery", "-A", "app.tasks.celery_app", "beat",
+                "--loglevel=info",
+                "--logfile=/tmp/celery_beat.log"
+            ]
+            
+            subprocess.Popen(
+                cmd,
+                cwd=current_dir,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                start_new_session=True
+            )
+            
+            return {
+                "success": True,
+                "message": "Celery Beat启动命令已发送",
+                "action": "start",
+                "note": "请等待几秒后刷新状态"
+            }
+            
+    except Exception as e:
+        print(f"❌ 控制Celery Beat失败: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.post("/collect/{source}")
 async def trigger_collection(source: str) -> Dict[str, Any]:
     """手动触发数据采集
