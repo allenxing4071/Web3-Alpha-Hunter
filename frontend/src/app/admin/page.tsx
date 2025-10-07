@@ -495,7 +495,11 @@ export default function AdminPage() {
                 </div>
                 <button
                   onClick={() => controlWorker(celeryRunning ? 'stop' : 'start')}
-                  className="w-full px-3 py-2 bg-gray-700 hover:bg-gray-600 text-white text-sm rounded-lg transition-colors"
+                  className={`w-full px-3 py-2 text-white text-sm rounded-lg transition-colors ${
+                    celeryRunning 
+                      ? 'bg-red-600 hover:bg-red-700' 
+                      : 'bg-green-600 hover:bg-green-700'
+                  }`}
                 >
                   {celeryRunning ? '停止 Worker' : '启动 Worker'}
                 </button>
@@ -518,7 +522,11 @@ export default function AdminPage() {
                 </div>
                 <button
                   onClick={() => controlBeat(beatRunning ? 'stop' : 'start')}
-                  className="w-full px-3 py-2 bg-gray-700 hover:bg-gray-600 text-white text-sm rounded-lg transition-colors"
+                  className={`w-full px-3 py-2 text-white text-sm rounded-lg transition-colors ${
+                    beatRunning 
+                      ? 'bg-red-600 hover:bg-red-700' 
+                      : 'bg-green-600 hover:bg-green-700'
+                  }`}
                 >
                   {beatRunning ? '停止 Beat' : '启动 Beat'}
                 </button>
