@@ -14,6 +14,7 @@ from app.models.prediction import (
     ProjectDiscovery,
 )
 
+from app.models.pending_project import PendingProject
 from app.models.user import User
 from app.models.kol import KOL
 
@@ -26,6 +27,7 @@ __all__ = [
     "AirdropValueEstimate",
     "InvestmentActionPlan",
     "ProjectDiscovery",
+    "PendingProject",
     "User",
     "KOL",
 ]
