@@ -60,18 +60,18 @@ Twitter: {project.twitter_handle or 'N/A'}
                     project.grade = result.get('grade')
                     project.status = 'analyzed'
                     
-                    # 保存AI分析记录
-                    existing_analysis = db.query(AIAnalysis).filter(
-                        AIAnalysis.project_id == project.id
-                    ).first()
+                    # 保存AI分析记录（简化版，只保存项目评分）
+                    # AIAnalysis表暂不使用，评分已保存在Project表中
+                    # existing_analysis = db.query(AIAnalysis).filter(
+                    #     AIAnalysis.project_id == project.id
+                    # ).first()
                     
-                    if not existing_analysis:
-                        ai_analysis = AIAnalysis(
-                            project_id=project.id,
-                            analysis_result=result.get('reasoning', ''),
-                            model_used=result.get('model', 'deepseek-chat')
-                        )
-                        db.add(ai_analysis)
+                    # if not existing_analysis:
+                    #     ai_analysis = AIAnalysis(
+                    #         project_id=project.id,
+                    #         investment_suggestion=result.get('reasoning', '')
+                    #     )
+                    #     db.add(ai_analysis)
                     
                     analyzed_count += 1
                     logger.info(f"✅ Analyzed {project.project_name}: Grade {result.get('grade')}, Score {result.get('overall_score')}")
