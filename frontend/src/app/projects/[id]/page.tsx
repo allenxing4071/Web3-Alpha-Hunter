@@ -279,12 +279,21 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
                   </p>
                   
                   <div className="flex flex-wrap gap-2">
-                    <span className="px-3 py-1 bg-blue-900/30 text-blue-300 text-sm rounded-md border border-blue-700/50">
-                      💰 {project.category}
-                    </span>
-                    <span className="px-3 py-1 bg-purple-900/30 text-purple-300 text-sm rounded-md border border-purple-700/50">
-                      ⛓️ {project.blockchain}
-                    </span>
+                    {project.category && (
+                      <span className="px-3 py-1 bg-blue-900/30 text-blue-300 text-sm rounded-md border border-blue-700/50">
+                        💰 {project.category}
+                      </span>
+                    )}
+                    {project.blockchain && (
+                      <span className="px-3 py-1 bg-purple-900/30 text-purple-300 text-sm rounded-md border border-purple-700/50">
+                        ⛓️ {project.blockchain}
+                      </span>
+                    )}
+                    {project.discovery?.source && (
+                      <span className="px-3 py-1 bg-green-900/30 text-green-300 text-sm rounded-md border border-green-700/50">
+                        📍 来源: {project.discovery.source}
+                      </span>
+                    )}
                     <span className="px-3 py-1 bg-gray-800 text-text-tertiary text-sm rounded-md">
                       🕐 发现于 {project.first_discovered_at && !isNaN(new Date(project.first_discovered_at).getTime())
                         ? formatDistanceToNow(new Date(project.first_discovered_at), { 
@@ -341,21 +350,36 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
               </Card>
 
               {/* 核心亮点 */}
-              <Card className="bg-bg-tertiary border-gray-700">
-                <CardHeader>
-                  <CardTitle>✨ 核心亮点</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-3">
-                    {project.key_highlights.map((highlight, idx) => (
-                      <li key={idx} className="flex items-start gap-3">
-                        <span className="text-accent-primary mt-1">•</span>
-                        <span className="text-text-secondary">{highlight}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
+              {project.key_highlights && project.key_highlights.length > 0 ? (
+                <Card className="bg-bg-tertiary border-gray-700">
+                  <CardHeader>
+                    <CardTitle>✨ 核心亮点</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-3">
+                      {project.key_highlights.map((highlight, idx) => (
+                        <li key={idx} className="flex items-start gap-3">
+                          <span className="text-accent-primary mt-1">•</span>
+                          <span className="text-text-secondary">{highlight}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+              ) : (
+                <Card className="bg-bg-tertiary border-gray-700">
+                  <CardHeader>
+                    <CardTitle>✨ 核心亮点</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-center py-8 text-text-tertiary">
+                      <div className="text-4xl mb-2">📝</div>
+                      <p>暂无核心亮点数据</p>
+                      <p className="text-sm mt-1">AI 分析将在下次更新时生成</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
 
               {/* 风险提示 */}
               {project.risk_flags.length > 0 && (
@@ -539,7 +563,8 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
           </div>
         )}
 
-        {activeTab === 'analysis' && project.ai_analysis && (
+        {activeTab === 'analysis' && (
+          project.ai_analysis ? (
           <div className="space-y-6">
             {/* AI分析说明 */}
             <div className="bg-blue-900/20 border border-blue-700/50 rounded-lg p-4">
@@ -648,6 +673,26 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
               </CardContent>
             </Card>
           </div>
+          ) : (
+            <Card className="bg-bg-tertiary border-gray-700">
+              <CardContent className="py-16">
+                <div className="text-center text-text-tertiary">
+                  <div className="text-6xl mb-4">🤖</div>
+                  <h3 className="text-xl font-bold text-text-primary mb-2">AI 分析尚未生成</h3>
+                  <p className="text-text-secondary mb-4">
+                    系统将在24小时内自动进行 AI 深度分析
+                  </p>
+                  <button 
+                    className="px-6 py-2 bg-accent-primary/20 text-accent-primary rounded-lg hover:bg-accent-primary/30 transition-colors"
+                    onClick={handleRefresh}
+                    disabled={refreshing}
+                  >
+                    {refreshing ? '🔄 正在刷新...' : '🔄 手动触发分析'}
+                  </button>
+                </div>
+              </CardContent>
+            </Card>
+          )
         )}
 
         {activeTab === 'data' && (
