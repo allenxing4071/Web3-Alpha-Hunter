@@ -145,14 +145,37 @@ async def trigger_manual_collection(
         if not row:
             raise HTTPException(status_code=404, detail=f"平台 {platform_id} 不存在")
         
-        # TODO: 实际触发Celery采集任务
-        # 这里先返回模拟响应
-        
-        return {
-            "success": True,
-            "message": f"已触发 {platform_id} 数据采集任务",
-            "task_id": f"manual-{platform_id}-{datetime.now().timestamp()}"
+        # 映射平台ID到Celery任务名称
+        task_mapping = {
+            "twitter": "app.tasks.collectors.collect_twitter_data",
+            "telegram": "app.tasks.collectors.collect_telegram_data",
+            "discord": "app.tasks.collectors.collect_discord_data",
+            "coingecko": "app.tasks.collectors.collect_coingecko_data",
         }
+        
+        task_name = task_mapping.get(platform_id)
+        if not task_name:
+            raise HTTPException(status_code=400, detail=f"不支持的平台: {platform_id}")
+        
+        # 实际触发Celery采集任务
+        try:
+            from app.tasks.celery_app import celery_app
+            task = celery_app.send_task(task_name)
+            
+            return {
+                "success": True,
+                "message": f"已触发 {platform_id} 数据采集任务",
+                "task_id": task.id,
+                "task_name": task_name,
+                "status": "pending"
+            }
+        except Exception as celery_error:
+            # Celery不可用，返回错误
+            print(f"⚠️ Celery不可用: {celery_error}")
+            raise HTTPException(
+                status_code=503, 
+                detail=f"Celery服务不可用，无法触发采集任务: {str(celery_error)}"
+            )
         
     except HTTPException:
         raise
