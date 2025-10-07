@@ -39,7 +39,9 @@ export default function ReviewPage() {
   const loadProjects = async () => {
     try {
       setLoading(true)
-      const response = await fetch(`${API_BASE_URL}/admin/pending-projects?limit=50`)
+      // 根据筛选条件加载不同状态的项目
+      const statusParam = filter === 'all' ? '' : '&status=pending'
+      const response = await fetch(`${API_BASE_URL}/admin/pending-projects?limit=50${statusParam}`)
       if (response.ok) {
         const data = await response.json()
         if (data.success) {
@@ -97,7 +99,7 @@ export default function ReviewPage() {
 
   useEffect(() => {
     loadProjects()
-  }, [])
+  }, [filter]) // 当filter改变时重新加载
 
   return (
     <AuthGuard requireAdmin>

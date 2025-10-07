@@ -589,13 +589,17 @@ async def update_ai_work_config(
 @router.get("/pending-projects")
 async def get_pending_projects(
     limit: int = 50,
+    status: str = None,  # 添加status参数
     db: Session = Depends(get_db)
 ) -> Dict[str, Any]:
     """获取待审核项目列表"""
     from sqlalchemy import text
     
     try:
-        result = db.execute(text("""
+        # 根据status参数决定查询条件
+        where_clause = "WHERE review_status = 'pending'" if status == 'pending' else ""
+        
+        result = db.execute(text(f"""
             SELECT 
                 id,
                 project_name,
@@ -610,7 +614,7 @@ async def get_pending_projects(
                 review_status,
                 created_at
             FROM projects_pending
-            WHERE review_status = 'pending'
+            {where_clause}
             ORDER BY ai_score DESC, created_at DESC
             LIMIT :limit
         """), {"limit": limit})
@@ -669,14 +673,14 @@ async def approve_pending_project(
         # 获取待审核项目
         result = db.execute(text("""
             SELECT 
-                project_name,
-                symbol,
-                description,
-                discovered_from,
-                ai_score,
-                ai_grade,
-                ai_extracted_info,
-                source_url
+                project_name,      -- 0
+                symbol,            -- 1
+                description,       -- 2
+                discovered_from,   -- 3
+                ai_score,          -- 4
+                ai_grade,          -- 5
+                ai_extracted_info, -- 6
+                source_url         -- 7
             FROM projects_pending
             WHERE id = :id AND review_status = 'pending'
         """), {"id": project_id})
@@ -685,19 +689,27 @@ async def approve_pending_project(
         if not row:
             raise HTTPException(status_code=404, detail="项目不存在或已审核")
         
-        # 创建正式项目（只使用projects表中存在的字段）
+        # 创建正式项目（使用正确的字段名）
         db.execute(text("""
             INSERT INTO projects (
-                name, description, overall_score,
+                project_name, symbol, description, 
+                discovered_from, blockchain, category,
+                website, overall_score, grade, status,
                 created_at, updated_at
             ) VALUES (
-                :name, :description, :overall_score,
+                :project_name, :symbol, :description,
+                :discovered_from, NULL, NULL,
+                :website, :overall_score, :grade, 'analyzed',
                 CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
             )
         """), {
-            "name": row[0],
+            "project_name": row[0],
+            "symbol": row[1],
             "description": row[2],
-            "overall_score": row[4]
+            "discovered_from": row[3],
+            "website": row[7],
+            "overall_score": row[4],
+            "grade": row[5]
         })
         
         # 更新待审核项目状态
