@@ -66,6 +66,10 @@ class Settings(BaseSettings):
     TWITTER_ACCESS_TOKEN_SECRET: Optional[str] = None
     TWITTER_BEARER_TOKEN: Optional[str] = None
     
+    # Apify (Twitter第三方采集)
+    APIFY_API_KEY: Optional[str] = None
+    APIFY_TWITTER_ACTOR_ID: str = "apify/twitter-scraper"
+    
     # Telegram API
     TELEGRAM_API_ID: Optional[str] = None
     TELEGRAM_API_HASH: Optional[str] = None

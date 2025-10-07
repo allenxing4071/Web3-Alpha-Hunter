@@ -32,13 +32,13 @@ celery_app.conf.beat_schedule = {
         "schedule": crontab(minute="*/30"),  # 每30分钟
     },
     
-    # 每5分钟采集Twitter数据（需要API配置）
+    # 每15分钟采集Twitter数据（Apify第三方服务）
     "collect-twitter-data": {
         "task": "app.tasks.collectors.collect_twitter_data",
-        "schedule": crontab(minute="*/5"),  # 每5分钟
+        "schedule": crontab(minute="*/15"),  # 每15分钟（平衡配额和数据新鲜度）
     },
     
-    # 每15分钟采集Telegram数据（需要API配置）
+    # 每15分钟采集Telegram数据（免费API）
     "collect-telegram-data": {
         "task": "app.tasks.collectors.collect_telegram_data",
         "schedule": crontab(minute="*/15"),  # 每15分钟

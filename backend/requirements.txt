@@ -30,6 +30,7 @@ telethon==1.33.1
 google-api-python-client==2.108.0
 beautifulsoup4==4.12.2
 playwright==1.40.0
+apify-client==1.6.0  # Twitter第三方采集服务
 
 # Web3/链上数据
 web3==6.11.3

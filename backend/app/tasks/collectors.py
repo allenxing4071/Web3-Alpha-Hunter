@@ -5,6 +5,7 @@ from loguru import logger
 from sqlalchemy import text
 from app.tasks.celery_app import celery_app
 from app.services.collectors.twitter import twitter_collector
+from app.services.collectors.twitter_apify import twitter_apify_collector
 from app.services.collectors.telegram import telegram_collector
 from app.services.collectors.coingecko import coingecko_collector
 from app.services.collectors.test_collector import (
@@ -13,6 +14,7 @@ from app.services.collectors.test_collector import (
 )
 from app.db import SessionLocal
 from app.models import Project
+from app.core.config import settings
 
 
 def update_platform_stats(db, platform: str, collected: int, discovered: int):
@@ -34,12 +36,28 @@ def update_platform_stats(db, platform: str, collected: int, discovered: int):
 
 @celery_app.task(name="app.tasks.collectors.collect_twitter_data")
 def collect_twitter_data():
-    """采集Twitter数据(定时任务)"""
+    """采集Twitter数据(定时任务) - 支持Apify和官方API双模式"""
     logger.info("🚀 Starting Twitter data collection task...")
     
     try:
+        # 智能选择采集器: 优先使用Apify，如果未配置则使用官方API
+        if settings.APIFY_API_KEY:
+            logger.info("📡 Using Apify Twitter collector")
+            collector = twitter_apify_collector
+        elif settings.TWITTER_BEARER_TOKEN:
+            logger.info("📡 Using official Twitter API collector")
+            collector = twitter_collector
+        else:
+            logger.error("❌ No Twitter collector configured (need APIFY_API_KEY or TWITTER_BEARER_TOKEN)")
+            return {
+                "success": False,
+                "error": "No Twitter API credentials configured",
+                "projects_found": 0,
+                "projects_saved": 0
+            }
+        
         # 真实采集 - 不使用mock数据
-        projects = twitter_collector.collect_and_extract(hours=1)
+        projects = collector.collect_and_extract(hours=1)
         
         if not projects or len(projects) == 0:
             logger.warning("⚠️ No data from Twitter API - check API configuration")
