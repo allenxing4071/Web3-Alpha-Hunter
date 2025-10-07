@@ -6,7 +6,6 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuthStore } from '@/store/authStore'
 import { usersApi } from '@/lib/api'
 
@@ -58,7 +57,7 @@ export default function UsersPage() {
     try {
       setLoading(true)
       const response = await usersApi.list()
-      setUsers(response)
+      setUsers(response.data || response)
     } catch (error) {
       console.error('加载用户失败:', error)
       setError('加载用户列表失败')
@@ -167,10 +166,10 @@ export default function UsersPage() {
 
   if (!isAuthenticated || !isAdmin()) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-900">
+      <div className="min-h-screen flex items-center justify-center bg-bg-primary">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto mb-4"></div>
-          <p className="text-gray-400">验证权限中...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent-primary mx-auto mb-4"></div>
+          <p className="text-text-secondary">验证权限中...</p>
         </div>
       </div>
     )
@@ -178,37 +177,46 @@ export default function UsersPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-900">
+      <div className="min-h-screen flex items-center justify-center bg-bg-primary">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto mb-4"></div>
-          <p className="text-gray-400">加载用户数据...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent-primary mx-auto mb-4"></div>
+          <p className="text-text-secondary">加载用户数据...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-bg-primary p-8">
-      <div className="max-w-6xl mx-auto">
-        <Card className="bg-gray-800 border-gray-700">
-          <CardHeader className="border-b border-gray-700">
-            <div className="flex justify-between items-center">
-              <CardTitle className="text-2xl text-white">
-                👥 用户管理 (仅管理员可见)
-              </CardTitle>
-              <button
-                onClick={() => {
-                  resetForm()
-                  setShowAddForm(!showAddForm)
-                }}
-                className="px-4 py-2 bg-accent-primary hover:bg-accent-primary/80 text-white rounded-lg transition"
-              >
-                {showAddForm ? '取消' : '+ 添加用户'}
-              </button>
-            </div>
-          </CardHeader>
+    <div className="min-h-screen bg-bg-primary p-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-accent-primary to-accent-purple bg-clip-text text-transparent">
+            👥 用户管理
+          </h1>
+          <p className="text-text-secondary">
+            管理系统用户与权限（仅管理员可见）
+          </p>
+        </div>
 
-          <CardContent className="p-6">
+        <div className="bg-bg-tertiary border border-gray-700 rounded-lg overflow-hidden">
+          {/* Top Bar */}
+          <div className="px-6 py-4 border-b border-gray-700 flex justify-between items-center">
+            <div className="text-text-primary font-semibold">
+              用户列表 · 共 {users.length} 个用户
+            </div>
+            <button
+              onClick={() => {
+                resetForm()
+                setShowAddForm(!showAddForm)
+              }}
+              className="px-4 py-2 bg-accent-primary hover:bg-accent-primary/80 text-white rounded-lg transition-colors"
+            >
+              {showAddForm ? '✕ 取消' : '+ 添加用户'}
+            </button>
+          </div>
+
+          <div className="p-6">
             {/* 成功/错误提示 */}
             {error && (
               <div className="mb-4 p-4 bg-red-500/20 border border-red-500 text-red-200 rounded-lg">
@@ -224,9 +232,9 @@ export default function UsersPage() {
 
             {/* 添加/编辑表单 */}
             {showAddForm && (
-              <form onSubmit={handleSubmit} className="mb-6 p-6 bg-gray-700/50 rounded-lg border border-gray-600">
-                <h3 className="text-lg font-semibold text-white mb-4">
-                  {editingUser ? '编辑用户' : '添加新用户'}
+              <form onSubmit={handleSubmit} className="mb-6 p-6 bg-bg-secondary rounded-lg border border-gray-700">
+                <h3 className="text-lg font-semibold text-text-primary mb-4">
+                  {editingUser ? '✏️ 编辑用户' : '➕ 添加新用户'}
                 </h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -304,42 +312,42 @@ export default function UsersPage() {
             )}
 
             {/* 用户列表 */}
-            <div className="bg-gray-700/30 rounded-lg overflow-hidden">
+            <div className="bg-bg-secondary rounded-lg border border-gray-700 overflow-hidden">
               <table className="w-full">
-                <thead className="bg-gray-700">
+                <thead className="bg-bg-tertiary">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
                       用户名
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
                       邮箱
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
                       角色
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
                       创建时间
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
                       操作
                     </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-700">
                   {users.map((user) => (
-                    <tr key={user.id} className="hover:bg-gray-700/50 transition">
+                    <tr key={user.id} className="hover:bg-bg-tertiary/50 transition">
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-white flex items-center gap-2">
+                        <div className="text-sm font-medium text-text-primary flex items-center gap-2">
                           {user.username}
                           {user.role === 'admin' && (
-                            <span className="px-2 py-0.5 text-xs bg-red-500 text-white rounded">
+                            <span className="px-2 py-0.5 text-xs bg-red-500/20 text-red-400 border border-red-500/50 rounded">
                               管理员
                             </span>
                           )}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-300">{user.email}</div>
+                        <div className="text-sm text-text-secondary">{user.email}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span
@@ -353,7 +361,7 @@ export default function UsersPage() {
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-400">
+                        <div className="text-sm text-text-tertiary">
                           {new Date(user.created_at).toLocaleString('zh-CN')}
                         </div>
                       </td>
@@ -391,19 +399,20 @@ export default function UsersPage() {
               </table>
 
               {users.length === 0 && (
-                <div className="text-center py-12 text-gray-400">
-                  暂无用户数据
+                <div className="text-center py-12 text-text-secondary">
+                  <div className="text-6xl mb-4">👥</div>
+                  <p>暂无用户数据</p>
                 </div>
               )}
             </div>
 
-            <div className="mt-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
-              <p className="text-sm text-blue-200">
-                <strong>提示:</strong> 管理员用户不能被删除。至少需要保留一个用户账号。
+            <div className="mt-6 p-4 bg-info/10 border border-info/50 rounded-lg">
+              <p className="text-sm text-info">
+                <strong>💡 提示:</strong> 管理员用户不能被删除。至少需要保留一个用户账号。
               </p>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     </div>
   )
