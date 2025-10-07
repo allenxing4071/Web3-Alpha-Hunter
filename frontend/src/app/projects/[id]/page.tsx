@@ -241,7 +241,7 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
   }
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen bg-bg-primary p-8">
       <div className="max-w-7xl mx-auto">
         {/* 返回按钮 */}
         <button
