@@ -179,6 +179,48 @@ class TelegramCollector:
         logger.info(f"✅ Total Telegram messages collected: {len(all_messages)}")
         return all_messages
     
+    def _extract_project_name(self, text: str, urls: List[str], telegram_links: List[str]) -> str:
+        """从文本中智能提取项目名称
+        
+        Args:
+            text: 消息文本
+            urls: URL列表
+            telegram_links: Telegram链接列表
+            
+        Returns:
+            项目名称
+        """
+        # 策略1: 从URL提取域名
+        if urls:
+            try:
+                from urllib.parse import urlparse
+                domain = urlparse(urls[0]).netloc
+                # 移除www.和.com等
+                name = domain.replace('www.', '').split('.')[0]
+                if len(name) > 2:
+                    return name.capitalize()
+            except:
+                pass
+        
+        # 策略2: 从Telegram链接提取
+        if telegram_links:
+            return telegram_links[0].replace('_', ' ').title()
+        
+        # 策略3: 从文本中查找大写单词或$符号后的内容
+        import re
+        # 查找$TOKEN格式
+        token_match = re.search(r'\$([A-Z]{2,10})', text)
+        if token_match:
+            return token_match.group(1)
+        
+        # 查找连续大写单词
+        caps_match = re.search(r'\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,3})\b', text)
+        if caps_match:
+            return caps_match.group(1)
+        
+        # 策略4: 使用频道名称作为后备
+        return "Crypto Project"
+    
     def extract_project_info(self, message: Dict) -> Optional[Dict]:
         """从消息中提取项目信息
         
@@ -214,7 +256,15 @@ class TelegramCollector:
         if not urls and not contracts and not found_keywords:
             return None
         
+        # 智能提取项目名称
+        project_name = self._extract_project_name(text, urls, telegram_links)
+        
+        # 提取项目描述（使用消息文本）
+        description = text[:500] if text else None
+        
         return {
+            "name": project_name,  # ✅ 新增：项目名称
+            "description": description,  # ✅ 新增：项目描述
             "message_id": message["message_id"],
             "discovered_at": message["date"],
             "source": "telegram",
