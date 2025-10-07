@@ -64,8 +64,8 @@ export function Navbar() {
 
   // 管理员菜单项
   const adminNavItems = [
-    { href: '/admin', label: '系统管理', icon: '⚙️' },
-    { href: '/review', label: '项目审核', icon: '🎯' },
+    { href: '/admin', label: 'AI助理配置', icon: '⚙️' },
+    { href: '/review', label: 'AI项目审核', icon: '🎯' },
     { href: '/users', label: '用户管理', icon: '👥' },
     { href: '/database', label: '数据库管理', icon: '🗄️' },
   ]
