@@ -8,10 +8,6 @@ from app.services.collectors.twitter import twitter_collector
 from app.services.collectors.twitter_apify import twitter_apify_collector
 from app.services.collectors.telegram import telegram_collector
 from app.services.collectors.coingecko import coingecko_collector
-from app.services.collectors.test_collector import (
-    mock_twitter_collector, 
-    mock_telegram_collector
-)
 from app.db import SessionLocal
 from app.models import Project
 from app.core.config import settings
