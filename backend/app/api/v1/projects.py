@@ -195,13 +195,23 @@ async def get_project(
     ai_analysis_data = None
     if ai_analysis:
         ai_analysis_data = {
-            "whitepaper_summary": ai_analysis.whitepaper_summary,
-            "key_features": ai_analysis.key_features,
-            "sentiment_score": float(ai_analysis.sentiment_score) if ai_analysis.sentiment_score else None,
-            "sentiment_label": ai_analysis.sentiment_label,
-            "investment_suggestion": ai_analysis.investment_suggestion,
-            "position_size": ai_analysis.position_size,
-            "entry_timing": ai_analysis.entry_timing,
+            "summary": ai_analysis.whitepaper_summary or "暂无分析摘要",
+            "key_features": ai_analysis.key_features or [],
+            "similar_projects": [],  # 暂无相似项目数据
+            "sentiment": {
+                "score": float(ai_analysis.sentiment_score) if ai_analysis.sentiment_score else 0.5,
+                "label": ai_analysis.sentiment_label or "中性",
+            },
+            "risk_assessment": {
+                "flags": ai_analysis.risk_flags or [],
+                "scam_probability": float(ai_analysis.scam_probability) if ai_analysis.scam_probability else 0.0,
+            },
+            "investment_suggestion": {
+                "action": ai_analysis.investment_suggestion or "观望",
+                "position_size": ai_analysis.position_size or "小仓位",
+                "entry_timing": ai_analysis.entry_timing or "等待确认",
+                "stop_loss": float(ai_analysis.stop_loss_percentage) if ai_analysis.stop_loss_percentage else 0.0,
+            },
         }
     
     # 从AI分析中获取highlights和风险
