@@ -169,10 +169,26 @@ async def get_top_projects(
     db: Session = Depends(get_db)
 ) -> Dict[str, Any]:
     """
-    获取Top N高分项目
+    获取Top N高分项目（去重，相同名称只保留评分最高的）
     """
     try:
         result = db.execute(text("""
+            WITH ranked_projects AS (
+                SELECT 
+                    id,
+                    project_name,
+                    symbol,
+                    grade,
+                    overall_score,
+                    category,
+                    blockchain,
+                    team_score,
+                    tech_score,
+                    community_score,
+                    ROW_NUMBER() OVER (PARTITION BY LOWER(TRIM(project_name)) ORDER BY overall_score DESC, created_at DESC) as rn
+                FROM projects
+                WHERE overall_score IS NOT NULL
+            )
             SELECT 
                 id,
                 project_name,
@@ -184,9 +200,9 @@ async def get_top_projects(
                 team_score,
                 tech_score,
                 community_score
-            FROM projects
-            WHERE overall_score IS NOT NULL
-            ORDER BY overall_score DESC, created_at DESC
+            FROM ranked_projects
+            WHERE rn = 1
+            ORDER BY overall_score DESC
             LIMIT :limit
         """).bindparams(limit=limit))
         
