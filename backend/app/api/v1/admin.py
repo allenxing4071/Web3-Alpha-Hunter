@@ -689,17 +689,31 @@ async def approve_pending_project(
         if not row:
             raise HTTPException(status_code=404, detail="项目不存在或已审核")
         
-        # 创建正式项目（使用正确的字段名）
+        # 从ai_extracted_info中提取blockchain和category
+        import json
+        ai_info = row[6] if row[6] else {}
+        if isinstance(ai_info, str):
+            ai_info = json.loads(ai_info)
+        
+        blockchain = ai_info.get('blockchain') if ai_info else None
+        category = ai_info.get('category') if ai_info else None
+        twitter = ai_info.get('twitter') if ai_info else None
+        telegram = ai_info.get('telegram') if ai_info else None
+        logo_url = ai_info.get('logo_url') if ai_info else None
+        
+        # 创建正式项目（包含完整信息）
         db.execute(text("""
             INSERT INTO projects (
                 project_name, symbol, description, 
                 discovered_from, blockchain, category,
-                website, overall_score, grade, status,
+                website, twitter_handle, telegram_channel,
+                logo_url, overall_score, grade, status,
                 created_at, updated_at
             ) VALUES (
                 :project_name, :symbol, :description,
-                :discovered_from, NULL, NULL,
-                :website, :overall_score, :grade, 'analyzed',
+                :discovered_from, :blockchain, :category,
+                :website, :twitter_handle, :telegram_channel,
+                :logo_url, :overall_score, :grade, 'analyzed',
                 CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
             )
         """), {
@@ -707,7 +721,12 @@ async def approve_pending_project(
             "symbol": row[1],
             "description": row[2],
             "discovered_from": row[3],
+            "blockchain": blockchain,
+            "category": category,
             "website": row[7],
+            "twitter_handle": twitter,
+            "telegram_channel": telegram,
+            "logo_url": logo_url,
             "overall_score": row[4],
             "grade": row[5]
         })

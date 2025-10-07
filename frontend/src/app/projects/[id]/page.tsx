@@ -149,8 +149,8 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
         symbol: data.symbol,
         grade: data.grade || '?',
         overall_score: data.overall_score || 0,
-        category: data.category || null,
-        blockchain: data.blockchain || null,
+        category: data.category || 'Unknown',
+        blockchain: data.blockchain || 'Unknown',
         description: data.description || '',
         logo_url: data.logo_url,
         website: data.website,
@@ -239,6 +239,9 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
       </div>
     )
   }
+
+  // 调试：打印项目数据
+  console.log('Project Data:', project)
 
   return (
     <div className="min-h-screen bg-bg-primary p-8">
