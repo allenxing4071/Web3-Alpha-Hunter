@@ -44,8 +44,10 @@ async def list_projects(
     - **limit**: 每页数量
     """
     
-    # 构建查询
-    query = db.query(Project).filter(Project.overall_score >= min_score)
+    # 构建查询（包含所有项目，包括未评分的）
+    query = db.query(Project).filter(
+        (Project.overall_score >= min_score) | (Project.overall_score.is_(None))
+    )
     
     # 应用筛选
     if grade:
