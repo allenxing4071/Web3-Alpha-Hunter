@@ -167,7 +167,7 @@ export default function ProjectsPage() {
         // 转换后端数据格式为前端Project类型
         const projects: Project[] = projectsData.map((p: any) => ({
           project_id: p.project_id || String(p.id),
-          name: p.project_name,
+          name: p.name,  // ✅ 修复: API返回的是 name 而不是 project_name
           symbol: p.symbol,
           grade: p.grade || '?',
           overall_score: p.overall_score || 0,
@@ -176,16 +176,16 @@ export default function ProjectsPage() {
           description: p.description || '',
           logo_url: p.logo_url,
           website: p.website,
-          social_links: {
-            twitter: p.twitter_handle,
-            telegram: p.telegram_channel,
-            github: p.github_repo,
+          social_links: p.social_links || {  // ✅ 修复: 直接使用 social_links 对象
+            twitter: null,
+            telegram: null,
+            github: null,
           },
-          key_highlights: [], // 后续可从AI分析获取
-          risk_flags: [],
-          metrics: {},
-          first_discovered_at: p.first_discovered_at || p.created_at,
-          last_updated_at: p.last_updated_at || p.updated_at,
+          key_highlights: p.key_highlights || [],
+          risk_flags: p.risk_flags || [],
+          metrics: p.metrics || {},
+          first_discovered_at: p.first_discovered_at,
+          last_updated_at: p.last_updated_at,
         }))
         
         setAllProjects(projects)
