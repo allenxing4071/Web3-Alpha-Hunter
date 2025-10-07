@@ -12,8 +12,8 @@ export interface Project {
   symbol?: string
   grade: ProjectGrade
   overall_score: number
-  category?: ProjectCategory
-  blockchain?: string
+  category?: ProjectCategory | null
+  blockchain?: string | null
   description?: string
   logo_url?: string
   website?: string
