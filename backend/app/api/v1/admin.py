@@ -99,12 +99,12 @@ async def control_celery_worker(action: str) -> Dict[str, Any]:
         
         else:  # start
             # 启动Celery Worker
-            # 获取项目根目录
+            # 获取backend目录（当前文件所在的backend目录）
             current_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
             
-            # 启动命令
+            # 使用python3 -m celery确保使用正确的Python环境
             cmd = [
-                "celery", "-A", "app.tasks.celery_app", "worker",
+                "python3", "-m", "celery", "-A", "app.tasks.celery_app", "worker",
                 "--loglevel=info",
                 "--logfile=/tmp/celery_worker.log"
             ]
@@ -167,7 +167,7 @@ async def control_celery_beat(action: str) -> Dict[str, Any]:
             current_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
             
             cmd = [
-                "celery", "-A", "app.tasks.celery_app", "beat",
+                "python3", "-m", "celery", "-A", "app.tasks.celery_app", "beat",
                 "--loglevel=info",
                 "--logfile=/tmp/celery_beat.log"
             ]
