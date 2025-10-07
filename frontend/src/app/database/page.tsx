@@ -212,53 +212,58 @@ export default function DatabasePage() {
 
   return (
     <AuthGuard requireAdmin>
-      <div className="min-h-screen bg-bg-primary pb-8">
-        {/* Header */}
-        <div className="bg-bg-tertiary border-b border-gray-800 sticky top-0 z-10">
-          <div className="max-w-7xl mx-auto px-4 py-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                  🗄️ 数据库管理
-                </h1>
-                <p className="text-text-secondary mt-1">查看和管理系统数据库表结构与数据</p>
-              </div>
-              {user && (
-                <div className="text-sm text-text-secondary">
-                  欢迎，<span className="text-accent-primary font-medium">{user.username}</span>
-                  {user.role === 'admin' && (
-                    <span className="ml-2 px-2 py-1 bg-red-500/20 text-red-400 rounded text-xs">管理员</span>
-                  )}
-                </div>
-              )}
-            </div>
+      <div className="min-h-screen bg-bg-primary p-6">
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-accent-primary to-accent-purple bg-clip-text text-transparent">
+              🗄️ 数据库管理
+            </h1>
+            <p className="text-text-secondary">
+              查看和管理系统数据库表结构与数据
+            </p>
           </div>
-        </div>
 
-        <div className="max-w-7xl mx-auto px-4 py-6">
+          <div>
           {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 p-6 rounded-xl border border-purple-500/20 hover:border-purple-500/40 transition-colors">
-              <div className="text-4xl font-bold text-white">{stats.tableCount}</div>
-              <div className="text-sm text-gray-400 mt-2">数据表</div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div className="bg-bg-tertiary border border-gray-700 rounded-lg p-6 hover:border-accent-primary transition-all">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-text-secondary text-sm font-medium">数据表</h3>
+                <span className="text-2xl">📊</span>
+              </div>
+              <div className="text-3xl font-bold text-accent-primary mb-2">{stats.tableCount}</div>
+              <p className="text-text-tertiary text-xs">系统表总数</p>
             </div>
-            <div className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 p-6 rounded-xl border border-blue-500/20 hover:border-blue-500/40 transition-colors">
-              <div className="text-4xl font-bold text-white">{stats.projectCount}</div>
-              <div className="text-sm text-gray-400 mt-2">示例项目</div>
+            <div className="bg-bg-tertiary border border-gray-700 rounded-lg p-6 hover:border-success transition-all">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-text-secondary text-sm font-medium">示例项目</h3>
+                <span className="text-2xl">📋</span>
+              </div>
+              <div className="text-3xl font-bold text-success mb-2">{stats.projectCount}</div>
+              <p className="text-text-tertiary text-xs">数据行数</p>
             </div>
-            <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 p-6 rounded-xl border border-green-500/20 hover:border-green-500/40 transition-colors">
-              <div className="text-2xl font-bold text-white">{stats.databaseType}</div>
-              <div className="text-sm text-gray-400 mt-2">数据库类型</div>
+            <div className="bg-bg-tertiary border border-gray-700 rounded-lg p-6 hover:border-info transition-all">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-text-secondary text-sm font-medium">数据库类型</h3>
+                <span className="text-2xl">🗄️</span>
+              </div>
+              <div className="text-xl font-bold text-info mb-2">{stats.databaseType}</div>
+              <p className="text-text-tertiary text-xs">当前使用</p>
             </div>
-            <div className="bg-gradient-to-br from-orange-500/10 to-red-500/10 p-6 rounded-xl border border-orange-500/20 hover:border-orange-500/40 transition-colors">
-              <div className="text-4xl font-bold text-white">{stats.databasePort}</div>
-              <div className="text-sm text-gray-400 mt-2">端口</div>
+            <div className="bg-bg-tertiary border border-gray-700 rounded-lg p-6 hover:border-warning transition-all">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-text-secondary text-sm font-medium">端口</h3>
+                <span className="text-2xl">🔌</span>
+              </div>
+              <div className="text-3xl font-bold text-warning mb-2">{stats.databasePort}</div>
+              <p className="text-text-tertiary text-xs">监听端口</p>
             </div>
           </div>
 
           {/* Tabs - 分类显示 */}
-          <div className="bg-bg-tertiary rounded-xl border border-gray-800 overflow-hidden">
-            <div className="p-4 border-b border-gray-800 max-h-96 overflow-y-auto space-y-4">
+          <div className="bg-bg-tertiary rounded-lg border border-gray-700 overflow-hidden">
+            <div className="p-4 border-b border-gray-700 max-h-96 overflow-y-auto space-y-4">
               {groupedTables.map(group => (
                 <div key={group.key} className="space-y-2">
                   {/* 分类标题 */}
@@ -318,8 +323,8 @@ export default function DatabasePage() {
               </div>
 
               {/* Table Structure */}
-              <div className="bg-gray-900/50 rounded-xl border border-gray-800 overflow-hidden">
-                <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 px-6 py-4 border-b border-gray-800 flex items-center justify-between">
+              <div className="bg-bg-secondary rounded-lg border border-gray-700 overflow-hidden">
+                <div className="bg-bg-tertiary px-6 py-4 border-b border-gray-700 flex items-center justify-between">
                   <h4 className="text-lg font-bold text-white">表结构</h4>
                   {tableInfo && (
                     <span className="text-sm text-gray-400">
@@ -391,8 +396,8 @@ export default function DatabasePage() {
               </div>
 
               {/* Table Data */}
-              <div className="mt-6 bg-gray-900/50 rounded-xl border border-gray-800 overflow-hidden">
-                <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 px-6 py-4 border-b border-gray-800 flex items-center justify-between">
+              <div className="mt-6 bg-bg-secondary rounded-lg border border-gray-700 overflow-hidden">
+                <div className="bg-bg-tertiary px-6 py-4 border-b border-gray-700 flex items-center justify-between">
                   <h4 className="text-lg font-bold text-white">示例数据</h4>
                   {tableData && (
                     <div className="text-sm text-gray-400">
@@ -446,7 +451,7 @@ export default function DatabasePage() {
                     </div>
 
                     {/* Pagination */}
-                    <div className="bg-gray-900/80 px-6 py-4 border-t border-gray-800 flex items-center justify-between">
+                    <div className="bg-bg-tertiary px-6 py-4 border-t border-gray-700 flex items-center justify-between">
                       <div className="flex items-center gap-4">
                         <span className="text-sm text-gray-400">每页显示:</span>
                         <select
@@ -515,6 +520,7 @@ export default function DatabasePage() {
                 )}
               </div>
             </div>
+          </div>
           </div>
         </div>
       </div>
