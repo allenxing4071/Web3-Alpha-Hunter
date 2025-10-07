@@ -205,7 +205,27 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
     setTimeout(() => {
       loadProjectData()
       router.refresh()
+      setRefreshing(false)
     }, 800)
+  }
+  
+  // 复制项目链接
+  const handleCopyLink = async () => {
+    try {
+      const url = window.location.href
+      await navigator.clipboard.writeText(url)
+      alert('✅ 项目链接已复制到剪贴板！')
+    } catch (err) {
+      alert('❌ 复制失败，请手动复制')
+    }
+  }
+  
+  // 分享到Twitter
+  const handleShareTwitter = () => {
+    if (!project) return
+    const text = `发现优质${project.category}项目: ${project.name} ($${project.symbol})\n评级: ${project.grade} | 评分: ${project.overall_score}/100\n\n${project.description}\n\n`
+    const url = window.location.href
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank')
   }
 
   if (loading) {
@@ -437,6 +457,22 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
                       📱 Telegram
                     </a>
                   )}
+                  
+                  {/* 分享功能 */}
+                  <div className="pt-2 border-t border-gray-700 space-y-2">
+                    <button
+                      onClick={handleCopyLink}
+                      className="w-full px-4 py-2 bg-bg-secondary border border-gray-700 rounded-lg hover:border-accent-purple transition-colors text-left"
+                    >
+                      🔗 复制项目链接
+                    </button>
+                    <button
+                      onClick={handleShareTwitter}
+                      className="w-full px-4 py-2 bg-bg-secondary border border-gray-700 rounded-lg hover:border-accent-primary transition-colors text-left"
+                    >
+                      🐦 分享到Twitter
+                    </button>
+                  </div>
                 </CardContent>
               </Card>
 

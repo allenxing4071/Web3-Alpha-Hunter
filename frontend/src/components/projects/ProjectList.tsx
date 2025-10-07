@@ -3,6 +3,7 @@
  */
 
 import { ProjectCard } from "./ProjectCard"
+import { ProjectCardSkeleton } from "./ProjectCardSkeleton"
 import { Project } from "@/types/project"
 
 interface ProjectListProps {
@@ -15,10 +16,7 @@ export function ProjectList({ projects, loading }: ProjectListProps) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[...Array(6)].map((_, i) => (
-          <div
-            key={i}
-            className="h-96 bg-bg-tertiary border border-gray-700 rounded-lg animate-pulse"
-          />
+          <ProjectCardSkeleton key={i} />
         ))}
       </div>
     )

@@ -8,6 +8,9 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'Web3 Alpha Hunter - AI驱动的Web3项目发现平台',
   description: '通过AI技术自动化发现和分析早期优质Web3项目',
+  icons: {
+    icon: '/favicon.svg',
+  },
 }
 
 export default function RootLayout({

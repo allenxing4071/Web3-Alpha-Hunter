@@ -7,6 +7,7 @@
 import { useState, useEffect, useMemo } from "react"
 import { ProjectList } from "@/components/projects/ProjectList"
 import { ProjectFilter, FilterOptions } from "@/components/projects/ProjectFilter"
+import { ProjectCardSkeleton } from "@/components/projects/ProjectCardSkeleton"
 import { Project } from "@/types/project"
 import { API_BASE_URL } from "@/lib/config"
 
