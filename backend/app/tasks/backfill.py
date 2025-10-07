@@ -81,14 +81,23 @@ def backfill_existing_projects():
                         logger.warning(f"  ⚠️ Failed to get CoinGecko details, falling back to AI")
                 
                 # 方法2：使用AI补全（如果方法1失败或不适用）
-                if not enriched_data:
+                if not enriched_data or not enriched_data.get('blockchain'):
                     project_data = {
                         'name': project.project_name,
                         'description': project.description or '',
                         'symbol': project.symbol,
                     }
-                    enriched_data = data_enricher.enrich_project(project_data)
+                    ai_enriched = data_enricher.enrich_project(project_data)
                     logger.info(f"  🤖 Used AI enrichment")
+                    
+                    # 合并AI推理的数据到enriched_data
+                    if not enriched_data:
+                        enriched_data = ai_enriched
+                    else:
+                        # 只填充CoinGecko没有获取到的字段
+                        for key, value in ai_enriched.items():
+                            if not enriched_data.get(key) and value:
+                                enriched_data[key] = value
                 
                 # 更新项目字段（只更新缺失的字段）
                 updated = False
