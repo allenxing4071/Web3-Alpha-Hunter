@@ -273,7 +273,7 @@ class TwitterApifyCollector:
         return all_tweets
     
     def extract_project_info(self, tweet: Dict) -> Optional[Dict]:
-        """从推文中提取项目信息
+        """从推文中提取项目信息（放宽识别规则以提升发现率）
         
         Args:
             tweet: 推文数据
@@ -283,19 +283,38 @@ class TwitterApifyCollector:
         """
         text = tweet.get("text", "").lower()
         
-        # 检查是否包含项目相关关键词
+        # 扩大项目相关关键词列表（放宽门槛）
         project_indicators = [
             "presale", "launch", "airdrop", "mint", 
-            "token", "ico", "ido", "whitelist"
+            "token", "ico", "ido", "whitelist",
+            "defi", "nft", "web3", "dapp", "protocol",
+            "testnet", "mainnet", "blockchain", "crypto",
+            "metaverse", "dao", "gamefi", "staking"
         ]
         
-        if not any(indicator in text for indicator in project_indicators):
+        # 降低要求：只要包含任一关键词即可
+        has_keyword = any(indicator in text for indicator in project_indicators)
+        
+        # 或者推文来自高影响力账号（粉丝>10k）
+        high_influence = tweet.get("author_followers", 0) > 10000
+        
+        # 或者推文参与度高（点赞+转发>100）
+        high_engagement = (tweet.get("likes", 0) + tweet.get("retweets", 0)) > 100
+        
+        # 三个条件满足任一即可（大幅降低门槛）
+        if not (has_keyword or high_influence or high_engagement):
             return None
         
-        # 提取项目名称 (简化版)
+        # 提取项目名称（如果提取失败，使用作者名称作为临时名称）
         project_name = self._extract_project_name(tweet)
         if not project_name:
-            return None
+            # 降级方案：使用作者用户名或第一个hashtag
+            project_name = tweet.get("author_username", "Unknown Project")
+            # 如果有hashtag，优先使用
+            entities = tweet.get("entities", {})
+            hashtags = entities.get("hashtags", [])
+            if hashtags:
+                project_name = hashtags[0].get("tag", project_name)
         
         # 计算质量分数
         quality_score = self._calculate_quality_score(tweet)

@@ -27,34 +27,59 @@ class TelegramCollector:
     ]
     
     def __init__(self):
-        """初始化Telegram客户端"""
-        if not settings.TELEGRAM_API_ID or not settings.TELEGRAM_API_HASH:
+        """初始化Telegram采集器（延迟初始化client以避免fork问题）"""
+        self._client = None
+        self._credentials_available = bool(settings.TELEGRAM_API_ID and settings.TELEGRAM_API_HASH)
+        
+        if not self._credentials_available:
             logger.warning("Telegram API credentials not configured")
-            self.client = None
-            return
+        else:
+            logger.info("✅ Telegram collector initialized (client will be created on demand)")
+    
+    def _get_client(self):
+        """懒加载：每次使用时创建新的client实例（避免Celery fork问题）"""
+        if not self._credentials_available:
+            return None
         
         try:
-            self.client = TelegramClient(
+            # 每次都创建新实例，避免fork后的文件描述符问题
+            client = TelegramClient(
                 'web3_alpha_hunter',
                 settings.TELEGRAM_API_ID,
                 settings.TELEGRAM_API_HASH
             )
-            logger.info("✅ Telegram client initialized")
+            logger.debug("🔌 Created new Telegram client instance")
+            return client
         except Exception as e:
-            logger.error(f"Failed to initialize Telegram client: {e}")
-            self.client = None
+            logger.error(f"Failed to create Telegram client: {e}")
+            return None
+    
+    @property
+    def client(self):
+        """兼容性属性：返回client（懒加载）"""
+        if self._client is None:
+            self._client = self._get_client()
+        return self._client
     
     async def start_client(self):
-        """启动Telegram客户端"""
-        if not self.client:
+        """启动Telegram客户端（每次采集时重新创建client）"""
+        # 获取新的client实例
+        client = self._get_client()
+        if not client:
             return False
         
         try:
-            await self.client.start()
+            await client.start()
             logger.info("✅ Telegram client connected")
+            self._client = client  # 保存已连接的client
             return True
         except Exception as e:
             logger.error(f"Failed to start Telegram client: {e}")
+            if client:
+                try:
+                    await client.disconnect()
+                except:
+                    pass
             return False
     
     async def get_channel_messages(
@@ -202,7 +227,7 @@ class TelegramCollector:
         }
     
     async def collect_and_extract(self, hours: int = 1) -> List[Dict]:
-        """采集消息并提取项目信息
+        """采集消息并提取项目信息（每次都创建新client避免fork问题）
         
         Args:
             hours: 监控过去N小时
@@ -210,25 +235,42 @@ class TelegramCollector:
         Returns:
             项目信息列表
         """
+        if not self._credentials_available:
+            logger.error("Telegram API credentials not configured")
+            return []
+        
         logger.info(f"🔍 Starting Telegram collection (last {hours} hours)...")
         
-        # 1. 监控所有频道
-        messages = await self.monitor_all_channels(hours=hours)
+        # 创建并启动新的客户端（避免复用旧的client）
+        self._client = None  # 重置client
+        if not await self.start_client():
+            logger.error("Failed to start Telegram client")
+            return []
         
-        # 2. 提取项目信息
-        projects = []
-        for message in messages:
-            project_info = self.extract_project_info(message)
-            if project_info:
-                projects.append(project_info)
+        try:
+            # 1. 监控所有频道
+            messages = await self.monitor_all_channels(hours=hours)
         
-        logger.info(f"✅ Extracted {len(projects)} potential projects from Telegram")
+            # 2. 提取项目信息
+            projects = []
+            for message in messages:
+                project_info = self.extract_project_info(message)
+                if project_info:
+                    projects.append(project_info)
+            
+            logger.info(f"✅ Extracted {len(projects)} potential projects from Telegram")
+            return projects
         
-        # 关闭客户端
-        if self.client:
-            await self.client.disconnect()
-        
-        return projects
+        finally:
+            # 确保client被正确关闭
+            if self._client:
+                try:
+                    await self._client.disconnect()
+                    logger.debug("🔌 Telegram client disconnected")
+                except Exception as e:
+                    logger.warning(f"Error disconnecting Telegram client: {e}")
+                finally:
+                    self._client = None
 
 
 # 全局采集器实例
