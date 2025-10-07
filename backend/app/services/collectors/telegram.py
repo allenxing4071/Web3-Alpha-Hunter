@@ -42,13 +42,18 @@ class TelegramCollector:
             return None
         
         try:
+            import os
+            # 使用进程ID作为session文件名，避免多进程冲突
+            pid = os.getpid()
+            session_name = f'web3_alpha_hunter_worker_{pid}'
+            
             # 每次都创建新实例，避免fork后的文件描述符问题
             client = TelegramClient(
-                'web3_alpha_hunter',
+                session_name,
                 settings.TELEGRAM_API_ID,
                 settings.TELEGRAM_API_HASH
             )
-            logger.debug("🔌 Created new Telegram client instance")
+            logger.debug(f"🔌 Created new Telegram client instance (session: {session_name})")
             return client
         except Exception as e:
             logger.error(f"Failed to create Telegram client: {e}")
