@@ -431,45 +431,57 @@ export default function AdminPage() {
 
           {/* Celery系统状态 */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <Card className="bg-bg-tertiary border-gray-700">
+            <Card className={`border-2 ${celeryRunning ? 'border-success' : 'border-gray-700'} bg-bg-tertiary`}>
               <CardHeader>
-                <CardTitle className="text-base">Celery Worker</CardTitle>
+                <CardTitle className="text-lg">Celery Worker</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className={`w-3 h-3 rounded-full ${celeryRunning ? 'bg-success animate-pulse' : 'bg-gray-600'}`}></div>
-                    <span className={celeryRunning ? 'text-success' : 'text-text-tertiary'}>
+                    <span className={celeryRunning ? 'text-success font-medium' : 'text-text-tertiary'}>
                       {celeryRunning ? '运行中' : '已停止'}
                     </span>
                   </div>
                   <span className="text-2xl">{celeryRunning ? '✅' : '⏸️'}</span>
                 </div>
+                <button
+                  onClick={() => addLog('[操作] Celery Worker启停需要在服务器端执行')}
+                  className="w-full px-3 py-2 bg-gray-700 hover:bg-gray-600 text-white text-sm rounded-lg transition-colors"
+                >
+                  {celeryRunning ? '停止 Worker' : '启动 Worker'}
+                </button>
               </CardContent>
             </Card>
 
-            <Card className="bg-bg-tertiary border-gray-700">
+            <Card className={`border-2 ${beatRunning ? 'border-success' : 'border-gray-700'} bg-bg-tertiary`}>
               <CardHeader>
-                <CardTitle className="text-base">Celery Beat</CardTitle>
+                <CardTitle className="text-lg">Celery Beat</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className={`w-3 h-3 rounded-full ${beatRunning ? 'bg-success animate-pulse' : 'bg-gray-600'}`}></div>
-                    <span className={beatRunning ? 'text-success' : 'text-text-tertiary'}>
+                    <span className={beatRunning ? 'text-success font-medium' : 'text-text-tertiary'}>
                       {beatRunning ? '运行中' : '已停止'}
                     </span>
                   </div>
                   <span className="text-2xl">{beatRunning ? '⏰' : '⏸️'}</span>
                 </div>
+                <button
+                  onClick={() => addLog('[操作] Celery Beat启停需要在服务器端执行')}
+                  className="w-full px-3 py-2 bg-gray-700 hover:bg-gray-600 text-white text-sm rounded-lg transition-colors"
+                >
+                  {beatRunning ? '停止 Beat' : '启动 Beat'}
+                </button>
               </CardContent>
             </Card>
 
             <Card className={`border-2 ${celeryRunning && beatRunning ? 'bg-gradient-to-br from-green-900/20 to-blue-900/20 border-success' : 'bg-bg-tertiary border-gray-700'}`}>
               <CardHeader>
-                <CardTitle className="text-base">AI自动运行</CardTitle>
+                <CardTitle className="text-lg">AI自动运行</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className={`w-3 h-3 rounded-full ${celeryRunning && beatRunning ? 'bg-success animate-pulse' : 'bg-gray-600'}`}></div>
@@ -478,6 +490,9 @@ export default function AdminPage() {
                     </span>
                   </div>
                   <span className="text-2xl">{celeryRunning && beatRunning ? '🚀' : '💤'}</span>
+                </div>
+                <div className="text-xs text-gray-400 text-center">
+                  Worker + Beat = AI自动运行
                 </div>
               </CardContent>
             </Card>
