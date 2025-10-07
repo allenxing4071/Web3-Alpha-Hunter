@@ -486,7 +486,14 @@ export default function AdminPage() {
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className={`w-3 h-3 rounded-full ${celeryRunning ? 'bg-success animate-pulse' : 'bg-gray-600'}`}></div>
+                    {celeryRunning ? (
+                      <div className="relative w-5 h-5">
+                        <div className="absolute inset-0 rounded-full border-2 border-success/30"></div>
+                        <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-success animate-spin"></div>
+                      </div>
+                    ) : (
+                      <div className="w-3 h-3 rounded-full bg-gray-600"></div>
+                    )}
                     <span className={celeryRunning ? 'text-success font-medium' : 'text-text-tertiary'}>
                       {celeryRunning ? '运行中' : '已停止'}
                     </span>
@@ -513,7 +520,14 @@ export default function AdminPage() {
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className={`w-3 h-3 rounded-full ${beatRunning ? 'bg-success animate-pulse' : 'bg-gray-600'}`}></div>
+                    {beatRunning ? (
+                      <div className="relative w-5 h-5">
+                        <div className="absolute inset-0 rounded-full border-2 border-success/30"></div>
+                        <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-success animate-spin"></div>
+                      </div>
+                    ) : (
+                      <div className="w-3 h-3 rounded-full bg-gray-600"></div>
+                    )}
                     <span className={beatRunning ? 'text-success font-medium' : 'text-text-tertiary'}>
                       {beatRunning ? '运行中' : '已停止'}
                     </span>
@@ -540,7 +554,14 @@ export default function AdminPage() {
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className={`w-3 h-3 rounded-full ${celeryRunning && beatRunning ? 'bg-success animate-pulse' : 'bg-gray-600'}`}></div>
+                    {celeryRunning && beatRunning ? (
+                      <div className="relative w-5 h-5">
+                        <div className="absolute inset-0 rounded-full border-2 border-success/30"></div>
+                        <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-success border-r-success animate-spin"></div>
+                      </div>
+                    ) : (
+                      <div className="w-3 h-3 rounded-full bg-gray-600"></div>
+                    )}
                     <span className={celeryRunning && beatRunning ? 'text-success font-semibold' : 'text-text-tertiary'}>
                       {celeryRunning && beatRunning ? '已启用' : '未启用'}
                     </span>
@@ -583,6 +604,14 @@ export default function AdminPage() {
                             {platform.id === 'discord' && 'Discord'}
                           </h3>
                           <div className="flex items-center gap-2 ml-2">
+                            {platform.enabled ? (
+                              <div className="relative w-4 h-4 mr-1">
+                                <div className="absolute inset-0 rounded-full border-2 border-accent-primary/30"></div>
+                                <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-accent-primary animate-spin"></div>
+                              </div>
+                            ) : (
+                              <div className="w-2 h-2 rounded-full bg-gray-600 mr-2"></div>
+                            )}
                             <label className="relative inline-flex items-center cursor-pointer">
                               <input
                                 type="checkbox"
