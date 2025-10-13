@@ -56,3 +56,62 @@ class KOL(Base):
     def __repr__(self):
         return f"<KOL {self.username} ({self.platform}) - Score: {self.influence_score}>"
 
+
+class KOLPending(Base):
+    """待审核KOL表 - AI发现的潜在KOL"""
+    __tablename__ = "kols_pending"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    platform = Column(String(50), default='twitter', comment="平台")
+    username = Column(String(255), nullable=False, comment="用户名")
+    display_name = Column(String(255), comment="显示名称")
+
+    # 账号数据
+    followers = Column(Integer, comment="粉丝数")
+    following = Column(Integer, comment="关注数")
+    tweets_count = Column(Integer, comment="推文数")
+    account_created_at = Column(DateTime(timezone=True), comment="账号创建时间")
+
+    # AI评估
+    ai_recommendation_score = Column(Numeric(10, 2), comment="AI推荐评分 0-100")
+    ai_recommendation_reason = Column(Text, comment="AI推荐理由(JSON)")
+    ai_discovery_method = Column(String(100), comment="发现方式: from_tier1_mention, high_engagement等")
+
+    # 原始数据
+    source_tweet_id = Column(String(255), comment="来源推文ID")
+    source_context = Column(Text, comment="来源上下文")
+
+    # 审核状态
+    review_status = Column(String(50), default='pending', index=True, comment="审核状态: pending, approved, rejected")
+    reviewed_by = Column(String(255), comment="审核人")
+    reviewed_at = Column(DateTime(timezone=True), comment="审核时间")
+    reject_reason = Column(Text, comment="拒绝理由")
+
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    def __repr__(self):
+        return f"<KOLPending {self.username} score={self.ai_recommendation_score} status={self.review_status}>"
+
+
+class KOLPerformance(Base):
+    """KOL表现追踪表 - 跟踪KOL的预测准确率"""
+    __tablename__ = "kol_performances"
+
+    id = Column(Integer, primary_key=True, index=True)
+    kol_id = Column(Integer, nullable=False, index=True, comment="KOL ID")
+
+    predicted_project = Column(String(255), comment="预测的项目名称")
+    prediction_date = Column(DateTime(timezone=True), server_default=func.now(), comment="预测日期")
+    did_succeed = Column(Boolean, comment="预测是否成功")
+
+    tweet_id = Column(String(255), comment="相关推文ID")
+    likes = Column(Integer, default=0, comment="点赞数")
+    retweets = Column(Integer, default=0, comment="转推数")
+    replies = Column(Integer, default=0, comment="回复数")
+
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    def __repr__(self):
+        return f"<KOLPerformance kol={self.kol_id} project={self.predicted_project} success={self.did_succeed}>"
+

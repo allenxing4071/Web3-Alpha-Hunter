@@ -16,19 +16,10 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "Web3 Alpha Hunter"
     VERSION: str = "1.0.0"
     
-    # 数据库 (使用PostgreSQL) - 强制使用正确的数据库名
-    DATABASE_URL: str = "postgresql://postgres:postgres@localhost:5432/web3_alpha_hunter"
+    # 数据库 (使用PostgreSQL)
+    DATABASE_URL: str = "postgresql://postgres:postgres@localhost:5432/web3hunter"
     DATABASE_POOL_SIZE: int = 20
     DATABASE_MAX_OVERFLOW: int = 10
-    
-    @field_validator("DATABASE_URL", mode="after")
-    @classmethod
-    def validate_database_url(cls, v: str) -> str:
-        """确保数据库名正确"""
-        if 'web3hunter' in v and 'web3_alpha_hunter' not in v:
-            v = v.replace('web3hunter', 'web3_alpha_hunter')
-            print(f"⚠️  修正数据库URL: {v}")
-        return v
     
     # Redis
     REDIS_URL: str = "redis://localhost:6379/0"

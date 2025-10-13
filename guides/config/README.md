@@ -1,7 +1,52 @@
 # Config 配置目录
 
-> **最后更新**: 2025-10-04
+> **最后更新**: 2025-10-10
 > **⚠️ 重要**: 此目录包含项目所有配置文件,请妥善保管API密钥和SSH密钥
+
+---
+
+## 🆕 Figma MCP 配置 (推荐)
+
+**AI 驱动的 Figma 设计转代码工具**
+
+### 一键配置（推荐）
+```bash
+cd guides/config
+./figma-quick-setup.sh
+```
+
+### 📚 完整文档
+- **[Figma MCP 配置指南](./FIGMA_MCP_SETUP.md)** - 安装、配置和使用说明
+- **[Figma Token 创建指南](./FIGMA_TOKEN_GUIDE.md)** - 详细 Token 创建步骤
+- **[Figma AI 使用指南](./FIGMA_AI_USAGE_GUIDE.md)** - 唤醒和使用方法
+- **[提示词模板库](./FIGMA_PROMPT_TEMPLATES.md)** - 各种场景的提示词示例
+
+### ✨ 主要功能
+- 从 Figma 设计直接生成 React 组件
+- 支持 Tailwind CSS + shadcn/ui
+- 自动生成响应式和无障碍代码
+- 与 Cursor + Claude 4.5 深度集成
+
+---
+
+## 🌐 Chrome DevTools MCP 配置
+
+**快速配置浏览器自动化测试工具**
+
+### 一键配置
+```bash
+cd guides/config
+./chrome-mcp-quick-setup.sh
+```
+
+### 快速启动 Chrome 远程调试
+```bash
+./scripts/start-chrome-debug.sh
+```
+
+### 📚 完整文档
+- **[完全使用指南](./CHROME_MCP_USAGE_GUIDE.md)** - 详细的参数说明、配置场景和实战案例
+- **[配置模板](./chrome-mcp-configs.json)** - 各种场景的配置模板
 
 ---
 
@@ -9,21 +54,31 @@
 
 ```
 guides/config/
-├── README.md                  # 📍 你在这里
-├── .gitignore                 # Git忽略规则
-├── servers/                   # 服务器配置
-│   └── production.yaml        # 生产服务器信息
-├── domains/                   # 域名配置
-│   └── domains.yaml           # 域名和DNS配置
-├── database/                  # 数据库配置
-│   └── database.yaml          # 数据库连接配置
-├── keys/                      # 密钥管理 ⚠️ 敏感
-│   ├── VPNKEY.pem             # SSH密钥
-│   └── api-keys.example.yaml  # API密钥示例
-├── scripts/                   # 配置脚本
-│   ├── setup_env.sh           # 环境变量设置
-│   └── start_with_env.sh      # 一键启动
-└── examples/                  # 配置示例
+├── README.md                        # 📍 你在这里
+├── .gitignore                       # Git忽略规则
+├── figma-quick-setup.sh             # 🆕 Figma MCP 一键配置
+├── FIGMA_MCP_SETUP.md               # 🆕 Figma MCP 配置指南
+├── FIGMA_TOKEN_GUIDE.md             # 🆕 Figma Token 创建指南
+├── FIGMA_AI_USAGE_GUIDE.md          # 🆕 Figma AI 使用指南
+├── FIGMA_PROMPT_TEMPLATES.md        # 🆕 Figma 提示词模板库
+├── chrome-mcp-configs.json          # Chrome MCP 配置模板
+├── chrome-mcp-quick-setup.sh        # Chrome MCP 一键配置脚本
+├── CHROME_MCP_USAGE_GUIDE.md        # Chrome MCP 完全使用指南
+├── servers/                         # 服务器配置
+│   └── production.yaml              # 生产服务器信息
+├── domains/                         # 域名配置
+│   └── domains.yaml                 # 域名和DNS配置
+├── database/                        # 数据库配置
+│   └── database.yaml                # 数据库连接配置
+├── keys/                            # 密钥管理 ⚠️ 敏感
+│   ├── VPNKEY.pem                   # SSH密钥
+│   └── api-keys.example.yaml        # API密钥示例
+├── scripts/                         # 配置脚本
+│   ├── setup_env.sh                 # 环境变量设置
+│   ├── start_with_env.sh            # 一键启动
+│   ├── start-chrome-debug.sh        # 🆕 启动Chrome远程调试
+│   └── stop-chrome-debug.sh         # 🆕 停止Chrome远程调试
+└── examples/                        # 配置示例
 ```
 
 ---

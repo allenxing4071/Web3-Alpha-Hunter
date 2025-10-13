@@ -1,0 +1,140 @@
+{
+  "说明": "Chrome DevTools MCP 多场景配置模板",
+  "使用方法": "将需要的配置复制到 ~/.cursor/mcp.json 的 mcpServers 中",
+  
+  "场景配置": {
+    "日常开发-连接已有浏览器": {
+      "chrome-devtools": {
+        "command": "npx",
+        "args": [
+          "chrome-devtools-mcp@latest",
+          "--browserUrl", "http://127.0.0.1:9222"
+        ],
+        "env": {},
+        "说明": "连接本地运行的 Chrome，需要先用 --remote-debugging-port=9222 启动"
+      }
+    },
+    
+    "自动化测试-无头模式": {
+      "chrome-devtools": {
+        "command": "npx",
+        "args": [
+          "chrome-devtools-mcp@latest",
+          "--headless",
+          "--isolated"
+        ],
+        "env": {},
+        "说明": "无界面运行，环境隔离，适合 CI/CD"
+      }
+    },
+    
+    "性能测试-固定环境": {
+      "chrome-devtools": {
+        "command": "npx",
+        "args": [
+          "chrome-devtools-mcp@latest",
+          "--isolated",
+          "--viewport", "1920x1080",
+          "--logFile", "/tmp/chrome-mcp-perf.log"
+        ],
+        "env": {
+          "DEBUG": "*"
+        },
+        "说明": "固定视口大小，启用详细日志"
+      }
+    },
+    
+    "移动端测试-小屏幕": {
+      "chrome-devtools": {
+        "command": "npx",
+        "args": [
+          "chrome-devtools-mcp@latest",
+          "--viewport", "375x667",
+          "--isolated"
+        ],
+        "env": {},
+        "说明": "模拟 iPhone 8 尺寸"
+      }
+    },
+    
+    "网络调试-使用代理": {
+      "chrome-devtools": {
+        "command": "npx",
+        "args": [
+          "chrome-devtools-mcp@latest",
+          "--proxyServer", "http://127.0.0.1:8888"
+        ],
+        "env": {},
+        "说明": "通过代理服务器（如 Charles、Fiddler）查看网络请求"
+      }
+    },
+    
+    "多配置方案-同时存在": {
+      "chrome-devtools-remote": {
+        "command": "npx",
+        "args": [
+          "chrome-devtools-mcp@latest",
+          "--browserUrl", "http://127.0.0.1:9222"
+        ],
+        "env": {}
+      },
+      "chrome-devtools-headless": {
+        "command": "npx",
+        "args": [
+          "chrome-devtools-mcp@latest",
+          "--headless",
+          "--isolated"
+        ],
+        "env": {}
+      },
+      "chrome-devtools-mobile": {
+        "command": "npx",
+        "args": [
+          "chrome-devtools-mcp@latest",
+          "--viewport", "375x667"
+        ],
+        "env": {}
+      }
+    }
+  },
+  
+  "启动远程调试Chrome的方法": {
+    "macOS": "/Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome --remote-debugging-port=9222 --user-data-dir=/tmp/chrome-remote-debug",
+    "macOS_使用别名": "alias chrome-debug='open -a \"Google Chrome\" --args --remote-debugging-port=9222'",
+    "Linux": "google-chrome --remote-debugging-port=9222 --user-data-dir=/tmp/chrome-remote-debug",
+    "Windows": "chrome.exe --remote-debugging-port=9222 --user-data-dir=C:\\temp\\chrome-remote-debug"
+  },
+  
+  "参数说明": {
+    "--browserUrl": "连接到已运行的 Chrome（端口 9222）",
+    "--headless": "无头模式，不显示浏览器窗口",
+    "--isolated": "使用临时用户目录，关闭后自动清理",
+    "--viewport": "设置视口大小，格式：宽x高（如 1920x1080）",
+    "--channel": "Chrome 版本：stable/beta/dev/canary",
+    "--logFile": "日志文件路径（需配合 DEBUG=* 环境变量）",
+    "--proxyServer": "代理服务器地址",
+    "--acceptInsecureCerts": "忽略证书错误（慎用）",
+    "--executablePath": "自定义 Chrome 可执行文件路径"
+  },
+  
+  "常用视口尺寸": {
+    "桌面端": {
+      "1920x1080": "全高清",
+      "1366x768": "常见笔记本",
+      "1280x720": "高清"
+    },
+    "移动端": {
+      "375x667": "iPhone 8",
+      "414x896": "iPhone XR/11",
+      "390x844": "iPhone 12/13",
+      "360x640": "Android 小屏",
+      "412x915": "Android 大屏"
+    },
+    "平板": {
+      "768x1024": "iPad",
+      "810x1080": "iPad Air",
+      "1024x1366": "iPad Pro 12.9"
+    }
+  }
+}
+

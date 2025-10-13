@@ -31,7 +31,7 @@ export default function ApiDocsPage() {
               </p>
               <div className="space-y-3">
                 <a
-                  href="http://localhost:8000/docs"
+                  href={`${API_BASE_URL.replace('/api/v1', '')}/docs`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 p-4 bg-info/10 hover:bg-info/20 border border-info/50 rounded-lg text-info transition-all group"
@@ -41,10 +41,10 @@ export default function ApiDocsPage() {
                     <div className="font-bold mb-1">Swagger UI</div>
                     <div className="text-sm opacity-80">交互式 API 文档和测试工具</div>
                   </div>
-                  <code className="text-xs bg-bg-primary px-3 py-1 rounded">http://localhost:8000/docs</code>
+                  <code className="text-xs bg-bg-primary px-3 py-1 rounded">{API_BASE_URL.replace('/api/v1', '')}/docs</code>
                 </a>
                 <a
-                  href="http://localhost:8000/redoc"
+                  href={`${API_BASE_URL.replace('/api/v1', '')}/redoc`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 p-4 bg-success/10 hover:bg-success/20 border border-success/50 rounded-lg text-success transition-all group"
@@ -54,7 +54,7 @@ export default function ApiDocsPage() {
                     <div className="font-bold mb-1">ReDoc</div>
                     <div className="text-sm opacity-80">更美观的 API 文档展示</div>
                   </div>
-                  <code className="text-xs bg-bg-primary px-3 py-1 rounded">http://localhost:8000/redoc</code>
+                  <code className="text-xs bg-bg-primary px-3 py-1 rounded">{API_BASE_URL.replace('/api/v1', '')}/redoc</code>
                 </a>
               </div>
             </div>

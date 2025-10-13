@@ -43,6 +43,7 @@ aiohttp==3.9.1
 # 认证
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
+bcrypt==5.0.0
 python-multipart==0.0.6
 
 # 工具
@@ -50,10 +51,12 @@ python-dateutil==2.8.2
 pytz==2023.3
 orjson==3.9.10
 pydantic-extra-types==2.2.0
+email-validator==2.1.0
 
 # 监控日志
 sentry-sdk[fastapi]==1.38.0
 loguru==0.7.2
+psutil==5.9.6
 
 # 测试
 pytest==7.4.3

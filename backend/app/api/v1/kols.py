@@ -46,8 +46,9 @@ async def get_top_influencers(
                 tier,
                 influence_score,
                 tags,
-                discovery_method,
-                is_verified
+                bio,
+                profile_url,
+                verified
             FROM kols
             WHERE {where_sql}
             ORDER BY influence_score DESC, followers DESC
@@ -60,22 +61,25 @@ async def get_top_influencers(
         # 格式化数据
         influencers = []
         for row in rows:
-            # 构建Twitter URL
-            twitter_url = f"https://twitter.com/{row.username}"
+            # 构建URL（优先使用profile_url）
+            url = row.profile_url if row.profile_url else f"https://twitter.com/{row.username}"
             
             # 格式化粉丝数
             followers_formatted = format_followers(row.followers or 0)
             
-            # 获取分类标签（从tags JSON中取第一个）
+            # 获取分类标签（从tags字符串中取第一个）
             category = "Crypto"
             if row.tags:
                 try:
-                    import json
-                    tags = json.loads(row.tags) if isinstance(row.tags, str) else row.tags
-                    if tags and len(tags) > 0:
-                        category = tags[0]
+                    # tags可能是字符串"tag1,tag2,tag3"
+                    tag_list = row.tags.split(',')
+                    if tag_list and len(tag_list) > 0:
+                        category = tag_list[0].strip()
                 except:
                     pass
+            
+            # 使用bio或生成描述
+            description = row.bio if row.bio else generate_description(row)
             
             influencer = {
                 "id": str(row.id),
@@ -83,11 +87,11 @@ async def get_top_influencers(
                 "platform": row.platform.capitalize() if row.platform else "Twitter",
                 "platformIcon": "𝕏" if row.platform == "twitter" else "📱",
                 "handle": f"@{row.username}",
-                "url": twitter_url,
+                "url": url,
                 "followers": followers_formatted,
                 "category": category,
-                "description": generate_description(row),
-                "verified": row.is_verified or False,
+                "description": description,
+                "verified": row.verified or False,
                 "tier": row.tier,
                 "influenceScore": float(row.influence_score or 0)
             }

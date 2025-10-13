@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "figma": {
+      "command": "node",
+      "args": [
+        "node_modules/.bin/figma-developer-mcp",
+        "--figma-api-key",
+        "${FIGMA_ACCESS_TOKEN}",
+        "--stdio"
+      ],
+      "disabled": false,
+      "alwaysAllow": []
+    }
+  }
+}

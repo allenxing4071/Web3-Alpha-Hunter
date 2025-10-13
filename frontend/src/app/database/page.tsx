@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from 'react'
-import { useAuthStore } from '@/store/authStore'
 import { AuthGuard } from '@/components/AuthGuard'
 import { API_BASE_URL } from '@/lib/config'
 
@@ -39,7 +38,6 @@ interface TableData {
 }
 
 export default function DatabasePage() {
-  const { user } = useAuthStore()
   const [activeTab, setActiveTab] = useState('projects')
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(20)
@@ -133,15 +131,15 @@ export default function DatabasePage() {
       emoji: '⭐',
       tables: ['projects', 'social_metrics', 'onchain_metrics', 'ai_analysis']
     },
-    config: {
+    aiConfig: {
       name: 'AI配置表',
       emoji: '⚙️',
-      tables: ['ai_configs', 'ai_work_config', 'platform_search_rules']
+      tables: ['ai_configs', 'ai_work_config', 'ai_learning_feedback']
     },
     prediction: {
       name: '预测表',
       emoji: '🔮',
-      tables: ['token_launch_predictions', 'airdrop_value_estimates']
+      tables: ['token_launch_predictions', 'airdrop_value_estimates', 'investment_action_plans']
     },
     discovery: {
       name: '发现表',
@@ -154,14 +152,14 @@ export default function DatabasePage() {
       tables: ['kols', 'kols_pending', 'kol_performances']
     },
     platform: {
-      name: '平台表',
+      name: '平台监控表',
       emoji: '🌐',
-      tables: ['twitter_keywords', 'telegram_channels', 'discord_servers', 'platform_daily_stats']
+      tables: ['platform_search_rules', 'platform_daily_stats', 'twitter_keywords', 'telegram_channels', 'discord_servers']
     },
-    other: {
-      name: '其他表',
-      emoji: '📋',
-      tables: ['investment_action_plans', 'ai_learning_feedback', 'users']
+    system: {
+      name: '系统表',
+      emoji: '🔐',
+      tables: ['users']
     }
   }
 
@@ -171,23 +169,23 @@ export default function DatabasePage() {
     'social_metrics': { emoji: '📱', desc: '社交媒体数据指标', name: '社交指标', category: 'core' },
     'onchain_metrics': { emoji: '⛓️', desc: '区块链上的实际数据', name: '链上数据', category: 'core' },
     'ai_analysis': { emoji: '🤖', desc: 'AI智能分析结果', name: 'AI分析', category: 'core' },
-    'ai_configs': { emoji: '🔑', desc: 'AI模型配置', name: 'AI配置', category: 'config' },
-    'ai_work_config': { emoji: '🧠', desc: 'AI智能助理工作参数', name: 'AI工作配置', category: 'config' },
-    'platform_search_rules': { emoji: '🌍', desc: '平台搜索规则配置', name: '平台规则', category: 'config' },
+    'ai_configs': { emoji: '🔑', desc: 'AI模型配置', name: 'AI配置', category: 'aiConfig' },
+    'ai_work_config': { emoji: '🧠', desc: 'AI智能助理工作参数', name: 'AI工作配置', category: 'aiConfig' },
+    'ai_learning_feedback': { emoji: '📚', desc: 'AI学习反馈记录', name: 'AI学习反馈', category: 'aiConfig' },
+    'platform_search_rules': { emoji: '🔍', desc: '平台搜索规则配置', name: '平台规则', category: 'platform' },
     'token_launch_predictions': { emoji: '🚀', desc: '代币发行预测', name: '发币预测', category: 'prediction' },
     'airdrop_value_estimates': { emoji: '💰', desc: '空投价值估算', name: '空投估值', category: 'prediction' },
-    'project_discoveries': { emoji: '🔍', desc: '多平台项目热度追踪', name: '项目发现', category: 'discovery' },
+    'investment_action_plans': { emoji: '📋', desc: 'AI生成的投资行动计划', name: '投资计划', category: 'prediction' },
+    'project_discoveries': { emoji: '🔭', desc: '多平台项目热度追踪', name: '项目发现', category: 'discovery' },
     'projects_pending': { emoji: '⏳', desc: 'AI推荐的待审核项目', name: '待审核项目', category: 'discovery' },
     'kols': { emoji: '👤', desc: 'KOL数据和表现追踪', name: 'KOL列表', category: 'kol' },
-    'kols_pending': { emoji: '👥', desc: 'AI推荐的待审核KOL', name: '待审核KOL', category: 'kol' },
+    'kols_pending': { emoji: '⏰', desc: 'AI推荐的待审核KOL', name: '待审核KOL', category: 'kol' },
     'kol_performances': { emoji: '📈', desc: 'KOL历史表现追踪', name: 'KOL表现', category: 'kol' },
     'twitter_keywords': { emoji: '🐦', desc: 'Twitter搜索关键词库', name: 'Twitter关键词', category: 'platform' },
     'telegram_channels': { emoji: '💬', desc: 'Telegram监控频道列表', name: 'Telegram频道', category: 'platform' },
     'discord_servers': { emoji: '🎮', desc: 'Discord监控服务器列表', name: 'Discord服务器', category: 'platform' },
     'platform_daily_stats': { emoji: '📊', desc: '平台每日数据统计', name: '平台统计', category: 'platform' },
-    'investment_action_plans': { emoji: '📋', desc: '投资行动计划', name: '行动计划', category: 'other' },
-    'ai_learning_feedback': { emoji: '📚', desc: 'AI学习反馈记录', name: 'AI学习反馈', category: 'other' },
-    'users': { emoji: '👥', desc: '系统用户管理', name: '用户表', category: 'other' },
+    'users': { emoji: '👥', desc: '系统用户权限管理', name: '用户表', category: 'system' },
   }
 
   // 按分类组织表
