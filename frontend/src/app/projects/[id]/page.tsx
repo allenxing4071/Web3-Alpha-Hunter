@@ -681,30 +681,32 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
                 </div>
               </CardHeader>
               <CardContent className="space-y-3">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-4">
                   <div>
-                    <span className="text-text-tertiary text-sm">推荐度</span>
-                    <p className="text-lg font-semibold text-accent-gold">
-                      {project.ai_analysis.investment_suggestion.recommendation}
+                    <span className="text-text-tertiary text-sm block mb-1">AI 投资建议</span>
+                    <p className="text-sm text-text-secondary leading-relaxed">
+                      {project.ai_analysis.investment_suggestion.action}
                     </p>
                   </div>
-                  <div>
-                    <span className="text-text-tertiary text-sm">建议仓位</span>
-                    <p className="text-lg font-semibold text-accent-primary">
-                      {project.ai_analysis.investment_suggestion.position_size}
-                    </p>
-                  </div>
-                  <div>
-                    <span className="text-text-tertiary text-sm">入场时机</span>
-                    <p className="text-sm text-text-secondary">
-                      {project.ai_analysis.investment_suggestion.entry_timing}
-                    </p>
-                  </div>
-                  <div>
-                    <span className="text-text-tertiary text-sm">止损线</span>
-                    <p className="text-lg font-semibold text-danger">
-                      -{project.ai_analysis.investment_suggestion.stop_loss}%
-                    </p>
+                  <div className="grid grid-cols-3 gap-4 pt-2 border-t border-gray-700">
+                    <div>
+                      <span className="text-text-tertiary text-sm">建议仓位</span>
+                      <p className="text-lg font-semibold text-accent-primary">
+                        {project.ai_analysis.investment_suggestion.position_size}
+                      </p>
+                    </div>
+                    <div>
+                      <span className="text-text-tertiary text-sm">入场时机</span>
+                      <p className="text-sm text-text-secondary">
+                        {project.ai_analysis.investment_suggestion.entry_timing}
+                      </p>
+                    </div>
+                    <div>
+                      <span className="text-text-tertiary text-sm">止损线</span>
+                      <p className="text-lg font-semibold text-danger">
+                        -{project.ai_analysis.investment_suggestion.stop_loss}%
+                      </p>
+                    </div>
                   </div>
                 </div>
               </CardContent>

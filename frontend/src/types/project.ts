@@ -79,8 +79,16 @@ export interface AIAnalysis {
     score: number
     label: string
   }
-  risk_assessment: any
-  investment_suggestion: any
+  risk_assessment: {
+    flags: RiskFlag[]
+    scam_probability: number
+  }
+  investment_suggestion: {
+    action: string  // 后端返回的是action而不是recommendation
+    position_size: string
+    entry_timing: string
+    stop_loss: number
+  }
 }
 
 export interface SimilarProject {

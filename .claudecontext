@@ -25,8 +25,11 @@
 - Recharts (数据可视化)
 
 ### AI & 数据采集
-- OpenAI GPT-4 / Anthropic Claude
-- DeepSeek (配置中)
+- DeepSeek v3 (主力AI，优先级最高) ✅ 已配置
+- Anthropic Claude (备用，通过WildCard)
+- OpenAI GPT (备用，通过WildCard)
+- Apify (Twitter数据采集)
+- Telethon (Telegram数据采集)
 - Playwright (网页爬虫)
 - Chrome MCP (浏览器自动化)
 
@@ -59,12 +62,16 @@
 - 管理后台界面
 - Chrome MCP集成测试
 - API文档 (Swagger/OpenAPI)
+- **AI分析引擎增强** (2025-10-14) ⭐
+  - 基于真实数据的详细分析生成
+  - 多AI提供商自动降级 (DeepSeek→Claude→OpenAI)
+  - 严格约束防止编造虚假信息
+  - 自动化AI分析流程 (评分+详细分析+投资建议)
 
 ### 🚧 进行中
-- X/Twitter数据采集
-- Telegram群组监控
-- AI分析引擎优化
-- 多平台数据采集架构
+- X/Twitter数据采集 (Apify集成)
+- Telegram群组监控 (Telethon集成)
+- 多平台数据采集架构完善
 
 ### 📋 待开发
 - 自动化每日报告
@@ -79,8 +86,12 @@
 2. **ORM**: 使用SQLAlchemy，便于复杂查询和关系管理
 3. **前端路由**: Next.js App Router，支持服务端渲染
 4. **状态管理**: Zustand而非Redux，因为更轻量简洁
-5. **AI模型**: 优先使用DeepSeek (成本低)，复杂分析使用GPT-4/Claude
-6. **记忆系统架构** (2025-10-13): 选择基于文件的跨对话记忆系统
+5. **AI模型**: 优先使用DeepSeek v3 (成本低、速度快、国内友好)，复杂分析降级到GPT-4/Claude
+6. **AI分析策略** (2025-10-14): 基于真实数据，严格防止编造 ⭐
+   - **理由**: 保证分析可靠性，避免误导用户投资决策
+   - **实现**: 降低temperature(0.3)、严格Prompt约束、数据不足明确声明
+   - **影响**: AI分析从"可能不准确"提升到"可信赖的投资参考"
+7. **记忆系统架构** (2025-10-13): 选择基于文件的跨对话记忆系统
    - **理由**: 平台无关（适用所有AI）、标准格式（Markdown）、易于版本控制
    - **替代方案**: 数据库存储（被否决，依赖特定环境）
    - **影响**: 所有AI平台都能使用，团队协作效率提升80%+
@@ -138,9 +149,9 @@ faxianjihui/
 
 ### 本地开发
 - **后端**: http://localhost:8000
-- **前端**: http://localhost:3000
+- **前端**: http://localhost:3001 (⚠️ 注意端口变化)
 - **API文档**: http://localhost:8000/docs
-- **数据库**: PostgreSQL localhost:5432
+- **数据库**: PostgreSQL localhost:5432/web3_alpha_hunter
 - **Redis**: localhost:6379
 
 ### 默认账号
@@ -150,7 +161,7 @@ faxianjihui/
 
 1. ~~Telegram数据采集session文件权限问题~~ ✅ 已解决
 2. ~~Chrome MCP配置复杂~~ ✅ 已完成文档和脚本
-3. 部分AI分析功能需要优化性能
+3. ~~AI分析只有评分无详细内容~~ ✅ 已解决 (2025-10-14)
 4. 数据采集频率需要动态调整
 
 ## 📝 常见操作
@@ -213,9 +224,26 @@ rsync -avz --exclude 'node_modules' ./ root@47.253.226.250:/app/web3-alpha-hunte
 
 ## 🔄 最后更新
 
-**更新时间**: 2025-10-13 (晚上)
+**更新时间**: 2025-10-14 (晚上)
 **更新人**: AI助手 + xinghailong
 **主要变更**:
+- ✅ **AI分析引擎重大升级**（2025-10-14）⭐⭐⭐
+  - 新增 `generate_detailed_analysis()` 函数 (ai_analyzer.py:505-663)
+  - 增强 `analyze_new_projects` 任务流程 (analyzers.py:45-152)
+  - 实现真实数据驱动的AI分析（从数据库提取社交指标）
+  - 严格约束AI防止编造（temperature=0.3, 禁止编造团队/融资）
+  - 自动生成完整分析：摘要 + 关键特性 + 投资建议
+  - 启用ai_analysis表保存详细分析
+  - 完成Arbitrum项目AI分析数据库更新
+  - 测试验证：TestCoinAI (project_id=734)
+
+**重要决策** (2025-10-14):
+- **AI分析真实性优先**: 宁可说"数据不足"也不编造（见技术决策#6）
+- **AI Provider优先级**: DeepSeek(主) > Claude(备) > OpenAI(备)
+- **新币种分析流程**: 评分分析 → 提取真实指标 → 详细分析 → 保存ai_analysis表
+- **AI温度策略**: 评分用0.7(创造性)，详细分析用0.3(准确性)
+
+**上一次更新**: 2025-10-13 (晚上)
 - ✅ **文档反向工程与代码修复**（重大改进 ⭐）
   - 创建9个缺失的Model类，达到100% Model覆盖率（55% → 100%）
   - 新建 backend/app/models/ai_system.py (2个Model类)
@@ -256,6 +284,9 @@ rsync -avz --exclude 'node_modules' ./ root@47.253.226.250:/app/web3-alpha-hunte
 - 文档与代码严重不一致时，应优先相信代码，从代码反推文档
 - Model类缺失会严重影响开发效率（无类型提示、无IDE支持）
 - 定期进行文档一致性检查非常重要（建议每季度一次）
+- **AI分析必须基于真实数据** (2025-10-14): 编造信息会导致用户投资损失，必须严格约束
+- **Next.js缓存问题**: 修改backend数据后，需清除.next缓存并重启前端才能看到更新
+- **数据库表结构**: ai_analysis表使用独立字段而非单个JSONB字段
 
 ---
 

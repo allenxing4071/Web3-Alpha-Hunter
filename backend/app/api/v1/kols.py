@@ -37,7 +37,7 @@ async def get_top_influencers(
         
         # 查询KOL数据
         query = text(f"""
-            SELECT 
+            SELECT
                 id,
                 username,
                 display_name,
@@ -46,9 +46,7 @@ async def get_top_influencers(
                 tier,
                 influence_score,
                 tags,
-                bio,
-                profile_url,
-                verified
+                is_verified as verified
             FROM kols
             WHERE {where_sql}
             ORDER BY influence_score DESC, followers DESC
@@ -61,12 +59,15 @@ async def get_top_influencers(
         # 格式化数据
         influencers = []
         for row in rows:
-            # 构建URL（优先使用profile_url）
-            url = row.profile_url if row.profile_url else f"https://twitter.com/{row.username}"
-            
+            # 构建URL（根据平台生成）
+            if row.platform == 'twitter':
+                url = f"https://twitter.com/{row.username}"
+            else:
+                url = f"https://{row.platform}.com/{row.username}"
+
             # 格式化粉丝数
             followers_formatted = format_followers(row.followers or 0)
-            
+
             # 获取分类标签（从tags字符串中取第一个）
             category = "Crypto"
             if row.tags:
@@ -77,9 +78,9 @@ async def get_top_influencers(
                         category = tag_list[0].strip()
                 except:
                     pass
-            
-            # 使用bio或生成描述
-            description = row.bio if row.bio else generate_description(row)
+
+            # 生成描述
+            description = generate_description(row)
             
             influencer = {
                 "id": str(row.id),

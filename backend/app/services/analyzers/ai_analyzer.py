@@ -119,20 +119,21 @@ class AIAnalyzer:
             except Exception as e:
                 logger.warning(f"Failed to initialize OpenAI: {e}")
     
-    def analyze_project_text(self, text: str, source: str = "twitter") -> Dict:
-        """分析项目文本内容
-        
+    def analyze_project_text(self, text: str, source: str = "twitter", retry_with_fallback: bool = True) -> Dict:
+        """分析项目文本内容（支持自动降级到备用AI）
+
         Args:
             text: 项目相关文本(推文、公告等)
             source: 来源(twitter, telegram等)
-            
+            retry_with_fallback: 失败时是否自动尝试其他AI提供商
+
         Returns:
             分析结果字典
         """
         if not self.active_provider:
             logger.warning("No AI client available, using mock analysis")
             return self._mock_analysis(text)
-        
+
         prompt = f"""分析以下Web3项目相关信息,提供专业评估:
 
 来源: {source}
@@ -501,24 +502,184 @@ class AIAnalyzer:
         
         return min(score, 100)
     
+    def generate_detailed_analysis(self, project_data: Dict) -> Dict:
+        """生成详细AI分析（基于真实数据，避免虚假信息）
+
+        Args:
+            project_data: 项目完整数据（包含真实指标）
+
+        Returns:
+            详细分析结果（summary, key_features, investment_suggestion等）
+        """
+        logger.info(f"🔍 Generating detailed AI analysis for {project_data.get('name', 'Unknown')}...")
+
+        if not self.active_provider:
+            logger.warning("No AI client available")
+            return self._mock_detailed_analysis()
+
+        # 构建基于真实数据的prompt
+        project_name = project_data.get("name", "Unknown")
+        description = project_data.get("description", "无描述")
+        category = project_data.get("category", "Unknown")
+        blockchain = project_data.get("blockchain", "Unknown")
+
+        # 提取真实指标
+        metrics = project_data.get("metrics", {})
+        twitter_followers = metrics.get("twitter_followers", 0)
+        telegram_members = metrics.get("telegram_members", 0)
+        github_stars = metrics.get("github_stars", 0)
+
+        # 评分数据（如果有）
+        scores = project_data.get("scores", {})
+        overall_score = scores.get("overall", 0)
+
+        prompt = f"""你是Web3项目分析专家。请基于以下**真实数据**分析项目，严禁编造任何不存在的信息。
+
+**项目信息（真实数据）：**
+- 项目名称: {project_name}
+- 分类: {category}
+- 区块链: {blockchain}
+- 描述: {description}
+
+**社交媒体数据（真实指标）：**
+- Twitter粉丝: {twitter_followers if twitter_followers > 0 else "未知"}
+- Telegram成员: {telegram_members if telegram_members > 0 else "未知"}
+- GitHub Stars: {github_stars if github_stars > 0 else "未知"}
+
+**评分：**
+- 综合评分: {overall_score}/100
+
+**分析要求（必须遵守）：**
+1. 只基于上述真实数据进行分析
+2. 如果某项数据缺失，明确说明"数据不足"，不要编造
+3. 技术特性只描述该项目类型的通用特征，不编造具体技术细节
+4. 投资建议要保守谨慎，强调风险
+
+请返回JSON格式（严格遵守格式）：
+{{
+  "summary": "100-150字的项目摘要，只基于已知信息",
+  "key_features": [
+    "特性1（基于真实类型特征）",
+    "特性2",
+    "特性3",
+    "特性4",
+    "特性5"
+  ],
+  "investment_suggestion": {{
+    "action": "投资建议文字（80-120字，强调风险和数据不足）",
+    "position_size": "建议仓位（如：1-3%）",
+    "entry_timing": "入场时机建议",
+    "stop_loss": 止损百分比数字（如：25）
+  }}
+}}
+
+**重要提醒：不要编造团队成员、融资信息、合作伙伴等未提供的数据！**"""
+
+        try:
+            # 调用AI（优先DeepSeek）
+            if self.deepseek_client:
+                response = self.deepseek_client.chat.completions.create(
+                    model="deepseek-chat",
+                    messages=[
+                        {"role": "system", "content": "你是专业的Web3分析师。你必须只基于提供的真实数据进行分析，严禁编造任何信息。如果数据不足，必须明确说明。"},
+                        {"role": "user", "content": prompt}
+                    ],
+                    max_tokens=2048,
+                    temperature=0.3,  # 降低温度，减少创造性，增加准确性
+                    top_p=0.9,
+                    stream=False
+                )
+                result_text = response.choices[0].message.content
+                logger.info(f"✅ DeepSeek detailed analysis generated")
+
+            elif self.claude_client:
+                response = self.claude_client.chat.completions.create(
+                    model="claude-3-5-sonnet-20241022",
+                    messages=[
+                        {"role": "system", "content": "你是专业的Web3分析师。必须只基于真实数据分析，不编造信息。"},
+                        {"role": "user", "content": prompt}
+                    ],
+                    max_tokens=2048,
+                    temperature=0.3
+                )
+                result_text = response.choices[0].message.content
+                logger.info(f"✅ Claude detailed analysis generated")
+
+            elif self.openai_client:
+                response = self.openai_client.chat.completions.create(
+                    model="gpt-3.5-turbo",
+                    messages=[
+                        {"role": "system", "content": "你是专业的Web3分析师。只基于真实数据分析。"},
+                        {"role": "user", "content": prompt}
+                    ],
+                    max_tokens=1500,
+                    temperature=0.3
+                )
+                result_text = response.choices[0].message.content
+                logger.info(f"✅ OpenAI detailed analysis generated")
+            else:
+                logger.warning("No AI provider available")
+                return self._mock_detailed_analysis()
+
+            # 解析JSON
+            import json
+            import re
+
+            # 移除Markdown代码块
+            if "```json" in result_text:
+                match = re.search(r'```json\s*(.*?)\s*```', result_text, re.DOTALL)
+                if match:
+                    result_text = match.group(1)
+            elif "```" in result_text:
+                match = re.search(r'```\s*(.*?)\s*```', result_text, re.DOTALL)
+                if match:
+                    result_text = match.group(1)
+
+            result_text = result_text.strip()
+            result = json.loads(result_text)
+
+            logger.info(f"✅ Detailed analysis parsed successfully")
+            return result
+
+        except Exception as e:
+            logger.error(f"❌ Failed to generate detailed analysis: {e}")
+            return self._mock_detailed_analysis()
+
+    def _mock_detailed_analysis(self) -> Dict:
+        """模拟详细分析（当AI不可用时）"""
+        return {
+            "summary": "暂无详细分析摘要，AI服务不可用",
+            "key_features": [
+                "数据采集中",
+                "分析生成中",
+                "请稍后查看"
+            ],
+            "investment_suggestion": {
+                "action": "数据不足，暂无投资建议",
+                "position_size": "0%",
+                "entry_timing": "等待更多数据",
+                "stop_loss": 0
+            }
+        }
+
     def analyze_full_project(self, project_data: Dict) -> Dict:
         """完整分析项目
-        
+
         Args:
             project_data: 项目原始数据
-            
+
         Returns:
             完整分析结果
         """
         logger.info(f"🔍 Starting full project analysis...")
-        
+
         # 1. 文本分析
         text = project_data.get("text", "")
         ai_result = self.analyze_project_text(text, project_data.get("source", "unknown"))
-        
+
         # 合并AI分析结果到项目数据
         enhanced_data = {**project_data, **ai_result}
-        
+
         # 2. 各维度评分
         scores = {
             "team": self.score_team_background(enhanced_data),
@@ -528,12 +689,12 @@ class AIAnalyzer:
             "market_timing": self.score_market_timing(enhanced_data),
             "risk": 80.0,  # 由风险检测器单独计算
         }
-        
+
         logger.info(f"📊 Individual scores: {scores}")
-        
+
         # 3. 计算综合评分
         from app.services.analyzers.scorer import project_scorer
-        
+
         overall_score = project_scorer.calculate_overall_score(
             team_score=scores["team"],
             tech_score=scores["technology"],
@@ -542,12 +703,12 @@ class AIAnalyzer:
             market_timing_score=scores["market_timing"],
             risk_score=scores["risk"],
         )
-        
+
         # 4. 计算等级
         grade = project_scorer.calculate_grade(overall_score)
-        
+
         logger.info(f"✅ Analysis complete: Score={overall_score}, Grade={grade}")
-        
+
         return {
             "overall_score": overall_score,
             "grade": grade,

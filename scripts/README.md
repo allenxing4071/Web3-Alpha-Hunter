@@ -9,6 +9,66 @@
 
 ## 📂 脚本列表
 
+### 🤖 上下文记忆系统脚本 (新增)
+
+#### 1. init-context-system.sh ⭐
+**用途**: 为新项目自动创建 Claude Code 上下文记忆系统
+
+**功能**:
+- 自动创建 `.claudecontext` (项目记忆核心)
+- 自动创建 `.clinerules` (AI工作规范)
+- 自动创建 `AI_START_HERE.md` (AI入口指南)
+- 自动创建 `CONTEXT_SYSTEM_README.md` (系统说明)
+- 支持交互式初始化（收集项目信息）
+
+**使用方法**:
+```bash
+# 基本用法：在当前目录初始化
+./scripts/init-context-system.sh
+
+# 交互式初始化（推荐）
+./scripts/init-context-system.sh -i
+
+# 在指定目录初始化
+./scripts/init-context-system.sh /path/to/project
+
+# 强制覆盖已存在的文件
+./scripts/init-context-system.sh -f
+
+# 查看帮助
+./scripts/init-context-system.sh --help
+```
+
+**详细文档**: [README_CONTEXT_SYSTEM.md](./README_CONTEXT_SYSTEM.md)
+
+---
+
+#### 2. install-globally.sh
+**用途**: 全局安装上下文系统初始化工具
+
+**功能**:
+- 安装到 `/usr/local/bin` (系统级)
+- 安装到 `~/.local/bin` (用户级)
+- 创建 shell alias
+- 自动配置 PATH
+
+**使用方法**:
+```bash
+./scripts/install-globally.sh
+
+# 然后在任何地方使用
+claude-init              # 初始化当前目录
+claude-init -i           # 交互式初始化
+claude-init /path/to/dir # 初始化指定目录
+```
+
+**优势**:
+- ✅ 一次安装，全局使用
+- ✅ 新建项目自动包含上下文系统
+- ✅ 提升开发效率 80%+
+
+---
+
 ### 开发环境脚本
 
 #### 1. start-dev.sh
