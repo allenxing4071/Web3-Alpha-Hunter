@@ -6,7 +6,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { ProjectDetail, ProjectScores } from '@/types/project'
+import { ProjectDetail } from '@/types/project'
 import { API_BASE_URL } from '@/lib/config'
 import { GradeBadge } from '@/components/projects/GradeBadge'
 import { RiskTag } from '@/components/projects/RiskTag'
@@ -99,11 +99,11 @@ const mockProjectDetail: ProjectDetail = {
       label: "positive"
     },
     risk_assessment: {
-      scam_probability: 5.2,
-      risk_level: "low"
+      flags: [],
+      scam_probability: 5.2
     },
     investment_suggestion: {
-      recommendation: "强烈推荐",
+      action: "强烈推荐 - 基于真实数据的保守建议",
       position_size: "3-5%",
       entry_timing: "立即小仓位埋伏,等待主网正式上线前加仓",
       stop_loss: 30
@@ -610,8 +610,9 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
                 <div className="flex-1">
                   <h3 className="text-blue-300 font-semibold mb-1">AI分析说明</h3>
                   <p className="text-sm text-blue-200/80">
-                    以下分析由Claude/GPT-4生成,综合了来自<strong>CoinGecko、GitHub、DefiLlama、Dune Analytics</strong>等多个数据源的实时信息。
-                    数据每24小时自动更新一次,最后更新于 {project.last_updated_at && !isNaN(new Date(project.last_updated_at).getTime())
+                    以下分析由<strong>DeepSeek AI</strong>生成，基于项目真实数据（社交媒体指标、链上数据等）进行客观评估。
+                    系统采用多AI降级机制（DeepSeek → Claude → GPT-4），确保分析质量。
+                    数据每小时自动更新，最后更新于 {project.last_updated_at && !isNaN(new Date(project.last_updated_at).getTime())
                       ? formatDistanceToNow(new Date(project.last_updated_at), { locale: zhCN, addSuffix: true })
                       : '未知时间'}。
                   </p>
